@@ -56,3 +56,9 @@
 ## Recommended Next Steps
 
 Independent web verification of 40 flagged assertions across 16 files returned 26 CONFIRMED, 14 UNVERIFIED, 0 OUTDATED, 0 CONTRADICTED — a high-reliability picture that re-confirms the earlier accuracy pass. The largest category was EVIDENCE/SPECIALIST (method and citation claims), nearly all of which resolved exactly to primary sources (arXiv, journals, PubMed). UNVERIFIED items are concentrated in honestly-hedged vendor figures and a few point-in-time platform facts, none of which assert a false fact. Expert review should prioritise any CONTRADICTED item first, then the back-matter citation/identifier details, before treating the manuscripts as fact-checked.
+
+---
+
+## Cross-validation (independent Codex pass)
+
+An independent fact-check of these same chapters was run separately with Codex on the same prompt. The two passes agreed on substance: both found zero OUTDATED claims, both independently flagged the one HCP Ch 8 Larkin→Eisenberg opioid misattribution as the single CONTRADICTED item, and both flagged the same UNVERIFIED clusters (Veeva schema/adoption figures; the Ch 10–11 synthetic-result citations). Codex additionally flagged Ch 12's “weak correlation … transfer is direct” sentence as an overclaim; that sentence has been softened and tied explicitly to Ascarza (2018), consistent with the chapter's own later hedging. The independent convergence raises confidence that the one corrected error was the substantive defect and that the remaining citation base is sound.

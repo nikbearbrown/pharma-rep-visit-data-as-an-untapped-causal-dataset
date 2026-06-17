@@ -384,11 +384,3 @@ All regulatory, legal, and method citations were verified CONFIRMED against FDA,
 6. Physician Payments Sunshine Act, 42 U.S.C. §1320a-7h; 42 C.F.R. Part 403; ACA 2010 §6002. CY2025 de minimis $13.46 / aggregate $134.54. [CONFIRMED]
 7. *United States v. Caronia*, 703 F.3d 149 (2d Cir. 2012). [CONFIRMED]
 8. *Amarin Pharma, Inc. v. FDA*, 119 F. Supp. 3d 196 (S.D.N.Y. 2015). [CONFIRMED]
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Veeva CRM/Vault Help for consent fields
-- FDA OPDP page
-- CMS Open Payments overview
-- PhRMA Code current version
-- FDA SIUU guidance current version
--->

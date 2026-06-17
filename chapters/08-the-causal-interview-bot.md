@@ -92,7 +92,6 @@ For a worked transcript, this might yield the chain `OBJECTION → EDUCATION →
 
 And the deliverable requires one more section: a **"rejected edges" appendix** listing every edge the bot proposed but the rep did not support, with the reason for rejection. A prior DAG with no rejected edges is suspicious. It means either the rep confirmed everything — which suggests leading questions — or the bot proposed nothing that the rep didn't confirm — which suggests the bot had no prior of its own. Neither is credible. The rejected-edges appendix is the integrity check on the entire elicitation.
 
-
 | From node | To node | Evidence (rep quote) | Confidence | Contradictions | Status |
 |---|---|---|---|---|---|
 | FORMULARY | PRESCRIBING_PROBABILITY | "She gets it but is formulary-blocked" | high | none | accepted |
@@ -356,9 +355,3 @@ TRANSCRIPT:
 3. Polanyi, M. (1966). *The Tacit Dimension*. University of Chicago Press.
 4. Shaposhnyk, O., Zahorska, D., & Yanushkevich, S. (2025). Can LLMs Assist Expert Elicitation for Probabilistic Causal Modeling? arXiv:2504.10397.
 5. Pearl, J. & Mackenzie, D. (2018). *The Book of Why*. Basic Books.
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Korb & Nicholson, Bayesian Artificial Intelligence
-- Feigenbaum knowledge engineering sources
-- Shaposhnyk et al. 2025 arXiv
--->

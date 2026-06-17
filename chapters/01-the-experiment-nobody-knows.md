@@ -325,9 +325,3 @@ For each interview stem, mark Pass / Fail / Cannot-determine on:
 2. Pearl, J. & Mackenzie, D., *The Book of Why* (2018) — Ladder of Causation / Rung-1 framing previewed here, formalized in Chapter 3. [CONFIRMED.]
 
 *Note: the "fifteen years" telemetry-logging duration is an author-acknowledged approximate anchor (self-hedged in this chapter and in "Still puzzling"), not an independently sourcable figure — see factchecks/01-the-experiment-nobody-knows.md.*
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Veeva CRM Suite public page
-- Analyst report needed for Veeva market-share estimates
-- Apple 2010 iPad launch history
--->

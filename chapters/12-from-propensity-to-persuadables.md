@@ -19,7 +19,7 @@ Define the two quantities precisely, because the whole chapter turns on their di
 
 **Persuadability** answers: *for whom does the message cause a change?* Formally it is $\tau(x) = \mathbb{E}[Y(1) - Y(0) \mid X = x]$ — the conditional average treatment effect, the difference between a physician's prescribing if treated and if untreated, given her characteristics. This is a Rung-2 quantity. It is the same per-physician number the causal forest in Chapter 11 produces. It tells you where the increment lives.
 
-These are not two estimates of the same thing. They are two different orderings of the same population. A physician can be high-propensity and low-persuadability — Dr. Alvarez, the loyalist who would prescribe regardless. Or mid-propensity and high-persuadability — Dr. Okafor, the physician with a specific concern the right content addresses. The correlation between the two orderings is weak. That weakness is the opportunity, and it has been demonstrated empirically in a setting close enough to detailing that the transfer is direct.
+These are not two estimates of the same thing. They are two different orderings of the same population. A physician can be high-propensity and low-persuadability — Dr. Alvarez, the loyalist who would prescribe regardless. Or mid-propensity and high-persuadability — Dr. Okafor, the physician with a specific concern the right content addresses. The correlation between the two orderings is weak — at least in the closest well-identified setting, customer retention (Ascarza 2018). That weakness is the opportunity; whether its *magnitude* carries over to pharmaceutical detailing is precisely the question this chapter hands to partner data (see the abandon-condition and the Qini experiment below), not something the public evidence settles.
 
 ---
 
@@ -332,9 +332,3 @@ Mark each Pass / Fail / Cannot-determine.
 The chapter's single load-bearing external citation was verified CONFIRMED; the propensity-vs-persuadability list-divergence magnitude is correctly labeled a testable Qini hypothesis, not a measured fact. See `factchecks/12-from-propensity-to-persuadables-assertions.md`.
 
 1. Ascarza, Eva. "Retention Futility: Targeting High-Risk Customers Might Be Ineffective." *Journal of Marketing Research* 55, no. 1 (2018): 80–98. Winner, 2018 Paul E. Green Award. [CONFIRMED]
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Ascarza 2018 Journal of Marketing Research
-- Uplift/Qini modeling references
-- Chapter 13 regulatory sources for pathway gate
--->

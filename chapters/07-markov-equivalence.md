@@ -351,9 +351,3 @@ Graph:
 3. Shalizi, C.R. & Thomas, A.C. (2011). Homophily and Contagion Are Generically Confounded in Observational Social Network Studies. *Sociological Methods & Research* 40(2):211–239. arXiv:1004.4704.
 4. Cartwright, N. (1989). *Nature's Capacities and Their Measurement*. Oxford: Clarendon Press.
 5. Spirtes, P., Glymour, C., & Scheines, R. (2000). *Causation, Prediction, and Search* (2nd ed.). MIT Press.
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Verma & Pearl 1990 UAI
-- Meek 1995 UAI
-- Shalizi & Thomas 2011 Sociological Methods & Research
--->

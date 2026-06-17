@@ -346,10 +346,3 @@ Artifact:
 4. Berkson, J. (1946). Limitations of the Application of Fourfold Table Analysis to Hospital Data. *Biometrics Bulletin* 2(3):47–53.
 5. Zhang, J. (2008). On the completeness of orientation rules for causal discovery in the presence of latent confounders and selection bias. *Artificial Intelligence* 172(16–17):1873–1896.
 6. Spirtes, P., Glymour, C., & Scheines, R. (2000). *Causation, Prediction, and Search* (2nd ed.). MIT Press.
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Montgomery, Nyhan & Torres 2018 AJPS
-- Hernan, Hernandez-Diaz & Robins 2004 Epidemiology
-- Zhang 2008 Artificial Intelligence
-- Veeva CRM/Vault Help for consent fields
--->

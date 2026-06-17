@@ -118,7 +118,6 @@ Here is what the analysis actually looks like on this dataset, including the wro
 
 **The limit.** Even the interventional decomposition is assumption-heavy, and the M1 proxy is weak. The honest claim is bounded: under stated assumptions, an estimated fraction of the message's effect is attributable to non-educational channels, with a sensitivity range showing the conclusion survives confounders up to a stated strength. That is enough to drive the investment-and-ethics argument. It tells the brand whether it is buying education or obligation without pretending to a precision the data cannot deliver.
 
-
 | Estimand | What it answers | Key identifying assumptions | Cross-world assumption required? | Exact 3-correlated-mediator decomposition? | Appropriate use case | Verdict for this problem |
 | --- | --- | --- | --- | --- | --- | --- |
 | Baron–Kenny product-of-coefficients | A coefficient product read as the "indirect effect" | No exposure–mediator interaction; linearity; no unmeasured mediator–outcome confounding | No (but its validity rests on assumptions it never states) | No — order-dependent, no causal warrant | Linear single-mediator models with no interaction and no confounding | Unsuitable: the share it reports is an artifact of mediator entry order |
@@ -383,10 +382,3 @@ For each edge, mark Pass / Fail / Cannot-determine on:
 6. Physician Payments Sunshine Act (ACA §6002); CMS Open Payments — M3/reciprocity regulatory framing. [CONFIRMED; legal adjudication correctly routed to counsel.]
 
 *All flagged assertions in this chapter resolved to CONFIRMED. The per-pathway non-identification stance is a correct honest position supported by refs 3–4. See factchecks/05-the-causal-graph-and-three-pathways.md.*
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Schwartz & Woloshin 2019 JAMA
-- Robins & Greenland 1992 Epidemiology
-- VanderWeele 2016 Annual Review of Public Health
-- DeJong et al. 2016 JAMA Internal Medicine
--->

@@ -375,9 +375,3 @@ For each field in field-roles.json, mark Pass / Fail / Cannot-determine on:
 3. IQVIA Xponent (prescriber-level projected NRx/TRx); Symphony Health / ICON (claims-based alternative) — data-source identities. [CONFIRMED.]
 
 *Unverified (correctly hedged in-text): "125+ live customers in early 2026" (point-in-time vendor count); the `Display_Order_vod` vs `View_Order_vod` split; `Multichannel_Line_vod` alias status; exact `Call_Detail_vod` and free-text-note API names — see factchecks/02-what-the-data-actually-is.md.*
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Veeva CRM Help
-- Vault CRM Help
-- IQVIA/Symphony prescribing-measure glossary
--->

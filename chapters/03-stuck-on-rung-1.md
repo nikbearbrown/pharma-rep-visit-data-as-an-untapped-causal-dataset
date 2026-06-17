@@ -337,10 +337,3 @@ For each stem, mark Pass / Fail / Cannot-determine on:
 4. Bottou, L. et al., "Counterfactual Reasoning and Learning Systems: The Example of Computational Advertising," *Journal of Machine Learning Research* 14:3207–3260 (2013) — Bing ad placement; engagement optimization ≠ causal effect of system actions. [CONFIRMED.]
 
 *Unverified (correctly hedged in-text): specific vendor magnitudes ("100M+ field suggestions," "+25% engagement") — already `[verify — unconfirmed]`; the argument rests on the checkable qualitative claim, not these numbers. See factchecks/03-stuck-on-rung-1.md.*
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Pearl & Mackenzie, The Book of Why
-- Bottou et al. 2013 JMLR/arXiv
-- Lewis & Rao 2015 QJE
-- Gordon et al. 2019 Marketing Science
--->

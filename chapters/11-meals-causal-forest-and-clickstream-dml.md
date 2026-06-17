@@ -461,11 +461,3 @@ All external method and citation claims in this chapter were verified CONFIRMED 
 6. DeJong, C., et al. "Pharmaceutical Industry–Sponsored Meals and Physician Prescribing Patterns for Medicare Beneficiaries." *JAMA Internal Medicine* 176, no. 8 (2016): 1114–1122. [CONFIRMED]
 7. Yeh, James S., et al. "Association of Industry Payments to Physicians With the Prescribing of Brand-name Statins in Massachusetts." *JAMA Internal Medicine* (2016). [CONFIRMED]
 8. Mitchell, Aaron P., Niti U. Trivedi, Renee L. Gennarelli, et al. "Are Financial Payments From the Pharmaceutical Industry Associated With Physician Prescribing? A Systematic Review." *Annals of Internal Medicine* 174, no. 3 (2021): 353–361. [CONFIRMED]
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Wager & Athey 2018 JASA
-- Athey, Tibshirani & Wager 2019 Annals of Statistics
-- Chernozhukov et al. 2018 Econometrics Journal
-- CMS Open Payments
-- CMS Medicare Part D Prescribers
--->

@@ -392,11 +392,3 @@ All load-bearing method and citation claims in this chapter were verified CONFIR
 6. Roth, Jonathan. "Pretest with Caution: Event-Study Estimates after Testing for Parallel Trends." *American Economic Review: Insights* 4, no. 3 (2022): 305–322. [CONFIRMED]
 7. Rambachan, Ashesh, and Jonathan Roth. "A More Credible Approach to Parallel Trends." *Review of Economic Studies* 90, no. 5 (2023): 2555–2591. [CONFIRMED]
 8. Roth, Jonathan, Pedro H. C. Sant'Anna, Alyssa Bilinski, and John Poe. "What's Trending in Difference-in-Differences? A Synthesis of the Recent Econometrics Literature." *Journal of Econometrics* 235, no. 2 (2023): 2218–2244. [CONFIRMED]
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Goodman-Bacon 2021
-- Callaway & Sant'Anna 2021
-- Sun & Abraham 2021
-- Rambachan & Roth 2023
-- Roth et al. 2023 synthesis
--->

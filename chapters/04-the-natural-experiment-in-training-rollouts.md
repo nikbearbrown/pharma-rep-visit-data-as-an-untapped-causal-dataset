@@ -365,10 +365,3 @@ For each probe, mark Pass / Fail / Cannot-determine on:
 8. Callaway, B. & Sant'Anna, P. H. C., *Journal of Econometrics* 225(2):200–230 (2021); de Chaisemartin & D'Haultfœuille, *AER* 110(9):2964–2996 (2020); Sun & Abraham, *Journal of Econometrics* 225(2):175–199 (2021) — heterogeneity-robust staggered DiD. [CONFIRMED.]
 
 *Unverified: Baker, Callaway, Cunningham, Goodman-Bacon & Sant'Anna (2025, arXiv:2503.13323) — authors/topic plausible; arXiv ID to be confirmed at final-citation stage. The "fifteen years" subtitle anchor is author-acknowledged approximate. See factchecks/04-the-natural-experiment-in-training-rollouts.md.*
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Imbens & Angrist 1994 Econometrica
-- Lee et al. 2022 AER
-- Goodman-Bacon 2021 Journal of Econometrics
-- Callaway & Sant'Anna 2021 Journal of Econometrics
--->

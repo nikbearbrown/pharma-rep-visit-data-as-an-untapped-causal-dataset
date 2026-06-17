@@ -364,9 +364,3 @@ SCM + recommendation:
 
 1. Pearl, J. (2009). *Causality: Models, Reasoning, and Inference* (2nd ed.). Cambridge University Press. (abduction–action–prediction; structural counterfactuals; partial identification)
 2. Wager, S. & Athey, S. (2018). Estimation and Inference of Heterogeneous Treatment Effects using Random Forests. *Journal of the American Statistical Association* 113(523):1228–1242.
-
-<!-- FACTCHECK-SUGGESTED-REFERENCES
-- Pearl, Causality, 2nd ed.
-- Pearl & Mackenzie, The Book of Why
-- Vendor NBA materials if making commercial-system claims
--->
