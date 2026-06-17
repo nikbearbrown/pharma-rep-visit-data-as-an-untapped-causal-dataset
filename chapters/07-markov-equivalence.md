@@ -39,7 +39,7 @@ Now the exception that proves the rule.
 
 This ties the last two chapters together at the joint. The one three-node structure the data *can* orient is the collider — the v-structure. And the v-structure is precisely the thing you learned to fear in Chapter 6 for the bias it creates when you condition on it. The same feature that makes colliders dangerous is what makes them visible to discovery algorithms. Colliders are the only arrows the data draws for you. Every other arrow it guesses.
 
-![The three-node theorem. Two structures share an independence signature; one is unique. Colliders are the only arrows observational data orients.](images/07-markov-equivalence-fig-01.png)
+![The three-node theorem. Two structures share an independence signature; one is unique. Colliders are the only arrows observational data orients.](../images/07-markov-equivalence-fig-01.png)
 *Figure 7.1 — The three-node theorem. Chain and fork share one independence signature; only the collider is identifiable. Observational data fixes the equivalence class, not the unique graph (Verma–Pearl).*
 
 <!-- → [DIAGRAM: Three panels side by side — Chain (A→B→C), Fork (A←B→C), Collider (A→B←C). Under Chain and Fork: "A ⊥ C | B — data cannot distinguish these." Under Collider: "A and C independent marginally, dependent given B — data can identify this." Caption: "The three-node theorem. Two structures share an independence signature; one is unique. Colliders are the only arrows observational data orients."] -->
@@ -84,7 +84,7 @@ The philosophy underneath is Nancy Cartwright's slogan: **"no causes in, no caus
 
 This is the book's thesis in miniature. The rep interviews are not soft supplementary color. They are the *source* of the structural information the data provably cannot contain. Demote them and the arrows that decide where eight figures of detailing go become coin flips.
 
-![The CPDAG is a two-color map: what the data decided, and what it left open for domain knowledge to close.](images/07-markov-equivalence-fig-02.png)
+![The CPDAG is a two-color map: what the data decided, and what it left open for domain knowledge to close.](../images/07-markov-equivalence-fig-02.png)
 *Figure 7.2 — The CPDAG two-color map: compelled edges the data settled versus reversible edges left open. The data identifies only the equivalence class (Verma–Pearl); rep knowledge orients the reversible edges.*
 
 <!-- → [DIAGRAM: CPDAG with a mix of directed and undirected edges. Directed edges labeled "compelled — data settled." Undirected edges labeled "reversible — rep must orient." Count of undirected edges annotated as "N open questions for Chapter 8." Caption: "The CPDAG is a two-color map: what the data decided, and what it left open for domain knowledge to close."] -->
@@ -111,7 +111,7 @@ Story C — *Reverse causation*: prescribing → perceived influence. High presc
 
 **The limit.** Rep knowledge is fallible and uneven. One rep's "I've never seen it run the other way" is a sample of her territory, her memory, and her attention. The orientation she licenses is a **prior with a confidence level**, not a certainty. That is exactly why the artifact you build in Chapter 8 is an *annotated* prior DAG — each edge tagged with the rep evidence, a confidence, and any contradictions. Where reps disagree or hedge, the honest output is a sensitivity analysis across the surviving equivalence class, not a forced single graph. Necessity-in-principle (Verma–Pearl says *some* outside knowledge must orient the edge) does not mean the rep is always right. It means the rep is the only candidate in the room.
 
-![The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. The algorithm cannot choose. The rep can.](images/07-markov-equivalence-fig-03.png)
+![The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. The algorithm cannot choose. The rep can.](../images/07-markov-equivalence-fig-03.png)
 *Figure 7.3 — The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. Observational data identifies only the equivalence class (Verma–Pearl); the algorithm cannot choose, but the rep can.*
 
 <!-- → [DIAGRAM: Three side-by-side mini-graphs — Story A (peer_exposure → NRx), Story B (latent_trait → peer_exposure and latent_trait → NRx), Story C (NRx → peer_exposure). All three consistent with the same positive observed correlation. Caption: "The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. The algorithm cannot choose. The rep can."] -->

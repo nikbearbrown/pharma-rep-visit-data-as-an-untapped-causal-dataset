@@ -25,7 +25,7 @@ In rep-visit data the lever is **training-cohort timing**. A new clinical messag
 
 Whether the nudge is *actually* as-good-as-random — rather than correlated with physician prescribing propensity through a mechanism like star-rep assignment — is not an assumption to state and move past. It is a **testable claim**, and you must test it before reporting any estimate. The test is the opening case's missing step.
 
-![Two parallel training-cohort timelines: cohort A switches to the new deck in month 1 and cohort B in month 3, so two otherwise-comparable physicians hear different messages in the same month — the administrative variation that serves as the instrument.](images/04-the-natural-experiment-in-training-rollouts-fig-01.png)
+![Two parallel training-cohort timelines: cohort A switches to the new deck in month 1 and cohort B in month 3, so two otherwise-comparable physicians hear different messages in the same month — the administrative variation that serves as the instrument.](../images/04-the-natural-experiment-in-training-rollouts-fig-01.png)
 
 *Figure 4.1 — The natural experiment: scheduling decided which physician heard which message when*
 
@@ -49,7 +49,7 @@ The estimation has two visible regressions. The **first stage** regresses treatm
 
 A critical honesty point about *what* IV estimates. When treatment effects are heterogeneous — and they certainly are, since some physicians are persuadable and many are not — IV does not recover the average effect over everyone. It recovers the **Local Average Treatment Effect (LATE)**: the average effect among **compliers**, the physicians whose message exposure actually tracked their rep's cohort timing (Imbens & Angrist 1994, *Econometrica* 62(2):467–475; Angrist, Imbens & Rubin 1996, *JASA* 91(434):444–455). Physicians whose reps would have delivered the new deck regardless of training, or never, are not in the estimate. The LATE is real and useful, but it is a statement about a subpopulation you do not get to name in advance. Report it as such.
 
-![Three-node identification graph: training cohort (Z) points to message variant (D), which points to NRx (Y); an unobserved physician-openness confounder sends dashed arrows into both D and Y; there is no direct Z-to-Y edge, so the instrument reaches the outcome only through the treatment.](images/04-the-natural-experiment-in-training-rollouts-fig-02.png)
+![Three-node identification graph: training cohort (Z) points to message variant (D), which points to NRx (Y); an unobserved physician-openness confounder sends dashed arrows into both D and Y; there is no direct Z-to-Y edge, so the instrument reaches the outcome only through the treatment.](../images/04-the-natural-experiment-in-training-rollouts-fig-02.png)
 
 *Figure 4.2 — The IV structure: Z's only path to Y runs through D (cohort instrument testable, not assumed)*
 
@@ -85,7 +85,7 @@ The threshold that controls one quantity — bias — does not license a claim a
 
 The teaching move for this dataset: report the first-stage F, but do not stop there. With a single cohort instrument, apply the tF standard-error adjustment, and additionally report **Anderson–Rubin** weak-instrument-robust confidence sets, which stay valid however weak the instrument is. Use the **effective F** of Montiel Olea and Pflueger (2013, *Journal of Business & Economic Statistics* 31(3):358–369) because NRx data is clustered by rep and territory and the classical F assumes it is not. The review by Andrews, Stock, and Sun (2019, *Annual Review of Economics* 11:727–753) is the practitioner's summary and recommends exactly this combination.
 
-![Line chart of first-stage F-statistic (x-axis, 1 to 200) against the actual size of a nominal 5 percent t-test (y-axis). The descending curve sits well above 5 percent at the legacy F=10 guide and only meets the 5 percent reference line near F=104.7.](images/04-the-natural-experiment-in-training-rollouts-fig-03.png)
+![Line chart of first-stage F-statistic (x-axis, 1 to 200) against the actual size of a nominal 5 percent t-test (y-axis). The descending curve sits well above 5 percent at the legacy F=10 guide and only meets the 5 percent reference line near F=104.7.](../images/04-the-natural-experiment-in-training-rollouts-fig-03.png)
 
 *Figure 4.3 — F > 10 controls bias, not size; the tF correction is required for valid inference (weak-IV F>10 is legacy)*
 

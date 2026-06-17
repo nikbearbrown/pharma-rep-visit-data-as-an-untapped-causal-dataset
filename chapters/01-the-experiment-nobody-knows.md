@@ -29,7 +29,7 @@ Now the reframe. Calling this a CRM makes you treat it like a record-keeping log
 
 One visit produces one micro-behavioral trace: slide 3 viewed 47 seconds, slide 4 skipped, slide 3 revisited, "neutral" tapped on the safety slide. Stack that trace across one physician over months and you have a longitudinal behavioral series. Stack it across all physicians and all reps and you have something close to a census of how pharmaceutical promotion actually lands on the people it is aimed at.
 
-![Single rep-visit trace as a horizontal timeline — each slide a block sized by dwell time and colored by reaction, with a skip and a back-track marked — then the same physician's trace stacked across six months as one longitudinal series.](images/01-the-experiment-nobody-knows-fig-01.png)
+![Single rep-visit trace as a horizontal timeline — each slide a block sized by dwell time and colored by reaction, with a skip and a back-track marked — then the same physician's trace stacked across six months as one longitudinal series.](../images/01-the-experiment-nobody-knows-fig-01.png)
 *Figure 1.1 — One visit, one trace; six months, a series*
 
 <!-- → [DIAGRAM: Single rep-visit trace as a horizontal timeline — each slide as a block, width proportional to dwell time, color-coded by reaction, with skips and back-tracks shown as arrows. Below it, the same physician's trace stacked across six months. Caption: "One visit: one behavioral trace. Six months: a longitudinal series. The CRM logs both; nobody has treated either as data."] -->
@@ -54,7 +54,7 @@ She might be reading carefully, genuinely absorbing the safety data — a positi
 
 Identical behavioral datum. Three incompatible causal stories. The telemetry records *what happened* — 47 seconds — and is mute on *why*. No amount of additional 47-second observations resolves which story is true for this physician on this day. That silence is not a data-quality problem you can fix with more logging. It is structural. It is the seed of this book's central argument.
 
-![Three branching interpretations of the single datum "47 seconds on the safety slide" — careful absorption read positive, skeptical scrutiny read negative, drifted attention read as noise — each an equally consistent causal story the data cannot choose among.](images/01-the-experiment-nobody-knows-fig-02.png)
+![Three branching interpretations of the single datum "47 seconds on the safety slide" — careful absorption read positive, skeptical scrutiny read negative, drifted attention read as noise — each an equally consistent causal story the data cannot choose among.](../images/01-the-experiment-nobody-knows-fig-02.png)
 *Figure 1.2 — One observation, three incompatible stories*
 
 <!-- → [DIAGRAM: Three branching interpretations of the single datum "47 seconds on the safety slide" — compelled / skeptical / distracted — each leading to a different causal story with different implications for message strategy. Caption: "Identical observation, three incompatible interpretations. The data records what happened; the why requires something the database cannot hold."] -->
@@ -75,7 +75,7 @@ We assert this here as the motivating claim. The mechanism — how training-coho
 
 The dominant pharma CRM standardizes the schema across most of the industry. Because one platform's object model is shared infrastructure across many firms, the telemetry is both vast and *comparable* — the content differs brand to brand; the shape is common. That uniformity is what makes a large-panel causal study conceivable rather than fantastical. A method that works on one brand's panel transfers, schema-wise, to another's. What does not transfer is ownership: the data is shared in shape and siloed in custody. That is the IP-firewall problem, and it is Chapter 13's. Here, we note only that the schema is the unlocking condition.
 
-![A grid with rep training cohorts on the vertical axis and calendar quarters across the horizontal axis; each cell shaded for the old efficacy-first deck or the new safety-first deck, the staggered certification dates forming a checkerboard of message exposure driven by training logistics rather than physician choice.](images/01-the-experiment-nobody-knows-fig-03.png)
+![A grid with rep training cohorts on the vertical axis and calendar quarters across the horizontal axis; each cell shaded for the old efficacy-first deck or the new safety-first deck, the staggered certification dates forming a checkerboard of message exposure driven by training logistics rather than physician choice.](../images/01-the-experiment-nobody-knows-fig-03.png)
 *Figure 1.3 — The unrun experiment: a rollout checkerboard*
 
 <!-- → [DIAGRAM: Timeline from ~2010 to present — rep cohorts on the y-axis, message-deck rollout dates as vertical lines creating a checkerboard of "old message" and "new message" cells. Physicians assigned to cohorts by geography, not by choice. Caption: "The unrun experiment: administrative training schedules created quasi-random variation in which physician heard which message when. The telemetry recorded it all."] -->

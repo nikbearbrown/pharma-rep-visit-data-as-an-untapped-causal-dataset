@@ -31,7 +31,7 @@ The $U_i$ term is everything affecting $X_i$ that the modeled parents do not cap
 
 That noise term is the key. Everything that follows depends on it.
 
-![Structure from the reps, magnitude from the experiment, history from the panel. The structural causal model is where they meet, feeding a counterfactual engine and a drift monitor.](images/09-from-priors-to-a-living-model-fig-01.png)
+![Structure from the reps, magnitude from the experiment, history from the panel. The structural causal model is where they meet, feeding a counterfactual engine and a drift monitor.](../images/09-from-priors-to-a-living-model-fig-01.png)
 *Figure 9.1 — Three-ingredient assembly into the SCM*
 
 <!-- → [DIAGRAM: Three-ingredient assembly diagram. Three boxes on the left: "Elicited Prior DAG (Chapter 8) — Structure: oriented edges, confidence tags," "Identified Effects (Chapters 4, 10, 11) — Magnitude: IV/DiD/causal forest estimates," "Physician Panel (Chapter 2) — History: visit records, NRx, reactions." All three boxes point into a central box: "Structural Causal Model — DAG + Structural Equations + Provenance Tags." From the SCM, two outputs: "Counterfactual Engine (individual recommendations)" and "Drift Monitor (structural-change alarms)." Caption: "Structure from the reps. Magnitude from the experiment. History from the panel. The SCM is where they meet."] -->
@@ -74,7 +74,7 @@ The reason this beats the population number is Step 1. A propensity engine or a 
 
 This counterfactual is **pre-factual**: it is evaluated before acting, conditioning on the physician's pre-action characteristics. It is distinct from the *retrospective* counterfactual the rep was asked to reason about in the elicitation session — "would that account have converted without the MSL visit?" — which conditions on the observed outcome and can therefore recover the noise more sharply. Same three steps. Different conditioning set.
 
-![Step 1 reads her state (abduction recovers U_K, U_Rx); Step 2 sets the candidate message (action, do-operator on one equation); Step 3 predicts her response carrying her specificity through.](images/09-from-priors-to-a-living-model-fig-02.png)
+![Step 1 reads her state (abduction recovers U_K, U_Rx); Step 2 sets the candidate message (action, do-operator on one equation); Step 3 predicts her response carrying her specificity through.](../images/09-from-priors-to-a-living-model-fig-02.png)
 *Figure 9.2 — Abduction, action, prediction. The individual counterfactual is often only partially identified, so the output is a ranking or bounds, not a point estimate.*
 
 <!-- → [DIAGRAM: Abduction-action-prediction procedure for Dr. Martinez. Three panels arranged horizontally. Panel 1 (Abduction): DAG with observed evidence highlighted — message delivered, knowledge lift observed, NRx observed. Arrow labeled "recover U_K, U_Rx from evidence." Panel 2 (Action): same DAG with do(message = efficacy-first) shown as a box replacing the message node's usual equation. Arrow: "replace message equation, leave Knowledge and NRx equations intact." Panel 3 (Prediction): DAG running forward with recovered U_K and U_Rx, producing counterfactual NRx for each candidate message. Output: ranked recommendations. Caption: "Step 1 reads her state. Step 2 sets the candidate. Step 3 predicts her response, carrying her specificity through."] -->
@@ -127,7 +127,7 @@ That is why the opt-out alarm is architectural rather than optional. It is not a
 
 And more specifically: not just *how many* physicians are opting out, but *who*. A shift in opt-out rates among academic physicians changes the selection structure differently from the same-sized shift among community physicians, because they sit at different positions in the causal graph. The scalar opt-out rate is a coarse alarm; the monitor should watch the composition of opt-outs as well as the rate.
 
-![The parameterized SCM is the mechanism; the counterfactual engine runs abduction-action-prediction on it; the drift monitor watches for parameter drift, structural drift, and opt-out-rate shifts.](images/09-from-priors-to-a-living-model-fig-03.png)
+![The parameterized SCM is the mechanism; the counterfactual engine runs abduction-action-prediction on it; the drift monitor watches for parameter drift, structural drift, and opt-out-rate shifts.](../images/09-from-priors-to-a-living-model-fig-03.png)
 *Figure 9.3 — The Living Model architecture. The opt-out-rate alarm is a selection-collider safeguard, watching the variable whose movement changes the model's structural validity.*
 
 <!-- → [DIAGRAM: Living Model architecture. Three components in a horizontal chain. Left box: "Parameterized SCM — DAG + structural equations + provenance tags." Center box: "Counterfactual Engine — Abduction → Action → Prediction — individual Rung-3 recommendations." Right box: "Drift Monitor — Parameter drift (refit) | Structural drift (re-elicit / FCI re-spec) | Opt-out-rate alarm (selection structure review)." Arrows connecting left to center (feeds equations to engine) and right to left (triggers model updates). Caption: "The SCM is the mechanism. The engine runs counterfactuals on it. The monitor watches for the world changing underneath both."] -->

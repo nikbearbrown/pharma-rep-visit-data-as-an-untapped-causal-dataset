@@ -38,7 +38,7 @@ A **mediator** is a variable that lies on the causal path between treatment and 
 
 Before going further, mark your own graph with one piece of honesty: **which arrows do you actually have data for?** M2 is relatively measurable from rep-entered fields — samples and co-pay cards are recorded. M3 is measurable from public Open Payments data, meals by NPI and date. M1 is the hardest: "educational attitude" lives in rep free-text call notes, in the objection resolved and the clinical question answered, not in a clean structured field. The legally important pathway is also the hardest to measure. That is not a coincidence you can wish away.
 
-![Three-pathway mediation graph: cohort timing (Z) points to message variant (D), which fans into the educational-attitude mediator (M1) and the samples/co-pay mediator (M2); a separate Open Payments public-data source feeds the reciprocity-meals mediator (M3); all three mediators point into NRx (Y). The pathways are grayscale-distinct: permissive (M1), cautionary (M2), high-scrutiny (M3).](images/05-the-causal-graph-and-three-pathways-fig-01.png)
+![Three-pathway mediation graph: cohort timing (Z) points to message variant (D), which fans into the educational-attitude mediator (M1) and the samples/co-pay mediator (M2); a separate Open Payments public-data source feeds the reciprocity-meals mediator (M3); all three mediators point into NRx (Y). The pathways are grayscale-distinct: permissive (M1), cautionary (M2), high-scrutiny (M3).](../images/05-the-causal-graph-and-three-pathways-fig-01.png)
 
 *Figure 5.1 — One treatment, three correlated pathways (the per-pathway split is generally NOT point-identified)*
 
@@ -84,7 +84,7 @@ Robins & Greenland (1992) proved the consequence precisely: direct and indirect 
 
 State this to a partner in plain language before showing any decomposition result: **the total message effect is far more credible than any pathway share.** Not because the decomposition is useless — the ethics and the economics demand it — but because it sits on a different and weaker evidential foundation.
 
-![Assumption hierarchy as three stacked layers. Bottom: Total Effect (IV estimate), needing assumptions 1 and 3, secured by quasi-randomization. Middle: single-mediator NDE/NIE, needing all four assumptions including the cross-world assumption, which randomization does not secure. Top: three-mediator per-pathway split, additionally needing no between-mediator confounding. Each higher layer rests on strictly more, and untested, assumptions.](images/05-the-causal-graph-and-three-pathways-fig-02.png)
+![Assumption hierarchy as three stacked layers. Bottom: Total Effect (IV estimate), needing assumptions 1 and 3, secured by quasi-randomization. Middle: single-mediator NDE/NIE, needing all four assumptions including the cross-world assumption, which randomization does not secure. Top: three-mediator per-pathway split, additionally needing no between-mediator confounding. Each higher layer rests on strictly more, and untested, assumptions.](../images/05-the-causal-graph-and-three-pathways-fig-02.png)
 
 *Figure 5.2 — The assumption hierarchy: the total effect is far more credible than any pathway share*
 

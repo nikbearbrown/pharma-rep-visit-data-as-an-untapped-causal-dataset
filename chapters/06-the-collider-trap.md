@@ -27,7 +27,7 @@ The intuition that makes this stick: suppose two independent causes can each pro
 
 That manufactured relationship is collider bias. And it is exactly what the analyst produced by conditioning on dwell time.
 
-![Three side-by-side three-node causal graphs. Left, a fork (A from C to B): conditioning on C removes a spurious association and helps. Middle, a chain (A to C to B): conditioning on C blocks the path, appropriate only if C is a mediator you mean to block. Right, a collider (A to C from B): A and B are independent through C, so conditioning on C opens a spurious path and hurts. A dashed box marks the conditioned node in each panel.](images/06-the-collider-trap-fig-01.png)
+![Three side-by-side three-node causal graphs. Left, a fork (A from C to B): conditioning on C removes a spurious association and helps. Middle, a chain (A to C to B): conditioning on C blocks the path, appropriate only if C is a mediator you mean to block. Right, a collider (A to C from B): A and B are independent through C, so conditioning on C opens a spurious path and hurts. A dashed box marks the conditioned node in each panel.](../images/06-the-collider-trap-fig-01.png)
 
 *Figure 6.1 — The one inversion: controlling for a collider makes things worse, not better*
 
@@ -64,7 +64,7 @@ The tell is the tighter standard error. The analyst added variables correlated w
 
 The fix is not a better engagement control. The fix is not conditioning on post-treatment variables when the target is the total effect. The rule is: position decides inclusion. Upstream of treatment — specialty, baseline prescribing, territory, rep tenure — is appropriate for confounding control. Downstream of treatment — dwell, reaction, in-visit signals, samples left behind — is off-limits for the total effect. Not because these variables are uninformative. Because they are downstream, and conditioning on downstream variables when estimating a total effect is structurally guaranteed to introduce bias.
 
-![Two identical four-node graphs. Message and NRx sit left and right; latent physician openness sits above center with a dashed outline; dwell/reaction sits below center as a common effect of the message and of openness, making it a collider. Left graph: dwell/reaction untouched and the path through openness stays blocked. Right graph: a conditioning box around dwell/reaction opens a dashed spurious path linking message to NRx through openness.](images/06-the-collider-trap-fig-02.png)
+![Two identical four-node graphs. Message and NRx sit left and right; latent physician openness sits above center with a dashed outline; dwell/reaction sits below center as a common effect of the message and of openness, making it a collider. Left graph: dwell/reaction untouched and the path through openness stays blocked. Right graph: a conditioning box around dwell/reaction opens a dashed spurious path linking message to NRx through openness.](../images/06-the-collider-trap-fig-02.png)
 
 *Figure 6.2 — Dwell and reaction are post-treatment colliders: conditioning on them creates the bias, it does not remove it*
 
@@ -90,7 +90,7 @@ $$\text{engaged rep / high contact} \rightarrow S = \text{consent} \leftarrow \t
 
 Consent is a selection collider. Analyzing the consenting subsample is conditioning on $S = 1$. By the structure Hernán and colleagues formalized, this opens a spurious message-to-prescribing path. Opt-out missingness is almost certainly correlated with physician characteristics — it is a sampling-frame collider that most analyses silently ignore. [This is a highly plausible, testable claim; the synthetic dataset lets you demonstrate the bias under known ground truth, which shows the mechanism, not the magnitude in any real population.]
 
-![Consent as a selection collider. A treatment-side cause (rep engagement / visit frequency) and an outcome-side cause (industry-skepticism / prescribing propensity) both point into a central consent node, S = 1. Below the node, a label notes the observed sample is only S = 1 physicians. Analyzing this subsample conditions on S, opening a spurious message-to-NRx path exactly as conditioning on any collider does. The bias lives in who is absent, so no diagnostic on the observed data reveals it.](images/06-the-collider-trap-fig-03.png)
+![Consent as a selection collider. A treatment-side cause (rep engagement / visit frequency) and an outcome-side cause (industry-skepticism / prescribing propensity) both point into a central consent node, S = 1. Below the node, a label notes the observed sample is only S = 1 physicians. Analyzing this subsample conditions on S, opening a spurious message-to-NRx path exactly as conditioning on any collider does. The bias lives in who is absent, so no diagnostic on the observed data reveals it.](../images/06-the-collider-trap-fig-03.png)
 
 *Figure 6.3 — The consent collider: a Berkson/selection collider invisible in the data, demanding FCI rather than PC or GES*
 
