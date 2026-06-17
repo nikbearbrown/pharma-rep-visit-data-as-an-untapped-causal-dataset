@@ -23,7 +23,7 @@ These are not two estimates of the same thing. They are two different orderings 
 
 ---
 
-The strongest academic statement of what propensity-ranking costs comes from a 2018 paper in the *Journal of Marketing Research* by Eva Ascarza: "Retention Futility: Targeting High-Risk Customers Might Be Ineffective." Ascarza ran two field experiments and showed that targeting customers by churn risk — their propensity to leave — is ineffective at retention, because risk and responsiveness to a retention offer are distinct quantities and only weakly correlated. The high-risk customers are not the ones the intervention can save. The right target is heterogeneity in treatment responsiveness, not the risk score.
+The strongest academic statement of what propensity-ranking costs comes from a 2018 paper in the *Journal of Marketing Research* (55(1):80–98) by Eva Ascarza: "Retention Futility: Targeting High-Risk Customers Might Be Ineffective." Ascarza ran two field experiments and showed that targeting customers by churn risk — their propensity to leave — is ineffective at retention, because risk and responsiveness to a retention offer are distinct quantities and only weakly correlated. The high-risk customers are not the ones the intervention can save. The right target is heterogeneity in treatment responsiveness, not the risk score.
 
 The transfer to pharmaceutical detailing is exact. Ranking physicians by prescribing propensity is the pharma analog of targeting high-churn-risk customers: you are ranking on baseline behavior, which tells you where the volume already lives, not where the message can cause a change. And a better propensity model does not fix this — it sharpens the error by more efficiently finding the Sure Things.
 

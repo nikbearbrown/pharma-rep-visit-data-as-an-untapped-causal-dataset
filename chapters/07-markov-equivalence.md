@@ -52,7 +52,7 @@ The three-node case generalizes into a clean theorem. Verma and Pearl (1990) pro
 
 > Two DAGs are Markov equivalent if and only if they have (a) the same **skeleton** — the same undirected adjacencies — and (b) the same set of **v-structures**.
 
-Everything else about the orientation — every edge not forced by a v-structure — is free to flip across members of the class. Verma was Pearl's student; the result is the formal backbone of the intuition Pearl later popularized in *The Book of Why*: you cannot read causation off correlation, because correlation only fixes the equivalence class, and the class generally has more than one member. [verify Verma & Pearl 1990 page numbers against UAI proceedings]
+Everything else about the orientation — every edge not forced by a v-structure — is free to flip across members of the class. Verma was Pearl's student; the result is the formal backbone of the intuition Pearl later popularized in *The Book of Why*: you cannot read causation off correlation, because correlation only fixes the equivalence class, and the class generally has more than one member. (Verma & Pearl, "Equivalence and synthesis of causal models," *Proc. 6th Conf. on Uncertainty in Artificial Intelligence (UAI 1990)*, pp. 255–270.)
 
 ---
 
@@ -78,9 +78,9 @@ Within an equivalence class the orientation of reversible edges is **empirically
 
 **Background or domain knowledge.** A credible structural claim from someone who understands the mechanism.
 
-Meek (1995) showed how such knowledge enters formally: assert one edge direction as a constraint, and orientation rules propagate it — a single expert-oriented edge can cascade into several more becoming compelled. One good rep observation can orient more than one arrow. [verify Meek 1995 page numbers against UAI proceedings]
+Meek (1995, "Causal inference and causal explanation with background knowledge," *Proc. 11th Conf. on Uncertainty in Artificial Intelligence (UAI 1995)*, pp. 403–410) showed how such knowledge enters formally: assert one edge direction as a constraint, and orientation rules propagate it — a single expert-oriented edge can cascade into several more becoming compelled. One good rep observation can orient more than one arrow.
 
-The philosophy underneath is Nancy Cartwright's slogan: **"no causes in, no causes out."** [verify exact page — Cartwright 1989, *Nature's Capacities and Their Measurement*] You cannot squeeze a causal conclusion out of purely associational premises. Some causal assumption must be an input. The broader discovery literature agrees: even the equivalence-class result itself rests on assumptions — causal Markov, faithfulness, and causal sufficiency (Spirtes, Glymour & Scheines 2000). Faithfulness — the assumption that no two real causal paths cancel so perfectly that a genuine dependence looks like zero — is usually reasonable but can be violated in systems with feedback and incentives. We carry that caveat forward.
+The philosophy underneath is Nancy Cartwright's slogan: **"no causes in, no causes out"** (the title of ch. 2 of *Nature's Capacities and Their Measurement*, Oxford: Clarendon Press, 1989, pp. 39–90). You cannot squeeze a causal conclusion out of purely associational premises. Some causal assumption must be an input. The broader discovery literature agrees: even the equivalence-class result itself rests on assumptions — causal Markov, faithfulness, and causal sufficiency (Spirtes, Glymour & Scheines 2000). Faithfulness — the assumption that no two real causal paths cancel so perfectly that a genuine dependence looks like zero — is usually reasonable but can be violated in systems with feedback and incentives. We carry that caveat forward.
 
 This is the book's thesis in miniature. The rep interviews are not soft supplementary color. They are the *source* of the structural information the data provably cannot contain. Demote them and the arrows that decide where eight figures of detailing go become coin flips.
 

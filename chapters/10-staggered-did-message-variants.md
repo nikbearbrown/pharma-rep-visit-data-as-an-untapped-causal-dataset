@@ -84,11 +84,11 @@ The cohort-rollout design is valid *only if* timing is uncorrelated with physici
 
 **Test 2 — pre-trend leads.** Estimate ATT(g, t) for pre-treatment periods (relative time below zero). They should be approximately zero. Two cautions apply. Use the clean estimator — Callaway–Sant'Anna or Sun–Abraham — so an apparent pre-trend is not just TWFE heterogeneity contamination. And heed Roth (2022, *AER: Insights* 4(3):305–322): pre-testing for parallel trends and then conditioning your analysis on having passed the test distorts inference, because the test is underpowered and selection-biased. Report the leads; do not treat flat leads as proof.
 
-**Test 3 — honest sensitivity.** Rather than assuming parallel trends holds exactly, use **Rambachan and Roth (2023, "Honest DiD," *Review of Economic Studies*)**: bound how large a post-period violation could plausibly be, relative to the violations you actually observe in the pre-period, and report which conclusions survive. This converts "trust me, trends are parallel" into "here is the effect, and here is how much trend-violation it can absorb before the conclusion breaks." Implemented as `HonestDiD`.
+**Test 3 — honest sensitivity.** Rather than assuming parallel trends holds exactly, use **Rambachan and Roth (2023, "A More Credible Approach to Parallel Trends," *Review of Economic Studies* 90(5):2555–2591)**: bound how large a post-period violation could plausibly be, relative to the violations you actually observe in the pre-period, and report which conclusions survive. This converts "trust me, trends are parallel" into "here is the effect, and here is how much trend-violation it can absorb before the conclusion breaks." Implemented as `HonestDiD`.
 
 One more test, carried from Chapter 4: **exclusion**. Cohort timing should affect prescribing only through the message. The threat is that early-trained reps also got better at selling generally. Defend by controlling rep tenure and baseline rep performance so the cohort effect is not just an early-rep skill effect.
 
-The practitioner synthesis for this whole discipline is Roth, Sant'Anna, Bilinski, and Poet (2023, *Journal of Econometrics* 235(2):2218–2244) — the single best current-state reference for anyone running a staggered DiD.
+The practitioner synthesis for this whole discipline is Roth, Sant'Anna, Bilinski, and Poe (2023, "What's Trending in Difference-in-Differences? A Synthesis of the Recent Econometrics Literature," *Journal of Econometrics* 235(2):2218–2244) — the single best current-state reference for anyone running a staggered DiD.
 
 ---
 
