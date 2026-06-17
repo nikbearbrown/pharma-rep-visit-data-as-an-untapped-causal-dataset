@@ -50,32 +50,32 @@ The research can establish which physicians are which, using public data. Your p
 
 ## The Candidate Project List
 
-These are starting points, not commitments. The attached books work each one end to end.
+These are starting points, not commitments. Each project below links to the chapter that works it end to end **where it lives in this book**; projects that belong to the companion book are tagged so you can find them there.
 
 **Track A — Lift and attribution**
-- Script-lift audit: how much of the headline number is selection, how much is effect
-- EHR-lift design memo: the experiment that *would* prove point-of-care advertising works, with a power analysis
-- Channel decomposition: what can and cannot be separated without individual-level exposure data
+- **Script-lift audit** — reconstruct a vendor-style lift number from public data (Open Payments promotion dose × Part D prescribing, joined on NPI), then re-estimate it with a credible design and report the gap: how much of the headline is selection — the platform aiming at physicians who would have prescribed anyway — versus genuine effect. — *(Book A)*
+- **EHR-lift design memo** — specify the on/off health-system rollout that *would* identify point-of-care lift, with a power analysis for the pilot it would take. On public data this is a design, not a result, and saying so precisely is the contribution. — *(Book A)*
+- **Channel decomposition** — attribute an observed prescribing change across promotion channels, with an explicit accounting of what cannot be separated without individual-level exposure data. — *(Book A)*
 
 **Track B — Brand and physician identity**
-- Prescribing-habit persistence (detailed above)
-- Share-of-mind → share-of-market: the leading-indicator claim tested on linked data
-- Brand equity vs. clinical value: does physician loyalty track ICER value scores after controlling for promotion intensity
-- Loss-of-exclusivity event study: how much branded share survives generic entry, and whether the survivors were the equity leaders
+- **Prescribing-habit persistence** *(detailed above)* — how sticky prescribing is across drug classes, and where brand loyalty is structurally durable versus rented short-term attention. — *(Book A)*
+- **Share-of-mind → share-of-market** — test the industry's leading-indicator claim, that mindshare today predicts market share tomorrow, on linked survey-plus-claims data where it has never been rigorously checked. — *(Book A)*
+- **Brand equity vs. clinical value** — does physician loyalty track ICER clinical-value scores once promotion intensity is controlled? An equity-not-value finding is a patient-welfare result, not only a marketing one. — *(Book A)*
+- **Loss-of-exclusivity event study** — use generic entry as a natural shock to measure how much branded share survives, and whether the survivors were the equity leaders — the cleaner causal companion to the persistence study. — *(Book A)*
 
 **Track C — Model architecture**
-- Ensemble vs. Mixture-of-Experts benchmark: does the vendor architecture beat a well-tuned gradient-boosted baseline on an NPI-propensity task
-- Physician archetypes: are the segments in the data or in the slide deck
+- **Ensemble vs. Mixture-of-Experts benchmark** — put a vendor "MoE" architecture against a well-tuned gradient-boosted baseline on an NPI-propensity task, judged on calibration, not just AUC. In the worked run the plain model wins — a "no" that saves an engineering build. — *(Book A)*
+- **Physician archetypes** — are the physician "segments" a stable structure in the data, or a round number chosen to fit a slide? Tests whether the clustering geometry survives scrutiny. — *(Book A)*
 
 **Track D — Ethics and accountability**
-- Proxy-discrimination test: do targeting models encode susceptibility rather than patient need
-- Co-pay coupon generic suppression: the Dafny-Ody-Schmitt design applied to Doceree-relevant drug classes
-- Accountability framework: what monitoring and disclosure a deployed targeting system should carry
+- **Proxy-discrimination test** — do targeting models quietly encode physician "susceptibility" or protected-correlated proxies rather than clinical need? — *(Book A)*
+- **Co-pay coupon generic suppression** — apply the Dafny–Ody–Schmitt cross-state design to Doceree-relevant drug classes to estimate how much coupons suppress cheaper generics and raise system cost. Tests a partner product line, so framing is cleared first. — *(Book A)*
+- **Accountability framework** — what monitoring, disclosure, and auditability a deployed targeting system should carry — the direct input to a patient-welfare gate. — *(Book A)*
 
 **Depth practicum — rep-visit causal model**
-- Staggered DiD on message-variant transitions: the natural experiment in the training rollout
-- Meals causal forest: per-physician heterogeneous effects on public Open Payments data — runnable today
-- Slide-sequence Double Machine Learning: does ordering matter, and what happens when you condition on the colliders
+- **Staggered DiD on message-variant transitions** — use the training-cohort rollout as a natural experiment to estimate what a *message variant* actually causes a physician to prescribe at 30/60/90 days, falsification test first. — *[Ch 10](10-staggered-did-message-variants.md)*
+- **Meals causal forest** — per-physician heterogeneous effects of promotional meals on public Open Payments data, separating genuine education from reciprocity — runnable end to end today. — *[Ch 11](11-meals-causal-forest-and-clickstream-dml.md)*
+- **Slide-sequence Double Machine Learning** — does slide order change prescribing? The cautionary case: the engagement signals you would naively control for are *caused* by the message, so conditioning on them breaks the estimate. — *[Ch 11](11-meals-causal-forest-and-clickstream-dml.md)*
 
 ---
 
