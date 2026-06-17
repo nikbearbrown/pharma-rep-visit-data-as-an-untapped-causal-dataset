@@ -1,0 +1,96 @@
+<!--
+  figure-title: Goodman-Bacon decomposition of TWFE into 2x2 comparisons
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 10-staggered-did-message-variants
+  Figure: 01
+  Type: Process/comparison diagram
+  Generated: 2026-06-16
+  Source: chapters/10-staggered-did-message-variants.md
+-->
+<svg viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
+  <title id="fig-title-01">Goodman-Bacon decomposition of TWFE into 2x2 comparisons</title>
+  <desc>A naive two-way fixed-effects estimate decomposes into three families of 2x2 difference-in-differences comparisons. The first two compare newly or earlier treated cohorts against not-yet-treated controls and carry valid positive weight. The third compares a later-treated cohort against an already-treated control and is forbidden, carrying a possibly negative weight. The three families converge into one contaminated combined estimate.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="10-staggered-did-message-variants" figure-number="01" figure-title="Goodman-Bacon decomposition of TWFE into 2x2 comparisons" figure-slug="goodman-bacon-decomposition" figure-type="Process/comparison diagram" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/10-staggered-did-message-variants.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="540" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">One staggered TWFE estimate is three 2x2 comparisons in a trench coat</text>
+  <text x="32" y="46" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Two valid families plus one forbidden family sum to the TWFE coefficient</text>
+
+  <!-- Panel A: newly-treated vs not-yet-treated (valid) -->
+  <g>
+    <rect x="32" y="64" width="500" height="84" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="44" y="84" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">A. Newly treated vs not-yet-treated</text>
+    <text x="44" y="100" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">valid comparison, positive weight</text>
+    <!-- treated timeline: pre (gray) then post (ink) -->
+    <rect x="230" y="76" width="120" height="14" fill="#D4D4D4"/>
+    <rect x="350" y="76" width="120" height="14" fill="#2a1a0e"/>
+    <text x="230" y="73" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">treated cohort</text>
+    <!-- control timeline: all pre (not yet treated) -->
+    <rect x="230" y="118" width="240" height="14" fill="#D4D4D4"/>
+    <text x="230" y="115" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">not-yet-treated control</text>
+    <!-- onset marker -->
+    <line x1="350" y1="70" x2="350" y2="138" stroke="#787878" stroke-width="0.75" stroke-dasharray="5 4"/>
+    <!-- valid mark -->
+    <rect x="486" y="98" width="38" height="16" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+    <text x="505" y="110" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">+w</text>
+  </g>
+
+  <!-- Panel B: earlier vs later during later's pre-window (valid) -->
+  <g>
+    <rect x="32" y="160" width="500" height="84" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+    <text x="44" y="180" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">B. Earlier vs later treated (later's pre-window)</text>
+    <text x="44" y="196" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">valid comparison, positive weight</text>
+    <rect x="230" y="172" width="80" height="14" fill="#D4D4D4"/>
+    <rect x="310" y="172" width="160" height="14" fill="#2a1a0e"/>
+    <text x="230" y="169" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">earlier treated</text>
+    <rect x="230" y="214" width="240" height="14" fill="#D4D4D4"/>
+    <text x="314" y="211" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">later treated (still pre)</text>
+    <line x1="310" y1="190" x2="310" y2="234" stroke="#787878" stroke-width="0.75" stroke-dasharray="5 4"/>
+    <rect x="486" y="194" width="38" height="16" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+    <text x="505" y="206" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">+w</text>
+  </g>
+
+  <!-- Panel C: later vs already-treated (forbidden) -->
+  <g>
+    <rect x="32" y="256" width="500" height="84" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <text x="44" y="276" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">C. Later treated vs ALREADY-treated control</text>
+    <text x="44" y="292" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#C8102E">forbidden comparison, weight may go negative</text>
+    <rect x="230" y="268" width="120" height="14" fill="#D4D4D4"/>
+    <rect x="350" y="268" width="120" height="14" fill="#2a1a0e"/>
+    <text x="230" y="265" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">later treated</text>
+    <!-- already-treated control: post throughout (its effect still climbing) -->
+    <rect x="230" y="310" width="240" height="14" fill="#C8102E"/>
+    <text x="230" y="307" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">already-treated control</text>
+    <line x1="350" y1="262" x2="350" y2="330" stroke="#787878" stroke-width="0.75" stroke-dasharray="5 4"/>
+    <!-- blocked terminator on the already-treated control path -->
+    <line x1="476" y1="317" x2="500" y2="317" stroke="#C8102E" stroke-width="1.5"/>
+    <line x1="500" y1="309" x2="500" y2="325" stroke="#C8102E" stroke-width="2.5"/>
+    <rect x="486" y="290" width="38" height="16" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+    <text x="505" y="302" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">-w</text>
+  </g>
+
+  <!-- Convergence arrows to summation node -->
+  <line x1="532" y1="106" x2="588" y2="106" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <line x1="532" y1="202" x2="588" y2="202" stroke="#2a1a0e" stroke-width="1.5" fill="none"/>
+  <line x1="532" y1="298" x2="588" y2="298" stroke="#2a1a0e" stroke-width="1.5" fill="none"/>
+  <line x1="588" y1="106" x2="588" y2="298" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="588" y1="202" x2="606" y2="202" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Summation node + combined estimate -->
+  <circle cx="624" cy="202" r="14" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="624" y="207" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="13" fill="#2a1a0e">+</text>
+  <rect x="566" y="356" width="116" height="56" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="624" y="378" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">combined TWFE</text>
+  <text x="624" y="394" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#C8102E">contaminated mix</text>
+  <line x1="624" y1="216" x2="624" y2="356" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Caption / honesty caveat -->
+  <text x="32" y="470" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Naive TWFE with staggered adoption and heterogeneous effects is biased: family C can carry a</text>
+  <text x="32" y="484" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">negative weight (Goodman-Bacon) because the already-treated control is still changing. Use</text>
+  <text x="32" y="498" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Callaway-Sant'Anna instead. Structure only, not weight magnitudes [inferred].</text>
+  <text x="32" y="520" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: GOODMAN-BACON (2021) DECOMPOSITION, AS DESCRIBED IN CHAPTER 10</text>
+</svg>

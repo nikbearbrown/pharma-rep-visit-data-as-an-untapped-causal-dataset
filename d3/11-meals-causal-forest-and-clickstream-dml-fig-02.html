@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 11.2 — DML three-box residual-on-residual flow</title>
+<style>
+:root{
+  --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+  --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+}
+@media(prefers-color-scheme:dark){:root{
+  --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+  --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+}}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--color-white);}
+#wrap{max-width:700px;margin:0 auto;padding:8px;}
+svg{width:100%;height:auto;display:block;}
+.fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;}
+.fig-heading{font-family:'EB Garamond','Garamond',Georgia,serif;}
+.fig-body{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.fig-mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+<svg id="chart" viewBox="0 0 700 480" role="img" aria-labelledby="chart-title chart-desc" preserveAspectRatio="xMidYMid meet">
+<title id="chart-title">Figure 11.2 — DML three-box residual-on-residual flow</title>
+<desc id="chart-desc">A left-to-right process flow for Double Machine Learning. Controls Z feed two machine-learning regressions that emit outcome and treatment residuals, which converge into a third regression of residual Y on residual D, recovering the causal slope theta. A discipline band contrasts the diagram's job of choosing Z with the machine learning's job of adjusting for Z.</desc>
+</svg>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+(function(){
+  const svg = d3.select("#chart");
+
+  function draw(){
+    svg.selectAll("g.layer, defs").remove();
+
+    const defs = svg.append("defs");
+    const marker = defs.append("marker")
+      .attr("id","arrow").attr("viewBox","0 0 10 10")
+      .attr("refX","9").attr("refY","5")
+      .attr("markerWidth","7").attr("markerHeight","7")
+      .attr("orient","auto-start-reverse");
+    marker.append("path")
+      .attr("d","M0,0 L10,5 L0,10 z")
+      .attr("fill","var(--color-ink)");
+
+    const g = svg.append("g").attr("class","layer");
+
+    // ---- Heading / sub ----
+    g.append("text").attr("class","fig-title").attr("x",24).attr("y",30)
+      .attr("font-size",16).attr("font-weight",600).attr("fill","var(--color-ink)")
+      .text("Figure 11.2 — DML three-box residual-on-residual flow");
+    g.append("text").attr("class","fig-heading").attr("x",24).attr("y",54)
+      .attr("font-size",15).attr("font-style","italic").attr("fill","var(--color-ink)")
+      .text("Double ML: partial out the controls twice, then regress the leftovers");
+    g.append("text").attr("class","fig-body").attr("x",24).attr("y",74)
+      .attr("font-size",11).attr("fill","var(--color-secondary)")
+      .text("The estimate is only as honest as the choice of what goes into Z");
+
+    // ---- box helper ----
+    function box(x,y,w,h,lines,opts){
+      opts = opts||{};
+      const grp = g.append("g");
+      grp.append("rect").attr("x",x).attr("y",y).attr("width",w).attr("height",h).attr("rx",0)
+        .attr("fill",opts.fill||"var(--color-white)")
+        .attr("stroke",opts.stroke||"var(--color-ink)")
+        .attr("stroke-width",opts.sw||1.4);
+      const cx = x+w/2;
+      const n = lines.length;
+      const start = y + h/2 - (n-1)*8 + 4;
+      lines.forEach((ln,i)=>{
+        grp.append("text").attr("class","fig-body").attr("x",cx).attr("y",start+i*15)
+          .attr("text-anchor","middle").attr("font-size",ln.size||11)
+          .attr("font-weight",ln.weight||400)
+          .attr("fill",ln.fill||"var(--color-ink)")
+          .text(ln.t);
+      });
+      return grp;
+    }
+    function arrow(x1,y1,x2,y2,label,lx,ly){
+      g.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2)
+        .attr("stroke","var(--color-ink)").attr("stroke-width",1.4)
+        .attr("marker-end","url(#arrow)");
+      if(label){
+        g.append("text").attr("class","fig-body")
+          .attr("x",lx!==undefined?lx:(x1+x2)/2)
+          .attr("y",ly!==undefined?ly:(y1+y2)/2-5)
+          .attr("text-anchor","middle").attr("font-size",9).attr("fill","var(--color-secondary)")
+          .text(label);
+      }
+    }
+
+    // ---- Z input box (left) ----
+    const zX=30, zY=180, zW=140, zH=46, zCX=zX+zW/2;
+    // red blocked-terminator (short bar) above it
+    g.append("line").attr("x1",zCX-22).attr("y1",zY-22).attr("x2",zCX+22).attr("y2",zY-22)
+      .attr("stroke","var(--color-red)").attr("stroke-width",3);
+    g.append("text").attr("class","fig-body").attr("x",zCX).attr("y",zY-30)
+      .attr("text-anchor","middle").attr("font-size",9.5).attr("font-weight",600)
+      .attr("fill","var(--color-red)").text("no post-treatment vars");
+    box(zX,zY,zW,zH,[{t:"controls Z",weight:600},{t:"(pre-treatment)",size:9,fill:"var(--color-secondary)"}]);
+
+    // ---- Box 1 (upper) and Box 2 (lower) ----
+    const b1X=240, b1Y=110, bW=200, bH=56, b1CX=b1X+bW/2;
+    const b2X=240, b2Y=250;
+    box(b1X,b1Y,bW,bH,[{t:"1. regress Y on Z (ML)",weight:600},{t:"emits outcome residual",size:9.5,fill:"var(--color-secondary)"}]);
+    box(b2X,b2Y,bW,bH,[{t:"2. regress D on Z (ML)",weight:600},{t:"emits treatment residual",size:9.5,fill:"var(--color-secondary)"}]);
+
+    // ---- Z feeds (two arrows) ----
+    arrow(zX+zW, zY+8, b1X-2, b1Y+bH/2);
+    arrow(zX+zW, zY+zH-8, b2X-2, b2Y+bH/2);
+
+    // ---- Box 3 (converge) ----
+    const b3X=500, b3Y=180, b3W=180, b3H=64, b3CX=b3X+b3W/2;
+    box(b3X,b3Y,b3W,b3H,[{t:"3. resid Y on resid D",weight:600},{t:"recovers causal slope",size:9.5,fill:"var(--color-secondary)"}]);
+
+    // residual arrows converge with labels
+    arrow(b1X+bW, b1Y+bH/2, b3X-2, b3Y+18, "resid Y", (b1X+bW+b3X)/2, b1Y+bH/2-6);
+    arrow(b2X+bW, b2Y+bH/2, b3X-2, b3Y+b3H-18, "resid D", (b2X+bW+b3X)/2, b2Y+bH/2-6);
+
+    // ---- Box 3 -> RED terminal theta ----
+    arrow(b3CX, b3Y+b3H, b3CX, b3Y+b3H+24);
+    const tX=b3X+18, tY=b3Y+b3H+24, tW=b3W-36, tH=40;
+    box(tX,tY,tW,tH,[{t:"theta",weight:600,fill:"var(--color-red)"},{t:"estimate",size:9.5,fill:"var(--color-red)"}],{stroke:"var(--color-red)",sw:1.8});
+
+    // ---- Discipline band ----
+    const bandX=30, bandY=336, bandW=640, bandH=66;
+    g.append("rect").attr("x",bandX).attr("y",bandY).attr("width",bandW).attr("height",bandH)
+      .attr("rx",0).attr("fill","var(--color-fill)")
+      .attr("stroke","var(--color-border)").attr("stroke-width",1);
+    // dashed divider between cells
+    g.append("line").attr("aria-hidden","true")
+      .attr("x1",bandX+bandW/2).attr("y1",bandY+8).attr("x2",bandX+bandW/2).attr("y2",bandY+bandH-8)
+      .attr("stroke","var(--color-border)").attr("stroke-width",1).attr("stroke-dasharray","5 4");
+
+    // left cell: ink swatch
+    g.append("rect").attr("x",bandX+16).attr("y",bandY+18).attr("width",12).attr("height",12)
+      .attr("fill","var(--color-ink)").attr("stroke","none");
+    g.append("text").attr("class","fig-body").attr("x",bandX+36).attr("y",bandY+28)
+      .attr("font-size",11.5).attr("font-weight",600).attr("fill","var(--color-ink)")
+      .text("The diagram chooses Z");
+    g.append("text").attr("class","fig-body").attr("x",bandX+36).attr("y",bandY+46)
+      .attr("font-size",10).attr("fill","var(--color-secondary)")
+      .text("specify the SCM first; pick legitimate controls");
+
+    // right cell: gray swatch
+    const rcX = bandX+bandW/2+16;
+    g.append("rect").attr("x",rcX).attr("y",bandY+18).attr("width",12).attr("height",12)
+      .attr("fill","var(--color-secondary)").attr("stroke","none");
+    g.append("text").attr("class","fig-body").attr("x",rcX+20).attr("y",bandY+28)
+      .attr("font-size",11.5).attr("font-weight",600).attr("fill","var(--color-ink)")
+      .text("The ML adjusts for Z");
+    g.append("text").attr("class","fig-body").attr("x",rcX+20).attr("y",bandY+46)
+      .attr("font-size",10).attr("fill","var(--color-secondary)")
+      .text("flexibly fit nuisance; cross-fit out overfit bias");
+
+    // ---- Caption ----
+    const cap = [
+      "Double ML on clickstream must specify the SCM FIRST. Reaction and dwell are post-treatment",
+      "colliders; if one enters Z, the estimate is structurally biased and cross-fitting cannot save you.",
+      "This is Project 3: needs proprietary or SYNTHETIC data (the firewall). Veeva CRM clickstream",
+      "fields [inferred, dated mid-2026]."
+    ];
+    cap.forEach((ln,i)=>{
+      g.append("text").attr("class","fig-body").attr("x",24).attr("y",420+i*15)
+        .attr("font-size",10.5).attr("fill","var(--color-secondary)").text(ln);
+    });
+
+    // ---- Source line ----
+    g.append("text").attr("class","fig-body").attr("x",24).attr("y",474)
+      .attr("font-size",10).attr("letter-spacing",".08em").attr("fill","var(--color-secondary)")
+      .text("SOURCE: DML RESIDUAL-ON-RESIDUAL MECHANICS AS DESCRIBED IN CHAPTER 11");
+  }
+
+  draw();
+  if(window.ResizeObserver){
+    const ro = new ResizeObserver(()=>draw());
+    ro.observe(document.getElementById("wrap"));
+  }
+})();
+</script>
+</body>
+</html>

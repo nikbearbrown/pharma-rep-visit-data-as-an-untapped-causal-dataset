@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>One datum, three incompatible causal stories</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .node-text{font-size:12px;}
+  .node-sub{font-size:11px;}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .branch{stroke:var(--color-ink);stroke-width:1.5;fill:none;}
+  .story{cursor:pointer;}
+  .story:focus{outline:none;}
+  .story rect:focus{outline:none;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;max-width:240px;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+  .story rect{transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA = [
+  {key:"positive", label:"careful absorption", sub:"read as positive signal", y:62, fill:"var(--color-red)", txt:"var(--color-white)",
+   detail:"She is reading carefully, genuinely absorbing the safety data. A positive educational signal - but the rep may still tap it neutral."},
+  {key:"negative", label:"skeptical scrutiny", sub:"read as negative signal", y:178, fill:"var(--color-ink)", txt:"var(--color-white)",
+   detail:"She is hunting for the methodological flaw, re-reading because she distrusts it. A negative signal that looks identical in the dwell record."},
+  {key:"noise", label:"drifted attention", sub:"read as pure noise", y:294, fill:"var(--color-border)", txt:"var(--color-ink)",
+   detail:"She got a text, attention drifted, the slide stayed up. Pure noise - the 47 seconds mean nothing about the message at all."}
+];
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+svg.append("title").attr("id","chart-title").text("One datum, three incompatible causal stories");
+svg.append("desc").attr("id","chart-desc").text("One identical observation - 47 seconds on the safety slide - fans into three equally consistent interpretations: careful absorption, skeptical scrutiny, and drifted attention. Equal-weight branches; the data alone cannot choose.");
+
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",420).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",30).attr("class","fig-title")
+   .text("One observation, three incompatible stories - none ruled out by the data");
+
+// source node
+svg.append("rect").attr("x",48).attr("y",170).attr("width",150).attr("height",80)
+   .attr("fill","var(--color-fill)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+["one recorded","dwell on the","safety slide"].forEach((t,i)=>{
+  svg.append("text").attr("x",123).attr("y",200+i*16).attr("text-anchor","middle")
+     .attr("class","node-text").attr("fill","var(--color-ink)").text(t);
+});
+
+// branches
+const paths = [
+  "M 198 195 C 320 195, 360 95, 470 95",
+  "M 198 210 C 320 210, 360 210, 470 210",
+  "M 198 225 C 320 225, 360 325, 470 325"
+];
+svg.append("defs").html('<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--color-ink)"/></marker>');
+paths.forEach(p=>svg.append("path").attr("class","branch").attr("d",p).attr("marker-end","url(#arrow)").attr("aria-hidden","true"));
+
+function showTip(event,d){
+  tip.style("opacity",1).html(`<strong>${d.label}</strong><br>${d.detail}`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+const g = svg.selectAll("g.story").data(FALLBACK_DATA).join("g").attr("class","story")
+  .attr("tabindex",0).attr("role","img")
+  .attr("aria-label",d=>`${d.label}: ${d.detail}`)
+  .on("mouseover",function(e,d){d3.selectAll(".story rect").attr("opacity",0.35);d3.select(this).select("rect").attr("opacity",1);showTip(e,d);})
+  .on("mousemove",showTip)
+  .on("mouseout",function(){d3.selectAll(".story rect").attr("opacity",1);hideTip();})
+  .on("focus",function(e,d){d3.selectAll(".story rect").attr("opacity",0.35);d3.select(this).select("rect").attr("opacity",1);
+     showTip({pageX:window.scrollX+560,pageY:window.scrollY+d.y+40},d);})
+  .on("blur",function(){d3.selectAll(".story rect").attr("opacity",1);hideTip();})
+  .on("keydown",function(e,d){if(e.key==="Enter"||e.key===" "){e.preventDefault();
+     d3.selectAll(".story rect").attr("opacity",0.35);d3.select(this).select("rect").attr("opacity",1);
+     showTip({pageX:window.scrollX+560,pageY:window.scrollY+d.y+40},d);}});
+
+g.append("rect").attr("x",474).attr("y",d=>d.y).attr("width",190).attr("height",64)
+  .attr("fill",d=>d.fill).attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+g.append("text").attr("x",569).attr("y",d=>d.y+28).attr("text-anchor","middle").attr("class","node-text")
+  .attr("fill",d=>d.txt).text(d=>d.label);
+g.append("text").attr("x",569).attr("y",d=>d.y+46).attr("text-anchor","middle").attr("class","node-sub")
+  .attr("fill",d=>d.txt).text(d=>d.sub);
+
+svg.append("text").attr("x",32).attr("y",392).attr("class","caption")
+   .text("The branch happens after the data, in interpretation - the recorded number is identical down all three paths.");
+svg.append("text").attr("x",32).attr("y",408).attr("class","caption")
+   .text("Equal-weight branches: more of the same telemetry cannot collapse them to one answer.");
+
+new ResizeObserver(()=>{}).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

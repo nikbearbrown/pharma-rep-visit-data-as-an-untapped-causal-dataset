@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The unrun experiment - cohort rollout checkerboard</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .axis-num{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .row-label{font-size:11px;fill:var(--color-ink);}
+  .axis-title{font-size:12px;fill:var(--color-secondary);}
+  .legend-label{font-size:11px;fill:var(--color-ink);}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .cell{stroke:var(--color-white);stroke-width:1;cursor:pointer;}
+  .cell:focus{outline:none;stroke:var(--color-ochre);stroke-width:2.5;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;max-width:220px;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+// Each cell: cohort row, quarter column, which deck was being delivered.
+const COHORTS = ["Cohort A","Cohort B","Cohort C","Cohort D"];
+const QUARTERS = ["Q1","Q2","Q3","Q4"];
+// certifyQ = first quarter the cohort delivers the new safety-first deck
+const CERTIFY = {"Cohort A":1,"Cohort B":2,"Cohort C":3,"Cohort D":4};
+const FALLBACK_DATA = [];
+COHORTS.forEach(c=>QUARTERS.forEach((q,qi)=>{
+  const isNew = (qi+1) >= CERTIFY[c];
+  FALLBACK_DATA.push({cohort:c, quarter:q, qi, deck: isNew ? "safety-first (new)" : "efficacy-first (old)", isNew});
+}));
+
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+svg.append("title").attr("id","chart-title").text("The unrun experiment - cohort rollout checkerboard");
+svg.append("desc").attr("id","chart-desc").text("Training cohorts on the vertical axis, calendar quarters across the horizontal axis. Each cell shows which message deck the cohort delivered that quarter; staggered certification creates a checkerboard of old and new messages.");
+
+svg.append("defs").html('<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--color-ink)"/></marker>');
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",420).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",28).attr("class","fig-title")
+   .text("The unrun experiment - training schedules created the variation, not physicians");
+
+const X0=120, Y0=64, CW=112, CH=60;
+svg.append("rect").attr("x",X0).attr("y",Y0).attr("width",CW*4).attr("height",CH*4)
+   .attr("fill","var(--color-fill)").attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+
+// column headers
+QUARTERS.forEach((q,i)=>svg.append("text").attr("x",X0+CW*i+CW/2).attr("y",58).attr("text-anchor","middle").attr("class","axis-num").text(q));
+// row labels
+COHORTS.forEach((c,i)=>svg.append("text").attr("x",112).attr("y",Y0+CH*i+CH/2+4).attr("text-anchor","end").attr("class","row-label").text(c));
+
+function showTip(event,d){
+  tip.style("opacity",1).html(`<strong>${d.cohort}, ${d.quarter}</strong><br>${d.deck}`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+svg.selectAll("rect.cell").data(FALLBACK_DATA).join("rect")
+  .attr("class","cell")
+  .attr("x",d=>X0+CW*d.qi)
+  .attr("y",d=>Y0+CH*COHORTS.indexOf(d.cohort))
+  .attr("width",CW).attr("height",CH)
+  .attr("fill",d=>d.isNew?"var(--color-red)":"var(--color-border)")
+  .attr("tabindex",0).attr("role","img")
+  .attr("aria-label",d=>`${d.cohort}, ${d.quarter}: ${d.deck}`)
+  .on("mouseover",showTip).on("mousemove",showTip).on("mouseout",hideTip)
+  .on("focus",(e,d)=>showTip({pageX:window.scrollX+X0+CW*d.qi+CW/2,pageY:window.scrollY+Y0+CH*COHORTS.indexOf(d.cohort)+CH/2},d))
+  .on("blur",hideTip)
+  .on("keydown",(e,d)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();
+     showTip({pageX:window.scrollX+X0+CW*d.qi+CW/2,pageY:window.scrollY+Y0+CH*COHORTS.indexOf(d.cohort)+CH/2},d);}});
+
+// time arrow + axis title
+svg.append("line").attr("x1",X0).attr("y1",316).attr("x2",X0+CW*4).attr("y2",316)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+svg.append("text").attr("x",X0+CW*2).attr("y",332).attr("text-anchor","middle").attr("class","axis-title").text("calendar quarter (rollout time)");
+
+// legend
+svg.append("rect").attr("x",120).attr("y",346).attr("width",14).attr("height",12)
+   .attr("fill","var(--color-border)").attr("stroke","var(--color-ink)").attr("stroke-width",1).attr("aria-hidden","true");
+svg.append("text").attr("x",140).attr("y",356).attr("class","legend-label").text("old efficacy-first deck");
+svg.append("rect").attr("x",300).attr("y",346).attr("width",14).attr("height",12)
+   .attr("fill","var(--color-red)").attr("stroke","var(--color-ink)").attr("stroke-width",1).attr("aria-hidden","true");
+svg.append("text").attr("x",320).attr("y",356).attr("class","legend-label").text("new safety-first deck (post-certification)");
+
+svg.append("text").attr("x",32).attr("y",384).attr("class","caption")
+   .text("Cohort timing as instrument: as-good-as-random is a testable claim, not an assumption - Chapter 4 builds the falsification test.");
+svg.append("text").attr("x",32).attr("y",402).attr("class","caption")
+   .text("Public/synthetic structure only; cohorts and dates are illustrative. The telemetry recorded which cell every physician fell in.");
+
+new ResizeObserver(()=>{}).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

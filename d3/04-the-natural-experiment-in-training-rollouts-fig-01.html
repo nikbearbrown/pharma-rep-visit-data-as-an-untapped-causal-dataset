@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 4.1 — Staggered training rollout timelines</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+      --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}
+  }
+  html,body{margin:0;padding:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .subtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-secondary);}
+  .body{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-ink);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .tick{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .src{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:10px;fill:var(--color-secondary);letter-spacing:.08em;}
+  .tooltip{position:absolute;pointer-events:none;background:var(--color-white);border:1px solid var(--color-border);
+    padding:4px 8px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;color:var(--color-ink);opacity:0;}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" class="tooltip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA = {
+  months:["M1","M2","M3","M4","M5","M6"],
+  cohorts:[
+    {name:"Cohort A", switchMonth:1, label:"safety-first deck (new) from M1"},
+    {name:"Cohort B", switchMonth:3, label:"safety-first deck (new) from M3", oldLabel:"efficacy-first (old)"}
+  ]
+};
+const W=700,H=420;
+const wrap=d3.select("#wrap");
+const tip=d3.select("#tip");
+function draw(){
+  wrap.selectAll("svg").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`)
+    .attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Staggered training rollout: two cohorts switch decks in different months");
+  svg.append("desc").attr("id","chart-desc").text("Two parallel timelines; cohort A switches to the new deck in month 1, cohort B in month 3; otherwise comparable physicians hear different messages in the same calendar month.");
+  svg.append("rect").attr("x",0).attr("y",0).attr("width",W).attr("height",H).attr("fill","var(--color-white)");
+
+  svg.append("text").attr("class","title").attr("x",32).attr("y",30).text("Scheduling, not the physician, decided who heard which message when");
+  svg.append("text").attr("class","subtitle").attr("x",32).attr("y",50).text("Cohort A switches to the new deck in month 1; cohort B in month 3");
+
+  const x=d3.scaleLinear().domain([1,6]).range([120,520]);
+  // month axis
+  svg.append("line").attr("x1",120).attr("y1",96).attr("x2",520).attr("y2",96).attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+  FALLBACK_DATA.months.forEach((m,i)=>{
+    svg.append("text").attr("class","tick").attr("x",x(i+1)).attr("y",88).attr("text-anchor","middle").text(m);
+  });
+
+  // Cohort A lane (all new)
+  svg.append("text").attr("class","body").attr("x",32).attr("y",142).text("Cohort A");
+  svg.append("rect").attr("x",120).attr("y",124).attr("width",400).attr("height",28).attr("rx",0).attr("fill","var(--color-fill)").attr("stroke","var(--color-red)").attr("stroke-width",1.5)
+    .attr("tabindex",0).attr("aria-label","Cohort A: safety-first deck from month 1")
+    .on("mousemove",(e)=>show(e,"Cohort A — new deck from M1"))
+    .on("mouseleave",hide).on("focus",function(e){show2(this,"Cohort A — new deck from M1")}).on("blur",hide);
+  svg.append("text").attr("class","body").attr("x",320).attr("y",142).attr("text-anchor","middle").text("safety-first deck (new) from M1");
+  svg.append("line").attr("x1",120).attr("y1",118).attr("x2",120).attr("y2",158).attr("stroke","var(--color-red)").attr("stroke-width",1.5);
+
+  // Cohort B lane (old then new)
+  svg.append("text").attr("class","body").attr("x",32).attr("y",218).text("Cohort B");
+  svg.append("rect").attr("x",120).attr("y",200).attr("width",160).attr("height",28).attr("rx",0).attr("fill","var(--color-fill)").attr("stroke","#787878").attr("stroke-width",1)
+    .attr("tabindex",0).attr("aria-label","Cohort B: efficacy-first old deck through month 3")
+    .on("mousemove",(e)=>show(e,"Cohort B — old deck M1 to M3")).on("mouseleave",hide)
+    .on("focus",function(){show2(this,"Cohort B — old deck M1 to M3")}).on("blur",hide);
+  svg.append("text").attr("class","caption").attr("x",200).attr("y",218).attr("text-anchor","middle").text("efficacy-first (old)");
+  svg.append("rect").attr("x",280).attr("y",200).attr("width",240).attr("height",28).attr("rx",0).attr("fill","var(--color-fill)").attr("stroke","var(--color-red)").attr("stroke-width",1.5)
+    .attr("tabindex",0).attr("aria-label","Cohort B: safety-first deck from month 3")
+    .on("mousemove",(e)=>show(e,"Cohort B — new deck from M3")).on("mouseleave",hide)
+    .on("focus",function(){show2(this,"Cohort B — new deck from M3")}).on("blur",hide);
+  svg.append("text").attr("class","body").attr("x",400).attr("y",218).attr("text-anchor","middle").text("safety-first deck (new) from M3");
+  svg.append("line").attr("x1",280).attr("y1",194).attr("x2",280).attr("y2",234).attr("stroke","var(--color-red)").attr("stroke-width",1.5);
+
+  // comparison window
+  svg.append("line").attr("x1",200).attr("y1",110).attr("x2",200).attr("y2",244).attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("stroke-dasharray","5 4").attr("aria-hidden","true");
+  svg.append("text").attr("class","caption").attr("x",200).attr("y",262).attr("text-anchor","middle").text("same month (M2): different messages");
+
+  // physicians
+  svg.append("rect").attr("x",556).attr("y",120).attr("width",112).attr("height",36).attr("rx",0).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+  svg.append("text").attr("class","body").attr("x",612).attr("y",142).attr("text-anchor","middle").text("Physician (A's rep)");
+  svg.append("rect").attr("x",556).attr("y",196).attr("width",112).attr("height",36).attr("rx",0).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+  svg.append("text").attr("class","body").attr("x",612).attr("y",218).attr("text-anchor","middle").text("Physician (B's rep)");
+
+  defsArrow(svg);
+  svg.append("line").attr("x1",520).attr("y1",138).attr("x2",552).attr("y2",138).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  svg.append("line").attr("x1",520).attr("y1",214).attr("x2",552).attr("y2",214).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",312).text("Administrative scheduling determined which physician heard which message when. That");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",328).text("variation is the instrument -- but the cohort instrument is testable, not assumed: falsify Z's");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",344).text("independence first. Exclusion is threatened if early training improves general selling skill.");
+  svg.append("text").attr("class","src").attr("x",32).attr("y",368).text("PUBLIC / SYNTHETIC STRUCTURE ONLY");
+}
+function defsArrow(svg){
+  const defs=svg.append("defs");
+  const m=defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto");
+  m.append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+}
+function show(e,t){tip.style("opacity",1).html(t).style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px");}
+function show2(node,t){const r=node.getBoundingClientRect();tip.style("opacity",1).html(t).style("left",(window.scrollX+r.left+r.width/2)+"px").style("top",(window.scrollY+r.top-24)+"px");}
+function hide(){tip.style("opacity",0);}
+draw();
+new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

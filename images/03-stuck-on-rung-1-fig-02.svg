@@ -1,0 +1,75 @@
+<!--
+  figure-title: The do-operator severs incoming arrows
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 03-stuck-on-rung-1
+  Figure: 02
+  Type: paired before/after causal graphs
+  Generated: 2026-06-16
+  Source: chapters/03-stuck-on-rung-1.md
+-->
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">The do-operator severs incoming arrows</title>
+  <desc>Two identical four-node causal graphs. Left (observational): receptivity and rep strategy both point into message, message points to prescribing. Right (interventional): the two incoming arrows to message are severed, leaving only message to prescribing. Same geometry, only the cut edges differ.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="03-stuck-on-rung-1" figure-number="02" figure-title="The do-operator severs incoming arrows" figure-slug="do-operator-severs-arrows" figure-type="paired before/after causal graphs" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/03-stuck-on-rung-1.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Observation keeps the incoming arrows; intervention cuts them</text>
+
+  <!-- panel labels -->
+  <text x="180" y="60" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454" text-anchor="middle">observational</text>
+  <text x="520" y="60" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454" text-anchor="middle">interventional — do(message)</text>
+
+  <!-- divider between panels -->
+  <line x1="350" y1="72" x2="350" y2="356" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+
+  <!-- ============ LEFT GRAPH (intact) ============ -->
+  <!-- receptivity (top-left) -->
+  <rect x="48" y="90" width="110" height="40" rx="0" fill="#787878" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="103" y="114" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">receptivity</text>
+  <!-- rep strategy (bottom-left) -->
+  <rect x="48" y="260" width="110" height="40" rx="0" fill="#787878" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="103" y="284" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">rep strategy</text>
+  <!-- message (center) dominant -->
+  <rect x="208" y="175" width="110" height="44" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="263" y="201" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">message</text>
+  <!-- prescribing (right) outcome -->
+  <rect x="208" y="320" width="110" height="40" rx="0" fill="#C8102E" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="263" y="344" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">prescribing</text>
+
+  <!-- edges (all intact) -->
+  <line x1="158" y1="118" x2="206" y2="183" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="158" y1="278" x2="206" y2="210" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="263" y1="219" x2="263" y2="318" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ============ RIGHT GRAPH (severed) — identical geometry ============ -->
+  <rect x="388" y="90" width="110" height="40" rx="0" fill="#787878" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="443" y="114" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">receptivity</text>
+  <rect x="388" y="260" width="110" height="40" rx="0" fill="#787878" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="443" y="284" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">rep strategy</text>
+  <rect x="548" y="175" width="110" height="44" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="603" y="201" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">message</text>
+  <rect x="548" y="320" width="110" height="40" rx="0" fill="#C8102E" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="603" y="344" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">prescribing</text>
+
+  <!-- the two incoming edges drawn faint then cut -->
+  <line x1="498" y1="118" x2="546" y2="183" stroke="#D4D4D4" stroke-width="1.5"/>
+  <line x1="498" y1="278" x2="546" y2="210" stroke="#D4D4D4" stroke-width="1.5"/>
+  <!-- severing marks (red cut strokes) on the two incoming edges only -->
+  <g stroke="#C8102E" stroke-width="2.5">
+    <line x1="513" y1="132" x2="531" y2="148"/>
+    <line x1="531" y1="132" x2="513" y2="148"/>
+    <line x1="513" y1="240" x2="531" y2="256"/>
+    <line x1="531" y1="240" x2="513" y2="256"/>
+  </g>
+  <!-- the surviving message -> prescribing edge intact -->
+  <line x1="603" y1="219" x2="603" y2="318" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- caption: structure not proof -->
+  <text x="32" y="392" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The do-operator replaces message's equation with a set value and severs every</text>
+  <text x="32" y="406" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">arrow into it — only message to prescribing remains.</text>
+  <text x="32" y="428" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">This severance is structure (what randomization does physically, a model does</text>
+  <text x="32" y="442" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">mathematically) — it depicts the operation, not a proof of identifiability.</text>
+</svg>

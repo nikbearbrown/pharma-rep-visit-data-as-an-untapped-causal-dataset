@@ -1,0 +1,104 @@
+<!--
+  figure-title: Five-step panel assembly with an explicit time axis
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 02-what-the-data-actually-is
+  Figure: 02
+  Type: process pipeline with time axis
+  Generated: 2026-06-16
+  Source: chapters/02-what-the-data-actually-is.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">Five-step panel assembly with an explicit time axis</title>
+  <desc>Three raw logs feed five ordered steps — aggregate, define treatment, join warehouse, lag outcome, quarantine post-treatment — into an output panel with five column groups. A time axis with a pre/post divider is the spine; the quarantined block is set-apart, not deleted.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="02-what-the-data-actually-is" figure-number="02" figure-title="Five-step panel assembly with an explicit time axis" figure-slug="five-step-assembly-time-axis" figure-type="process pipeline with time axis" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/02-what-the-data-actually-is.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Raw logs become an analysis-ready panel — correctness lives in the time index</text>
+
+  <!-- ===== INPUTS: three stacked raw logs ===== -->
+  <g stroke="#2a1a0e" stroke-width="1.5">
+    <rect x="32" y="60" width="96" height="34" fill="#D4D4D4"/>
+    <rect x="32" y="100" width="96" height="34" fill="#D4D4D4"/>
+    <rect x="32" y="140" width="96" height="34" fill="#D4D4D4"/>
+  </g>
+  <text x="80" y="81" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">slide-view log</text>
+  <text x="80" y="121" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">call records</text>
+  <text x="80" y="161" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">payment records</text>
+
+  <!-- merge connector into step 1 -->
+  <path d="M 128 77 C 150 77, 150 117, 168 117" fill="none" stroke="#2a1a0e" stroke-width="1.5"/>
+  <path d="M 128 157 C 150 157, 150 117, 168 117" fill="none" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="128" y1="117" x2="168" y2="117" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ===== FIVE ordered process nodes ===== -->
+  <g font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#FFFFFF" text-anchor="middle">
+    <rect x="170" y="98" width="86" height="40" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+    <text x="213" y="115">1 aggregate</text>
+    <text x="213" y="128">to phys-week</text>
+
+    <rect x="268" y="98" width="86" height="40" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+    <text x="311" y="115">2 define</text>
+    <text x="311" y="128">treatment</text>
+
+    <rect x="366" y="98" width="86" height="40" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+    <text x="409" y="115">3 join</text>
+    <text x="409" y="128">warehouse</text>
+
+    <rect x="464" y="98" width="86" height="40" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+    <text x="507" y="115">4 lag</text>
+    <text x="507" y="128">outcome</text>
+
+    <rect x="562" y="98" width="96" height="40" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+    <text x="610" y="115">5 quarantine</text>
+    <text x="610" y="128">post-tx</text>
+  </g>
+  <!-- arrows between nodes -->
+  <g stroke="#2a1a0e" stroke-width="1.5">
+    <line x1="256" y1="118" x2="268" y2="118" marker-end="url(#arrow)"/>
+    <line x1="354" y1="118" x2="366" y2="118" marker-end="url(#arrow)"/>
+    <line x1="452" y1="118" x2="464" y2="118" marker-end="url(#arrow)"/>
+    <line x1="550" y1="118" x2="562" y2="118" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- ===== OUTPUT PANEL with 5 column groups ===== -->
+  <text x="32" y="206" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Physician-time panel — column groups (field names shown as blank slots)</text>
+  <rect x="32" y="214" width="636" height="74" rx="0" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+
+  <!-- treatment group (red highlight = the active estimand series) -->
+  <rect x="40" y="224" width="110" height="54" rx="0" fill="#C8102E" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="95" y="246" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">treatment</text>
+
+  <!-- lagged outcome -->
+  <rect x="156" y="224" width="120" height="54" rx="0" fill="#787878" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="216" y="246" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">lagged outcome</text>
+
+  <!-- instrument -->
+  <rect x="282" y="224" width="110" height="54" rx="0" fill="#ADADAD" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="337" y="246" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">instrument</text>
+
+  <!-- covariates -->
+  <rect x="398" y="224" width="110" height="54" rx="0" fill="#D4D4D4" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="453" y="246" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">covariates</text>
+
+  <!-- quarantined post-tx (set-apart, dashed border; retained not removed) -->
+  <rect x="514" y="224" width="146" height="54" rx="0" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="587" y="244" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">quarantined</text>
+  <text x="587" y="258" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">post-tx</text>
+  <text x="587" y="272" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="9" fill="#545454" text-anchor="middle">(set-apart, kept)</text>
+
+  <!-- ===== TIME AXIS (the spine) with pre/post divider ===== -->
+  <line x1="32" y1="326" x2="668" y2="326" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- pre/post divider aligned under the lag step / quarantine boundary -->
+  <line x1="500" y1="306" x2="500" y2="346" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="250" y="346" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">pre-treatment</text>
+  <text x="584" y="346" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">post-treatment</text>
+  <rect x="478" y="294" width="44" height="12" fill="#FFFFFF"/>
+  <text x="500" y="303" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#C8102E" text-anchor="middle">divider</text>
+
+  <!-- caption: caveat quarantine != delete -->
+  <text x="32" y="382" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Quarantine is not deletion: the post-treatment block is retained and flips to treatment under a later slide-sequencing estimand.</text>
+  <text x="32" y="400" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Correctness is a property of the time index, not the column count. Public/synthetic structure only.</text>
+</svg>

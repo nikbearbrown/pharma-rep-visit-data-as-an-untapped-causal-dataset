@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Two-plane CLM schema converging into the physician-time panel</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;--color-mid:#787878;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;--color-mid:#9A9A9A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .box-title{font-size:12px;fill:var(--color-ink);}
+  .field{font-size:11px;fill:var(--color-ink);}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-ink);}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .node{cursor:pointer;}
+  .node:focus{outline:none;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;max-width:240px;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA = {
+  plane1: {x:32,y:48,w:172,h:120,title:"Plane 1 - passive telemetry",
+    fields:["Duration_vod","Reaction_vod","Display_Order_vod","CLM_Presentation_vod","Multichannel_Activity_vod"],
+    note:"Machine-logged: what happened. Behavioral, no deliberate entry.", stroke:"var(--color-red)"},
+  plane2: {x:32,y:184,w:172,h:100,title:"Plane 2 - rep-entered",
+    fields:["Call2_Key_Message_vod","products detailed","free-text call notes"],
+    note:"Rep-authored: what the rep thinks happened. Entered after the visit.", stroke:"var(--color-secondary)"},
+  warehouse: {x:300,y:48,w:172,h:100,title:"Warehouse",
+    fields:["NRx / TRx / NBRx","Open Payments meals","cohort timing"],
+    note:"External warehouse joins: outcome, covariates, the rollout instrument.", stroke:"var(--color-mid)"}
+};
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+svg.append("title").attr("id","chart-title").text("Two-plane CLM schema converging into the physician-time panel");
+svg.append("desc").attr("id","chart-desc").text("Two source planes - passive telemetry and rep-entered - plus a warehouse box route through a mandatory consent gate and a shared NPI key into one physician-time panel.");
+
+svg.append("defs").html('<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--color-ink)"/></marker>');
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",420).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",28).attr("class","fig-title")
+   .text("Two source planes converge - through consent and an NPI key - into one panel");
+
+function showTip(event,d){
+  tip.style("opacity",1).html(`<strong>${d.title}</strong><br>${d.note}<br><em>${d.fields.join(", ")}</em>`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+function drawBox(d){
+  const g = svg.append("g").attr("class","node").attr("tabindex",0).attr("role","img")
+    .attr("aria-label",`${d.title}: ${d.note} Fields: ${d.fields.join(", ")}`)
+    .on("mouseover",e=>showTip(e,d)).on("mousemove",e=>showTip(e,d)).on("mouseout",hideTip)
+    .on("focus",()=>showTip({pageX:window.scrollX+d.x+d.w,pageY:window.scrollY+d.y+20},d)).on("blur",hideTip)
+    .on("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+d.x+d.w,pageY:window.scrollY+d.y+20},d);}});
+  g.append("rect").attr("x",d.x).attr("y",d.y).attr("width",d.w).attr("height",d.h)
+    .attr("fill","var(--color-white)").attr("stroke",d.stroke).attr("stroke-width",1.5);
+  g.append("text").attr("x",d.x+8).attr("y",d.y+18).attr("class","box-title").text(d.title);
+  d.fields.forEach((f,i)=>{
+    g.append("rect").attr("x",d.x+8).attr("y",d.y+26+i*15).attr("width",d.w-16).attr("height",13)
+      .attr("fill","var(--color-fill)").attr("stroke","var(--color-border)").attr("stroke-width",1);
+    g.append("text").attr("x",d.x+12).attr("y",d.y+36+i*15).attr("class","mono").attr("font-size","10").text(f);
+  });
+}
+drawBox(FALLBACK_DATA.plane1);
+drawBox(FALLBACK_DATA.plane2);
+drawBox(FALLBACK_DATA.warehouse);
+
+// connectors to NPI junctions
+[[190,168,190,272],[386,148,386,272]].forEach(([x1,y1,x2,y2])=>
+  svg.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2)
+     .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true"));
+
+// NPI diamonds
+[190,386].forEach(cx=>{
+  svg.append("rect").attr("x",cx-10).attr("y",276).attr("width",20).attr("height",20)
+     .attr("transform",`rotate(45 ${cx} 286)`).attr("fill","var(--color-white)")
+     .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true");
+  svg.append("rect").attr("x",cx-12).attr("y",281).attr("width",24).attr("height",12).attr("fill","var(--color-white)").attr("aria-hidden","true");
+  svg.append("text").attr("x",cx).attr("y",290).attr("text-anchor","middle").attr("class","mono").attr("font-size","9").text("NPI");
+});
+
+// consent gate band
+svg.append("g").attr("class","node").attr("tabindex",0).attr("role","img")
+  .attr("aria-label","Consent gate: all source data must pass through. Opt-out can strip the NPI or suppress the record entirely.")
+  .on("mouseover",e=>showTip(e,{title:"Consent gate",note:"All source data must pass. Opt-out strips the NPI (anonymous write) or suppresses the record entirely - a selection collider on the sampling frame.",fields:["CLM_OPT_OUT_BEHAVIOR_vod","CLM_Opt_Type_vod"]}))
+  .on("mouseout",hideTip)
+  .append("rect").attr("x",32).attr("y",306).attr("width",440).attr("height",34)
+  .attr("fill","var(--color-red)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+svg.append("text").attr("x",252).attr("y",328).attr("text-anchor","middle").attr("class","field")
+   .attr("fill","var(--color-white)").attr("font-size","12").text("CONSENT GATE - all source data must pass through (mandatory)");
+
+svg.append("line").attr("x1",252).attr("y1",340).attr("x2",252).attr("y2",360)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+
+svg.append("rect").attr("x",252).attr("y",364).attr("width",416).attr("height",40)
+   .attr("fill","var(--color-ink)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true");
+svg.append("text").attr("x",460).attr("y",389).attr("text-anchor","middle").attr("class","field")
+   .attr("fill","var(--color-white)").attr("font-size","13").text("PHYSICIAN-TIME PANEL (convergence point)");
+
+svg.append("text").attr("x",32).attr("y",360).attr("class","caption").text("Hover or focus any box for its role.");
+svg.append("text").attr("x",32).attr("y",376).attr("class","caption").text("Public/synthetic structure;");
+svg.append("text").attr("x",32).attr("y",392).attr("class","caption").text("Veeva *_vod names are");
+svg.append("text").attr("x",32).attr("y",408).attr("class","caption").text("dated mid-2026 examples.");
+
+new ResizeObserver(()=>{}).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

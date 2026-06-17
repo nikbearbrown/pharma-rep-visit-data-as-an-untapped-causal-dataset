@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 6.1 — Fork vs chain vs collider</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+      --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}
+  }
+  html,body{margin:0;padding:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .subtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-secondary);}
+  .panel{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .verdict{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .vred{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-red);font-weight:bold;}
+  .sub{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .tooltip{position:absolute;pointer-events:none;background:var(--color-white);border:1px solid var(--color-border);
+    padding:4px 8px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;color:var(--color-ink);opacity:0;}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" class="tooltip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA=[
+  {kind:"FORK",cx:138,verdict:"conditioning HELPS",vclass:"verdict",sub:["removes a spurious","A-B association"]},
+  {kind:"CHAIN",cx:350,verdict:"conditioning BLOCKS",vclass:"verdict",sub:["fine if C is a mediator","you mean to block"]},
+  {kind:"COLLIDER",cx:562,verdict:"conditioning HURTS",vclass:"vred",sub:["opens a spurious path","between A and B"]}
+];
+const W=700,H=420;
+const wrap=d3.select("#wrap");const tip=d3.select("#tip");
+function draw(){
+  wrap.selectAll("svg").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Conditioning on the middle node helps in a fork, blocks in a chain, and hurts at a collider");
+  svg.append("desc").attr("id","chart-desc").text("Three three-node graphs: a fork where conditioning helps, a chain where conditioning blocks, and a collider where conditioning opens a spurious path.");
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  svg.append("rect").attr("x",0).attr("y",0).attr("width",W).attr("height",H).attr("fill","var(--color-white)");
+
+  svg.append("text").attr("class","title").attr("x",32).attr("y",30).text("One operation, three different consequences");
+  svg.append("text").attr("class","subtitle").attr("x",32).attr("y",50).text("Dashed box = the node you condition on. Same action; opposite effects.");
+
+  FALLBACK_DATA.forEach(p=>panel(svg,p));
+
+  // separators
+  svg.append("line").attr("x1",248).attr("y1",74).attr("x2",248).attr("y2",336).attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+  svg.append("line").attr("x1",460).attr("y1",74).attr("x2",460).attr("y2",336).attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",388).text("In this book the collider is a POST-TREATMENT variable (dwell, reaction), not a confounder: position downstream of treatment decides");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",404).text("the harm, predictive power does not. Conditioning on it manufactures the very association you are trying to measure. Public + synthetic.");
+}
+function box(svg,x,y,w,h,stroke){return svg.append("rect").attr("x",x).attr("y",y).attr("width",w).attr("height",h).attr("rx",0).attr("fill","var(--color-white)").attr("stroke",stroke||"var(--color-ink)").attr("stroke-width",1.5);}
+function dbox(svg,x,y,w,h,stroke,sw){svg.append("rect").attr("x",x).attr("y",y).attr("width",w).attr("height",h).attr("fill","none").attr("stroke",stroke).attr("stroke-width",sw||1).attr("stroke-dasharray","5 4");}
+function panel(svg,p){
+  const cx=p.cx;
+  svg.append("text").attr("class","panel").attr("x",cx).attr("y",84).attr("text-anchor","middle").text(p.kind);
+  if(p.kind==="FORK"){
+    box(svg,cx-30,100,60,40);
+    dbox(svg,cx-38,92,76,56,"#787878",1);
+    box(svg,cx-90,220,60,40);
+    box(svg,cx+30,220,60,40);
+    svg.append("line").attr("x1",cx-14).attr("y1",148).attr("x2",cx-48).attr("y2",216).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+    svg.append("line").attr("x1",cx+14).attr("y1",148).attr("x2",cx+48).attr("y2",216).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  } else if(p.kind==="CHAIN"){
+    box(svg,cx-88,180,56,40);
+    box(svg,cx-28,180,56,40);
+    dbox(svg,cx-36,172,72,56,"#787878",1);
+    box(svg,cx+32,180,56,40);
+    svg.append("line").attr("x1",cx-32).attr("y1",200).attr("x2",cx-29).attr("y2",200).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+    svg.append("line").attr("x1",cx+28).attr("y1",200).attr("x2",cx+31).attr("y2",200).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  } else { // COLLIDER
+    box(svg,cx-30,100,60,40);
+    dbox(svg,cx-38,92,76,56,"var(--color-red)",1.5);
+    box(svg,cx-90,220,60,40);
+    box(svg,cx+30,220,60,40);
+    svg.append("line").attr("x1",cx-52).attr("y1",216).attr("x2",cx-18).attr("y2",148).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+    svg.append("line").attr("x1",cx+52).attr("y1",216).attr("x2",cx+18).attr("y2",148).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  }
+  svg.append("text").attr("class",p.vclass).attr("x",cx).attr("y",296).attr("text-anchor","middle").text(p.verdict)
+    .attr("tabindex",0).attr("aria-label",p.kind+": "+p.verdict);
+  svg.append("text").attr("class","sub").attr("x",cx).attr("y",314).attr("text-anchor","middle").text(p.sub[0]);
+  svg.append("text").attr("class","sub").attr("x",cx).attr("y",328).attr("text-anchor","middle").text(p.sub[1]);
+}
+draw();
+new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

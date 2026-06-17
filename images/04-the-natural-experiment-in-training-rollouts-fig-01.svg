@@ -1,0 +1,72 @@
+<!--
+  figure-title: The natural experiment in staggered training rollouts (two cohort timelines)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 04-the-natural-experiment-in-training-rollouts
+  Figure: 01
+  Type: timeline diagram
+  Generated: 2026-06-16
+  Source: chapters/04-the-natural-experiment-in-training-rollouts.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
+  <title id="fig-title-01">Staggered training rollout: two cohorts switch decks in different months</title>
+  <desc>Two parallel horizontal timelines spanning months one through six. Cohort A switches from the efficacy-first deck to the safety-first deck at month one; cohort B switches at month three. Two physicians on the right each connect back to one cohort, showing that otherwise comparable physicians heard different messages in the same calendar month because of administrative scheduling.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" chapter="04-the-natural-experiment-in-training-rollouts" figure-number="01" figure-title="The natural experiment in staggered training rollouts" figure-type="timeline diagram" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/04-the-natural-experiment-in-training-rollouts.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Scheduling, not the physician, decided who heard which message when</text>
+  <text x="32" y="50" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Cohort A switches to the new deck in month 1; cohort B in month 3</text>
+
+  <!-- Month axis -->
+  <line x1="120" y1="96" x2="520" y2="96" stroke="#D4D4D4" stroke-width="0.75"/>
+  <text x="120" y="88" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">M1</text>
+  <text x="200" y="88" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">M2</text>
+  <text x="280" y="88" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">M3</text>
+  <text x="360" y="88" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">M4</text>
+  <text x="440" y="88" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">M5</text>
+  <text x="520" y="88" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">M6</text>
+
+  <!-- Cohort A lane -->
+  <text x="32" y="142" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">Cohort A</text>
+  <!-- old deck segment (before M1: none; switches at M1) entire lane is new deck -->
+  <rect x="120" y="124" width="400" height="28" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="120" y="124" width="400" height="28" fill="none" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="320" y="142" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">safety-first deck (new) from M1</text>
+  <!-- switch tick at M1 -->
+  <line x1="120" y1="118" x2="120" y2="158" stroke="#C8102E" stroke-width="1.5"/>
+
+  <!-- Cohort B lane -->
+  <text x="32" y="218" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">Cohort B</text>
+  <!-- old deck M1-M3 -->
+  <rect x="120" y="200" width="160" height="28" fill="#F5F5F5" stroke="#787878" stroke-width="1"/>
+  <text x="200" y="218" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">efficacy-first (old)</text>
+  <!-- new deck M3 onward -->
+  <rect x="280" y="200" width="240" height="28" fill="#F5F5F5" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="400" y="218" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">safety-first deck (new) from M3</text>
+  <!-- switch tick at M3 -->
+  <line x1="280" y1="194" x2="280" y2="234" stroke="#C8102E" stroke-width="1.5"/>
+
+  <!-- Comparison window callout at M2 -->
+  <line x1="200" y1="110" x2="200" y2="204" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="200" y1="224" x2="200" y2="244" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="200" y="262" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">same month (M2): different messages</text>
+
+  <!-- Two physician nodes -->
+  <rect x="556" y="120" width="112" height="36" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="612" y="142" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">Physician (A's rep)</text>
+  <rect x="556" y="196" width="112" height="36" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="612" y="218" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">Physician (B's rep)</text>
+
+  <!-- arrows from lanes to physicians -->
+  <line x1="520" y1="138" x2="552" y2="138" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="520" y1="214" x2="552" y2="214" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- caption: honesty -->
+  <text x="32" y="312" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Administrative scheduling determined which physician heard which message when. That</text>
+  <text x="32" y="328" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">variation is the instrument -- but the cohort instrument is testable, not assumed: falsify Z's</text>
+  <text x="32" y="344" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">independence first. Exclusion is threatened if early training improves general selling skill.</text>
+  <text x="32" y="368" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">PUBLIC / SYNTHETIC STRUCTURE ONLY</text>
+</svg>

@@ -1,0 +1,50 @@
+<!--
+  figure-title: Assumption hierarchy for causal identification (total effect vs mediation)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 05-the-causal-graph-and-three-pathways
+  Figure: 02
+  Type: layered hierarchy diagram
+  Generated: 2026-06-16
+  Source: chapters/05-the-causal-graph-and-three-pathways.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">The assumption hierarchy: each higher claim rests on strictly more, and untested, assumptions</title>
+  <desc>Three stacked layers. The bottom layer, the total effect from the IV estimate, needs assumptions one and three, secured by quasi-randomization. The middle layer, the single-mediator natural direct and indirect effects, needs all four assumptions including the cross-world assumption, which randomization does not secure. The top layer, the three-mediator per-pathway split, additionally needs no between-mediator confounding.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" chapter="05-the-causal-graph-and-three-pathways" figure-number="02" figure-title="Assumption hierarchy for causal identification" figure-type="layered hierarchy diagram" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/05-the-causal-graph-and-three-pathways.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Each higher claim leans on strictly more -- and untested -- assumptions</text>
+  <text x="32" y="50" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">The total effect is far more credible than any pathway share</text>
+
+  <!-- Bottom layer: Total Effect (widest, most credible) -->
+  <rect x="120" y="288" width="460" height="56" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="350" y="312" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle" font-weight="bold">Total Effect (IV estimate)</text>
+  <text x="350" y="330" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">needs assumptions 1 and 3 -- secured by quasi-randomization</text>
+
+  <!-- Middle layer: NDE/NIE -->
+  <rect x="180" y="190" width="340" height="56" fill="#FFFFFF" stroke="#787878" stroke-width="1.5"/>
+  <text x="350" y="214" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle" font-weight="bold">Single-mediator NDE / NIE</text>
+  <text x="350" y="232" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">needs all 4 assumptions -- incl. cross-world (NOT secured)</text>
+
+  <!-- Top layer: Three-mediator split (narrowest, weakest) -->
+  <rect x="240" y="92" width="220" height="56" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="350" y="116" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle" font-weight="bold">Three-mediator split</text>
+  <text x="350" y="134" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">also needs no between-mediator confounding</text>
+
+  <!-- upward arrows showing "rests on more" -->
+  <line x1="350" y1="288" x2="350" y2="250" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="350" y1="190" x2="350" y2="152" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- side annotations -->
+  <text x="596" y="320" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">most credible</text>
+  <text x="596" y="124" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">least credible</text>
+
+  <!-- caption: honesty -->
+  <text x="32" y="372" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Randomizing the message buys assumptions 1 and 3 (total effect). It does nothing for the cross-world</text>
+  <text x="32" y="388" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">assumption, so the per-pathway split is generally NOT point-identified -- report interventional effects.</text>
+  <text x="32" y="408" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">PUBLIC / SYNTHETIC ONLY</text>
+</svg>

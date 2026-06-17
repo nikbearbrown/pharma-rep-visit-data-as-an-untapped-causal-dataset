@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 11.1 — Predictive forest vs causal forest</title>
+<style>
+:root{
+  --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+  --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+}
+@media(prefers-color-scheme:dark){:root{
+  --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+  --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+}}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--color-white);}
+#wrap{max-width:700px;margin:0 auto;padding:8px;}
+svg{width:100%;height:auto;display:block;}
+.fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;}
+.fig-heading{font-family:'EB Garamond','Garamond',Georgia,serif;}
+.fig-body{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.fig-mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+<svg id="chart" viewBox="0 0 700 500" role="img" aria-labelledby="chart-title chart-desc" preserveAspectRatio="xMidYMid meet">
+<title id="chart-title">Figure 11.1 — Predictive forest vs causal forest</title>
+<desc id="chart-desc">A two-column comparison. The left column shows a predictive forest reusing the same rows to choose splits and fill leaves, ending in a predicted outcome. The right column shows a causal forest using honest splitting on disjoint subsamples, ending in a per-unit effect with a confidence interval.</desc>
+</svg>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+(function(){
+  const svg = d3.select("#chart");
+  const VW = 700, VH = 500;
+
+  function draw(){
+    svg.selectAll("g.layer, defs").remove();
+
+    const defs = svg.append("defs");
+    const marker = defs.append("marker")
+      .attr("id","arrow").attr("viewBox","0 0 10 10")
+      .attr("refX","9").attr("refY","5")
+      .attr("markerWidth","7").attr("markerHeight","7")
+      .attr("orient","auto-start-reverse");
+    marker.append("path")
+      .attr("d","M0,0 L10,5 L0,10 z")
+      .attr("fill","var(--color-ink)");
+
+    const g = svg.append("g").attr("class","layer");
+
+    // ---- Heading / sub ----
+    g.append("text").attr("class","fig-title").attr("x",24).attr("y",30)
+      .attr("font-size",16).attr("font-weight",600).attr("fill","var(--color-ink)")
+      .text("Figure 11.1 — Predictive forest vs causal forest");
+    g.append("text").attr("class","fig-heading").attr("x",24).attr("y",54)
+      .attr("font-size",15).attr("font-style","italic").attr("fill","var(--color-ink)")
+      .text("A causal forest is a predictive forest that learned to behave");
+    g.append("text").attr("class","fig-body").attr("x",24).attr("y",74)
+      .attr("font-size",11).attr("fill","var(--color-secondary)")
+      .text("Same ensemble machinery, different estimand and an honest-splitting discipline");
+
+    // ---- Column headers ----
+    g.append("text").attr("class","fig-body").attr("x",170).attr("y",100)
+      .attr("text-anchor","middle").attr("font-size",13).attr("font-weight",600)
+      .attr("fill","var(--color-ink)").text("Predictive forest");
+    g.append("text").attr("class","fig-body").attr("x",530).attr("y",100)
+      .attr("text-anchor","middle").attr("font-size",13).attr("font-weight",600)
+      .attr("fill","var(--color-ink)").text("Causal forest");
+
+    // ---- Dashed centerline divider (gapped) ----
+    g.append("line").attr("aria-hidden","true")
+      .attr("x1",350).attr("y1",112).attr("x2",350).attr("y2",170)
+      .attr("stroke","var(--color-border)").attr("stroke-width",1)
+      .attr("stroke-dasharray","5 4");
+    g.append("line").attr("aria-hidden","true")
+      .attr("x1",350).attr("y1",290).attr("x2",350).attr("y2",430)
+      .attr("stroke","var(--color-border)").attr("stroke-width",1)
+      .attr("stroke-dasharray","5 4");
+
+    // ---- Contrast dots + labels down the middle ----
+    const contrasts = [
+      {y:205, label:"estimand differs"},
+      {y:240, label:"splitting discipline"},
+      {y:275, label:"inference validity"}
+    ];
+    const cg = g.selectAll("g.contrast").data(contrasts).join("g").attr("class","contrast");
+    cg.append("circle").attr("cx",350).attr("cy",d=>d.y).attr("r",3)
+      .attr("fill","var(--color-ink)");
+    cg.append("text").attr("class","fig-body").attr("x",350).attr("y",d=>d.y+15)
+      .attr("text-anchor","middle").attr("font-size",10).attr("fill","var(--color-secondary)")
+      .text(d=>d.label);
+
+    // ---- Box helper data ----
+    const BOX_W = 200, BOX_H = 40;
+    function box(x,y,w,h,lines,opts){
+      opts = opts||{};
+      const grp = g.append("g");
+      grp.append("rect").attr("x",x).attr("y",y).attr("width",w).attr("height",h).attr("rx",0)
+        .attr("fill","var(--color-white)")
+        .attr("stroke",opts.stroke||"var(--color-ink)")
+        .attr("stroke-width",opts.sw||1.4);
+      const cx = x+w/2;
+      const n = lines.length;
+      const start = y + h/2 - (n-1)*7 + 4;
+      lines.forEach((ln,i)=>{
+        grp.append("text").attr("class","fig-body").attr("x",cx).attr("y",start+i*14)
+          .attr("text-anchor","middle").attr("font-size",ln.size||11)
+          .attr("font-weight",ln.weight||400)
+          .attr("fill",ln.fill||"var(--color-ink)")
+          .text(ln.t);
+      });
+      return grp;
+    }
+    function arrow(x1,y1,x2,y2,label){
+      g.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2)
+        .attr("stroke","var(--color-ink)").attr("stroke-width",1.4)
+        .attr("marker-end","url(#arrow)");
+      if(label){
+        g.append("text").attr("class","fig-body").attr("x",(x1+x2)/2).attr("y",(y1+y2)/2-5)
+          .attr("text-anchor","middle").attr("font-size",9).attr("fill","var(--color-secondary)")
+          .text(label);
+      }
+    }
+
+    // ===== LEFT FLOW =====
+    const LX = 70, LW = 200, LCX = LX+LW/2;
+    box(LX,112,LW,34,[{t:"all data"}]);
+    arrow(LCX,146,LCX,168,"split + estimate");
+    // shift label off centerline visually: place to side
+    g.selectAll(null); // noop
+    box(LX,168,LW,42,[{t:"tree ensemble"},{t:"(same rows for both)",size:9,fill:"var(--color-secondary)"}]);
+    arrow(LCX,210,LCX,238);
+    box(LX,238,LW,40,[{t:"predicted outcome"},{t:"E[Y|X]",size:11,fill:"var(--color-ink)"}],{stroke:"var(--color-secondary)",sw:1.8});
+
+    // ===== RIGHT FLOW =====
+    const RX = 430, RW = 200, RCX = RX+RW/2;
+    box(RX,112,RW,34,[{t:"data"}]);
+    // fork
+    const sub1x = 360, sub2x = 540, subW = 130, subY = 172, subH = 44;
+    arrow(RCX,146,sub1x+subW/2,subY-2);
+    arrow(RCX,146,sub2x+subW/2,subY-2);
+    box(sub1x,subY,subW,subH,[{t:"subsample 1",size:10,weight:600},{t:"where to split",size:9,fill:"var(--color-secondary)"}]);
+    box(sub2x,subY,subW,subH,[{t:"subsample 2",size:10,weight:600},{t:"estimate leaf",size:9,fill:"var(--color-secondary)"}]);
+    g.append("text").attr("class","fig-body").attr("x",RCX).attr("y",234)
+      .attr("text-anchor","middle").attr("font-size",9).attr("fill","var(--color-secondary)")
+      .text("honest splitting: disjoint rows");
+    // reconverge
+    arrow(sub1x+subW/2,subY+subH,RCX-2,252);
+    arrow(sub2x+subW/2,subY+subH,RCX+2,252);
+    box(RX,252,RW,34,[{t:"tree ensemble"}]);
+    arrow(RCX,286,RCX,312);
+    box(RX,312,RW,46,[{t:"per-unit effect",weight:600,fill:"var(--color-red)"},{t:"tau(x), with CI",size:10,fill:"var(--color-red)"}],{stroke:"var(--color-red)",sw:1.8});
+    // red confidence whisker (short vertical + horizontal tick)
+    const wx = RX+RW-22, wyTop = 320, wyBot = 350;
+    g.append("line").attr("x1",wx).attr("y1",wyTop).attr("x2",wx).attr("y2",wyBot)
+      .attr("stroke","var(--color-red)").attr("stroke-width",1.4);
+    g.append("line").attr("x1",wx-4).attr("y1",wyTop).attr("x2",wx+4).attr("y2",wyTop)
+      .attr("stroke","var(--color-red)").attr("stroke-width",1.4);
+    g.append("line").attr("x1",wx-4).attr("y1",wyBot).attr("x2",wx+4).attr("y2",wyBot)
+      .attr("stroke","var(--color-red)").attr("stroke-width",1.4);
+
+    // ---- Caption ----
+    const cap = [
+      "The predictive forest reuses the same rows to choose splits and fill leaves, which invalidates",
+      "inference on effects. The causal forest's honest split (disjoint subsamples) is what licenses valid",
+      "pointwise confidence intervals on tau(x) (Wager and Athey, 2018). This is Project 2 (meals):",
+      "public-data-runnable on CMS Open Payments and Medicare Part D."
+    ];
+    cap.forEach((ln,i)=>{
+      g.append("text").attr("class","fig-body").attr("x",24).attr("y",398+i*15)
+        .attr("font-size",10.5).attr("fill","var(--color-secondary)").text(ln);
+    });
+
+    // ---- Source line ----
+    g.append("text").attr("class","fig-body").attr("x",24).attr("y",476)
+      .attr("font-size",10).attr("letter-spacing",".08em").attr("fill","var(--color-secondary)")
+      .text("SOURCE: CAUSAL FOREST MECHANICS AS DESCRIBED IN CHAPTER 11");
+  }
+
+  draw();
+  if(window.ResizeObserver){
+    const ro = new ResizeObserver(()=>draw());
+    ro.observe(document.getElementById("wrap"));
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!--
+  Title: What each knowledge source contributes to causal identification
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 08-the-causal-interview-bot
+  Figure: 01
+  Type: Comparison panels (VG + MC)
+  Generated: 2026-06-16
+  Source: chapters/08-the-causal-interview-bot.md
+-->
+<svg viewBox="0 0 700 420" role="img" aria-labelledby="fig-title-01" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-01">Three knowledge sources and what each contributes to a causal model</title>
+  <desc>Three columns. Telemetry identifies structure but leaves edges undirected. Rep elicitation supplies the orientation, shown as directed arrows in red. A randomized experiment gives one total-effect arrow but no internal pathway. A brace marks the gap between telemetry and experiment that only elicitation fills.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="08-the-causal-interview-bot" figure-number="01" figure-title="What each knowledge source contributes to causal identification" figure-slug="knowledge-source-contribution" figure-type="Comparison panels" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/08-the-causal-interview-bot.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#C8102E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">What each source contributes - and the gap only elicitation fills</text>
+
+  <!-- COLUMN 1: TELEMETRY  (source box + undirected edges) -->
+  <rect x="48" y="64" width="168" height="34" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="132" y="86" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">TELEMETRY</text>
+  <text x="132" y="120" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">structure, no direction</text>
+  <!-- undirected graph fragment: 3 nodes triangle, plain segments -->
+  <circle cx="80" cy="190" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="184" cy="190" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="132" cy="252" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <line x1="94" y1="190" x2="170" y2="190" stroke="#545454" stroke-width="1.5"/>
+  <line x1="90" y1="200" x2="122" y2="242" stroke="#545454" stroke-width="1.5"/>
+  <line x1="174" y1="200" x2="142" y2="242" stroke="#545454" stroke-width="1.5"/>
+
+  <!-- COLUMN 2: REP ELICITATION (source box + directed edges in red) -->
+  <rect x="266" y="64" width="168" height="34" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+  <text x="350" y="86" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E">REP ELICITATION</text>
+  <text x="350" y="120" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">supplies orientation</text>
+  <circle cx="298" cy="190" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="402" cy="190" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="350" cy="252" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <line x1="312" y1="190" x2="388" y2="190" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <line x1="308" y1="200" x2="340" y2="242" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <line x1="360" y1="242" x2="392" y2="200" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+  <!-- COLUMN 3: RCT (source box + one bold total-effect arrow) -->
+  <rect x="484" y="64" width="168" height="34" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="568" y="86" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">EXPERIMENT</text>
+  <text x="568" y="120" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">total effect, no path</text>
+  <circle cx="516" cy="218" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="620" cy="218" r="14" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <line x1="530" y1="218" x2="606" y2="218" stroke="#2a1a0e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- BRACE spanning column 1 to column 3 marking the elicitation-filled gap -->
+  <path d="M 80 290 L 80 300 L 568 300 L 568 290" fill="none" stroke="#2a1a0e" stroke-width="1"/>
+  <line x1="324" y1="300" x2="324" y2="310" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="324" y="328" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E">the gap only elicitation fills: edge orientation</text>
+
+  <!-- caption -->
+  <text x="32" y="350" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Telemetry finds the skeleton but leaves edges undirected; an experiment</text>
+  <text x="32" y="364" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">delivers a single total effect with no pathway. Rep knowledge is necessary</text>
+  <text x="32" y="378" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">IN PRINCIPLE to orient the structure. Whether elicitation is reliable in</text>
+  <text x="32" y="392" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">practice (LLM suggestibility, hallucinated edges) is the open question.</text>
+
+  <!-- source line -->
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.08 THE CAUSAL INTERVIEW BOT</text>
+</svg>

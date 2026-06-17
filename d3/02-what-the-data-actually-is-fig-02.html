@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Five-step panel assembly with an explicit time axis</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;--color-mid:#787878;--color-light:#ADADAD;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;--color-mid:#9A9A9A;--color-light:#6A6A6A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .sub{font-size:12px;fill:var(--color-secondary);}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .step,.col{cursor:pointer;}
+  .step:focus,.col:focus{outline:none;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;max-width:260px;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const STEPS = [
+  {n:1,l1:"1 aggregate",l2:"to phys-week",x:170,note:"Aggregate slide-view rows to one row per physician per week - the causal unit."},
+  {n:2,l1:"2 define",l2:"treatment",x:268,note:"Define treatment as first-exposure week to message variant M2 via Key_Message_vod."},
+  {n:3,l1:"3 join",l2:"warehouse",x:366,note:"Join NRx, Open Payments, territory, rep tenure, and cohort timing (the instrument) by NPI."},
+  {n:4,l1:"4 lag",l2:"outcome",x:464,note:"Lag the outcome: new prescriptions in the next 30/60/90 days so cause precedes effect."},
+  {n:5,l1:"5 quarantine",l2:"post-tx",x:562,w:96,note:"Quarantine Duration_vod and Reaction_vod - colliders for this estimand, kept not deleted."}
+];
+const COLS = [
+  {label:"treatment",x:40,w:110,fill:"var(--color-red)",txt:"var(--color-white)",note:"The active estimand series: which message variant was delivered."},
+  {label:"lagged outcome",x:156,w:120,fill:"var(--color-mid)",txt:"var(--color-white)",note:"New prescriptions, lagged 30/60/90 days post-treatment."},
+  {label:"instrument",x:282,w:110,fill:"var(--color-light)",txt:"var(--color-ink)",note:"Training-cohort rollout timing - the quasi-random variation Chapter 4 exploits."},
+  {label:"covariates",x:398,w:110,fill:"var(--color-border)",txt:"var(--color-ink)",note:"Pre-treatment: baseline NRx, specialty, territory, rep tenure. Safe controls."},
+  {label:"quarantined post-tx",x:514,w:146,fill:"var(--color-white)",txt:"var(--color-ink)",dashed:true,note:"Duration_vod, Reaction_vod: set-apart, kept. Flips to treatment under the slide-sequencing estimand."}
+];
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+svg.append("title").attr("id","chart-title").text("Five-step panel assembly with an explicit time axis");
+svg.append("desc").attr("id","chart-desc").text("Three raw logs feed five ordered steps - aggregate, define treatment, join warehouse, lag outcome, quarantine post-treatment - into an output panel with five column groups split by a pre/post-treatment time divider.");
+
+svg.append("defs").html('<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--color-ink)"/></marker>');
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",420).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",28).attr("class","fig-title")
+   .text("Raw logs become an analysis-ready panel - correctness lives in the time index");
+
+function showTip(event,d){
+  tip.style("opacity",1).html(`<strong>${d.label||d.l1}</strong><br>${d.note}`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+// inputs
+const logs=[["slide-view log",60],["call records",100],["payment records",140]];
+logs.forEach(([t,y])=>{
+  svg.append("rect").attr("x",32).attr("y",y).attr("width",96).attr("height",34)
+     .attr("fill","var(--color-border)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true");
+  svg.append("text").attr("x",80).attr("y",y+21).attr("text-anchor","middle").attr("class","mono").attr("fill","var(--color-ink)").text(t);
+});
+svg.append("line").attr("x1",128).attr("y1",117).attr("x2",168).attr("y2",117)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+
+// step nodes
+const stepG = svg.selectAll("g.step").data(STEPS).join("g").attr("class","step")
+  .attr("tabindex",0).attr("role","img").attr("aria-label",d=>`Step ${d.n}: ${d.note}`)
+  .on("mouseover",(e,d)=>showTip(e,d)).on("mousemove",(e,d)=>showTip(e,d)).on("mouseout",hideTip)
+  .on("focus",(e,d)=>showTip({pageX:window.scrollX+d.x+40,pageY:window.scrollY+118},d)).on("blur",hideTip)
+  .on("keydown",(e,d)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+d.x+40,pageY:window.scrollY+118},d);}});
+stepG.append("rect").attr("x",d=>d.x).attr("y",98).attr("width",d=>d.w||86).attr("height",40)
+  .attr("fill","var(--color-ink)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+stepG.append("text").attr("x",d=>d.x+(d.w||86)/2).attr("y",115).attr("text-anchor","middle").attr("fill","var(--color-white)").attr("font-size","10").text(d=>d.l1);
+stepG.append("text").attr("x",d=>d.x+(d.w||86)/2).attr("y",128).attr("text-anchor","middle").attr("fill","var(--color-white)").attr("font-size","10").text(d=>d.l2);
+[256,354,452,550].forEach(x=>svg.append("line").attr("x1",x).attr("y1",118).attr("x2",x+12).attr("y2",118)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true"));
+
+// output panel
+svg.append("text").attr("x",32).attr("y",206).attr("class","sub").text("Physician-time panel - column groups (field names shown as blank slots)");
+svg.append("rect").attr("x",32).attr("y",214).attr("width",636).attr("height",74)
+   .attr("fill","var(--color-fill)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true");
+
+const colG = svg.selectAll("g.col").data(COLS).join("g").attr("class","col")
+  .attr("tabindex",0).attr("role","img").attr("aria-label",d=>`${d.label}: ${d.note}`)
+  .on("mouseover",(e,d)=>showTip(e,d)).on("mousemove",(e,d)=>showTip(e,d)).on("mouseout",hideTip)
+  .on("focus",(e,d)=>showTip({pageX:window.scrollX+d.x+d.w/2,pageY:window.scrollY+250},d)).on("blur",hideTip)
+  .on("keydown",(e,d)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+d.x+d.w/2,pageY:window.scrollY+250},d);}});
+colG.append("rect").attr("x",d=>d.x).attr("y",224).attr("width",d=>d.w).attr("height",54)
+  .attr("fill",d=>d.fill).attr("stroke","var(--color-ink)").attr("stroke-width",d=>d.dashed?1.5:1)
+  .attr("stroke-dasharray",d=>d.dashed?"5 4":null);
+colG.append("text").attr("x",d=>d.x+d.w/2).attr("y",254).attr("text-anchor","middle").attr("font-size","11").attr("fill",d=>d.txt).text(d=>d.label);
+
+// time axis
+svg.append("line").attr("x1",32).attr("y1",326).attr("x2",668).attr("y2",326)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+svg.append("line").attr("x1",500).attr("y1",306).attr("x2",500).attr("y2",346)
+   .attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("aria-hidden","true");
+svg.append("text").attr("x",250).attr("y",346).attr("text-anchor","middle").attr("class","mono").text("pre-treatment");
+svg.append("text").attr("x",584).attr("y",346).attr("text-anchor","middle").attr("class","mono").text("post-treatment");
+
+svg.append("text").attr("x",32).attr("y",382).attr("class","caption")
+   .text("Quarantine is not deletion: the post-treatment block flips to treatment under a later slide-sequencing estimand.");
+svg.append("text").attr("x",32).attr("y",400).attr("class","caption")
+   .text("Correctness is a property of the time index, not the column count. Public/synthetic structure only.");
+
+new ResizeObserver(()=>{}).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

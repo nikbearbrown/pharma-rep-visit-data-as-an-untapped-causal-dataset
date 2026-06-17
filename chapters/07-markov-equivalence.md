@@ -39,6 +39,9 @@ Now the exception that proves the rule.
 
 This ties the last two chapters together at the joint. The one three-node structure the data *can* orient is the collider — the v-structure. And the v-structure is precisely the thing you learned to fear in Chapter 6 for the bias it creates when you condition on it. The same feature that makes colliders dangerous is what makes them visible to discovery algorithms. Colliders are the only arrows the data draws for you. Every other arrow it guesses.
 
+![The three-node theorem. Two structures share an independence signature; one is unique. Colliders are the only arrows observational data orients.](images/07-markov-equivalence-fig-01.png)
+*Figure 7.1 — The three-node theorem. Chain and fork share one independence signature; only the collider is identifiable. Observational data fixes the equivalence class, not the unique graph (Verma–Pearl).*
+
 <!-- → [DIAGRAM: Three panels side by side — Chain (A→B→C), Fork (A←B→C), Collider (A→B←C). Under Chain and Fork: "A ⊥ C | B — data cannot distinguish these." Under Collider: "A and C independent marginally, dependent given B — data can identify this." Caption: "The three-node theorem. Two structures share an independence signature; one is unique. Colliders are the only arrows observational data orients."] -->
 
 ---
@@ -81,6 +84,9 @@ The philosophy underneath is Nancy Cartwright's slogan: **"no causes in, no caus
 
 This is the book's thesis in miniature. The rep interviews are not soft supplementary color. They are the *source* of the structural information the data provably cannot contain. Demote them and the arrows that decide where eight figures of detailing go become coin flips.
 
+![The CPDAG is a two-color map: what the data decided, and what it left open for domain knowledge to close.](images/07-markov-equivalence-fig-02.png)
+*Figure 7.2 — The CPDAG two-color map: compelled edges the data settled versus reversible edges left open. The data identifies only the equivalence class (Verma–Pearl); rep knowledge orients the reversible edges.*
+
 <!-- → [DIAGRAM: CPDAG with a mix of directed and undirected edges. Directed edges labeled "compelled — data settled." Undirected edges labeled "reversible — rep must orient." Count of undirected edges annotated as "N open questions for Chapter 8." Caption: "The CPDAG is a two-color map: what the data decided, and what it left open for domain knowledge to close."] -->
 
 ---
@@ -104,6 +110,9 @@ Story C — *Reverse causation*: prescribing → perceived influence. High presc
 **What breaks the tie.** Information from outside the panel. The experienced rep supplies it: "I've watched Dr. Johnson switch within two weeks of a colleague switching, more than once. I have never once seen it run the other way." That is a temporal-plus-structural observation. It rules out story C and favors A over B — she is reporting something that looks like a response, repeated across cases, even if she never formally ran an experiment. Fed in as a Meek constraint, it may orient neighboring edges too.
 
 **The limit.** Rep knowledge is fallible and uneven. One rep's "I've never seen it run the other way" is a sample of her territory, her memory, and her attention. The orientation she licenses is a **prior with a confidence level**, not a certainty. That is exactly why the artifact you build in Chapter 8 is an *annotated* prior DAG — each edge tagged with the rep evidence, a confidence, and any contradictions. Where reps disagree or hedge, the honest output is a sensitivity analysis across the surviving equivalence class, not a forced single graph. Necessity-in-principle (Verma–Pearl says *some* outside knowledge must orient the edge) does not mean the rep is always right. It means the rep is the only candidate in the room.
+
+![The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. The algorithm cannot choose. The rep can.](images/07-markov-equivalence-fig-03.png)
+*Figure 7.3 — The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. Observational data identifies only the equivalence class (Verma–Pearl); the algorithm cannot choose, but the rep can.*
 
 <!-- → [DIAGRAM: Three side-by-side mini-graphs — Story A (peer_exposure → NRx), Story B (latent_trait → peer_exposure and latent_trait → NRx), Story C (NRx → peer_exposure). All three consistent with the same positive observed correlation. Caption: "The peer-influence puzzle: contagion, homophily, and reverse causation fit the data identically. The algorithm cannot choose. The rep can."] -->
 
@@ -130,20 +139,6 @@ I would weaken the "rep knowledge is necessary" claim if a method emerged that o
 ## Still puzzling
 
 Faithfulness sits uneasily under all of this. The whole story assumes no near-perfect cancellation of paths. In a system with feedback and incentives — formularies that adjust to prescribing, reps who shift effort toward responsive physicians — there could be structures where two real causal effects genuinely cancel, so an edge drops out of the skeleton entirely. If the skeleton itself is missing an edge, even a perfect interview can only orient edges the skeleton contains. How would a rep's knowledge surface an edge the skeleton lost? The Shalizi–Thomas result makes this sharper, not easier: if the three peer-influence stories are generically confounded, and one of them involves a latent variable the panel cannot measure, the skeleton may never recover the full structure regardless of how the rep orients what is visible.
-
----
-
-**LLM exercise (copy-paste prompt):**
-
-> "You are helping me reason about Markov equivalence, not assert causal claims. I have an observational correlation between two variables: PEER_EXPOSURE (a physician's colleague switched to the drug) and NRX (the physician's own prescribing). They are positively correlated. Do NOT tell me which causes which. Instead: (1) enumerate every distinct causal structure over these two variables (plus any latent common cause) consistent with a positive correlation; (2) for each, state the conditional-independence relation it implies; (3) state which structures are Markov equivalent to each other and why (same skeleton, same v-structures); (4) for each reversible edge, state what KIND of outside evidence (temporal order, intervention, domain knowledge) would be needed to orient it. Label clearly that you cannot orient any reversible edge from data alone."
-
-**CLI exercise.** On the synthetic dataset, run a discovery algorithm (PC or GES, via `causal-learn`) and dump the CPDAG adjacency matrix to disk. Write a one-line shell command that counts undirected edges in the output — that count is your "how many arrows is the model trusting reps for" metric. Then re-run after injecting the known ground-truth v-structures as background constraints and watch the undirected-edge count drop. That is Meek propagation, observed.
-
-**AI Validation exercise.** For any oriented graph an AI tool hands you, demand the CPDAG behind it. Ask: which of these arrows are compelled — the same in every member of the class — and which are the tool's tie-break? Cross-check the compelled edges against the synthetic ground truth. Reject any displayed arrow that is reversible in the CPDAG and unsupported by an outside-the-data source.
-
-**AI Use Disclosure**
-
-*Write two sentences naming exactly what an AI tool did in your work for this chapter and what judgment you supplied that the AI could not. The judgment most specific to this chapter: which edges in your panel's CPDAG require rep knowledge to orient, and what specific rep observation would supply each one — a determination the data cannot make and the model cannot guess.*
 
 ---
 
@@ -174,3 +169,177 @@ Faithfulness sits uneasily under all of this. The whole story assumes no near-pe
 **Challenge**
 
 9. *(Challenge — produce the named artifact)* Build the full equivalence map for the peer-influence-and-prescribing correlation in your thread's panel: the observational fact stated precisely, the three Markov-equivalent stories each drawn as a mini-graph with its independence signature, and edge-by-edge orienting evidence with confidence tags and any contradictions between reps. This artifact is the direct input to your Chapter 8 interview design. *What this tests: whether you can execute the full equivalence-map discipline as a complete, usable artifact rather than as a conceptual exercise.*
+
+---
+
+## Prompts
+
+### Figure 7.1 — The three-node theorem
+
+Build a single self-contained HTML file (inline CSS, D3 7.9.0 from cdnjs) rendering a node-link comparison figure, not a chart, so zero-baseline is n/a. Three side-by-side panels of equal size, left to right: CHAIN, FORK, COLLIDER. Data shape: an array of three panels, each with a list of labeled circle nodes (id, x, y) and directed edges (source, target). Panel 1 chain A→B→C laid out horizontally; panel 2 fork A←B→C with B raised; panel 3 collider A→B←C with arrows converging on B. Marks: circles for nodes (radius 16), straight lines with triangular end-markers for directed edges, monospace node labels. Channel: color encodes identifiability — chain and fork in gray (--color-secondary/--color-ink) to signal they are indistinguishable, collider in red (--color-red) to mark it as the one structure data orients. Annotations: under each panel its independence signature ("A indep C given B" twice; "A indep C, NOT given B" for the collider); a three-line caption noting the Verma–Pearl equivalence-class point. Interactive nodes expose a per-panel tooltip. Include inline FALLBACK_DATA. Deliverable: one offline HTML file.
+
+### Figure 7.2 — The CPDAG two-color map
+
+Build a single self-contained HTML file (inline CSS, D3 7.9.0 from cdnjs) rendering a CPDAG as a node-link diagram, not a chart (zero-baseline n/a). Data shape: a node list (id, x, y) laid out in three left-to-right layers of two nodes each, and an edge list where every edge carries a type field of either "compelled" or "reversible". Marks: uniform white circles (radius 16, gray stroke) for nodes; for compelled edges, straight black lines with a triangular arrowhead; for reversible edges, plain red segments with NO arrowhead. Channel: edge color plus arrowhead presence encodes compelled-versus-reversible (the two-color map). Sort: none — fixed layered layout. Annotations: a legend box defining both edge types; a count annotation reading "N reversible edges await orientation" where N is computed from the data (count of type==="reversible", here 3) so the number is data-driven; a four-line caption tying compelled to "data settled" and reversible to "rep must orient," with the Verma–Pearl note. Interactive nodes with tooltips and keyboard focus. Include inline FALLBACK_DATA. Deliverable: one offline HTML file.
+
+### Figure 7.3 — The peer-influence puzzle
+
+Build a single self-contained HTML file (inline CSS, D3 7.9.0 from cdnjs) rendering three side-by-side causal mini-graphs as node-link diagrams, not charts (zero-baseline n/a). Data shape: a banner string plus three panels, each with labeled circle nodes (id, x, y, dashed flag) and directed edges (source, target). Panel 1 CONTAGION: peer→NRx. Panel 2 LATENT HOMOPHILY: a dashed unobserved "trait" node pointing to both peer and NRx. Panel 3 REVERSE CAUSATION: NRx→peer. Marks: circles (radius 18) with a dashed stroke for the unobserved trait; straight directed lines with triangular arrowheads; monospace node labels. Channel: arrow direction is the only thing that differs between panels — drawn identically otherwise to make the point that the data cannot choose. Annotations: a red banner stating "corr(peer exposure, NRx) > 0" shared by all three; a "dashed = unobserved" note under panel 2; a three-line caption with the Verma–Pearl tie and the rep-breaks-the-tie point. Interactive nodes with per-story tooltips and keyboard focus. Include inline FALLBACK_DATA. Deliverable: one offline HTML file.
+
+---
+
+## Chapter 7 Exercises: Markov Equivalence
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** The edge-orienting questions — the core elicitation — that get a rep to distinguish the Markov-equivalent stories (influence vs common-cause vs reverse causation) for each reversible edge in the CPDAG.
+
+### Exercise 1 — When to Use AI
+
+Once a discovery run hands you a CPDAG, the reversible edges *are* your interview agenda — one open arrow, one question. AI is the right tool for turning the CPDAG into that agenda:
+
+- **Enumerate the Markov-equivalent stories for a given correlation** (contagion, latent homophily, reverse causation) and state the conditional-independence signature each implies. *Why AI works here:* (recall of a fixed theorem) — the three-node enumeration and the Verma–Pearl criterion are settled results you can check edge-by-edge against Figure 7.1.
+- **Count the undirected edges in a discovery output and draft a one-sentence orienting question per edge.** *Why AI works here:* (mechanical translation) — the count is deterministic from the adjacency matrix, and each draft question is a template you can read and accept or rewrite.
+
+**The tell:** you can independently evaluate the output — the equivalence-class membership is provable from skeleton + v-structures, and the edge count is a number you can recompute with a one-line command. The model is doing bookkeeping over a theorem, not making a causal claim.
+
+### Exercise 2 — When NOT to Use AI
+
+- **Do not let the LLM orient a reversible edge.** *Why AI fails here:* (causal-ID) — orienting a reversible edge from anything inside the data is impossible by Verma–Pearl; an LLM that picks a direction is substituting its training prior for the outside knowledge the theorem says is required, and it will do so fluently.
+- **Do not let the bot phrase the orienting question with the answer baked in** ("So the influencer moves the followers, right?"). *Why AI fails here:* (LLM-suggestibility / leading-the-witness) — the model's prior that influence flows from "key opinion leaders" will steer the rep toward confirming contagion, manufacturing the very orientation you needed her to supply independently.
+
+**The tell:** AI as reason vs tool — if the *reason* an edge points one way is "the model said so," you have let a coin flip wear a confidence interval (the opening vendor's exact error). The rep's structural observation is the reason; the bot is the tool that records it.
+
+**Series connection:** tier **T5 (Causal)** — orienting reversible edges is the irreducibly human core of this chapter; the theorem proves no observational method can do it. Where reps disagree, it also touches **T6 (Collective)**, because resolving a contested edge means reconciling multiple experts' territory-bound knowledge, not averaging it away.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building:** The edge-orienting module of the bot — the part that takes one reversible edge and produces (a) the three Markov-equivalent stories, (b) the *kind* of outside evidence that would orient it, and (c) a non-leading rep question for each.
+
+**Tool:** Claude, as a **Claude Project**, so the orientation discipline (never orient from data; never name the hypothesized direction in the question; preserve the rep's hedge as a confidence tag) persists as context — a fresh chat reliably forgets and starts orienting.
+
+**The Prompt:**
+
+```
+You are the edge-orienting module of an expert-elicitation bot for
+pharmaceutical rep-visit data. You reason about Markov equivalence; you NEVER
+assert which way an edge points.
+
+Reversible edge from the CPDAG: PEER_EXPOSURE — NRX
+(a physician's colleague switched to the drug; the physician's own
+prescribing). Observed: positively correlated. The discovery algorithm left
+this edge UNDIRECTED.
+
+Do the following:
+1. Enumerate the three Markov-equivalent stories consistent with this
+   correlation: contagion (peer→NRx), latent homophily (a hidden trait →
+   both), reverse causation (NRx→peer). For each, state the conditional-
+   independence relation it implies.
+2. State which stories share a skeleton and v-structure set, and therefore
+   why observational data cannot choose among them (cite the Verma–Pearl
+   criterion in plain words).
+3. For EACH story, name the KIND of outside evidence that would orient the
+   edge toward it: temporal order, intervention, or domain knowledge.
+4. Write THREE rep-natural interview questions — one per story — that could
+   elicit the orienting evidence. CONSTRAINTS: name no causal formalism;
+   never state which direction you are hoping to confirm; keep each question
+   open enough that a rep who holds the OPPOSITE view answers it honestly.
+5. Add one contradiction probe to run if two reps give opposite orientations.
+
+Do NOT tell me which story is true. If you are tempted to orient the edge,
+write "REVERSIBLE — REP MUST ORIENT" instead.
+```
+
+**What this produces:** A ready-to-run orientation card for one reversible edge: three stories, three evidence types, three non-leading questions, and a contradiction probe — the unit the bot repeats for every undirected edge in the CPDAG.
+
+**How to adapt:** swap `PEER_EXPOSURE — NRX` for `SAMPLES — NRX` or any reversible edge in your own dataset's CPDAG; on **ChatGPT or Gemini**, prepend the orientation discipline since there is no Project memory; in a **Claude Project**, store the discipline once and feed only the edge.
+
+**Connection to previous chapters:** The reversible edges come straight from Chapter 7's CPDAG, and the questions respect Chapter 6's screening — in-visit colliders never become orientable confounders.
+
+**Preview of next chapter:** You now have a question per edge. Chapter 8 builds the full bot that runs these questions in sequence, gates every answer behind a rep quote, and emits the annotated prior DAG.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** A discovery-to-agenda pipeline — run causal discovery on synthetic data, emit the CPDAG, count undirected edges, and watch the count drop as expert constraints propagate (Meek propagation, observed).
+
+**Tool:** Claude Code — because this chains `causal-learn`, matrix parsing, and a re-run with background knowledge across files. **Skill level:** intermediate (can install a Python package and read an adjacency matrix).
+
+**Setup:**
+- [ ] Python 3.11+ with `causal-learn` and `numpy` installed.
+- [ ] A synthetic rep-visit dataset with KNOWN ground-truth v-structures (generate one — synthetic only).
+- [ ] A `CLAUDE.md` stub: "synthetic-only; discovery output is a CPDAG, never report a single DAG as truth."
+
+**The Task:**
+
+```
+Work only in src/ and data/. Synthetic data only — no real CRM data exists
+in this repo.
+
+Write src/discovery_agenda.py that:
+1. Loads the synthetic rep-visit dataset from data/.
+2. Runs PC (or GES) via causal-learn and saves the CPDAG adjacency matrix to
+   data/cpdag.npy.
+3. Counts the UNDIRECTED edges in the CPDAG and prints:
+   "REVERSIBLE EDGES AWAITING ORIENTATION: <n>"
+4. For each undirected edge, prints the node pair and a placeholder line:
+   "<A> -- <B>  | interview question needed".
+5. Re-runs discovery after injecting the KNOWN ground-truth v-structures as
+   background constraints, and prints the new undirected-edge count.
+
+Stopping condition: both counts print and the second is <= the first.
+Verification step: assert the second count is strictly smaller than the first
+(constraints propagated); print "MEEK PROPAGATION OBSERVED" if so. Leave the
+ground-truth file read-only; do not overwrite it.
+```
+
+**Expected output:** A first reversible-edge count (your raw interview agenda), an edge-by-edge "question needed" list, and a smaller count after constraints — the visible payoff of one oriented edge cascading into others.
+
+**What to inspect:** Confirm the second count dropped by *more* than the number of constraints you injected. That excess is propagation — one rep observation orienting neighbors — and it is the whole argument for elicitation efficiency.
+
+**If it goes wrong:** If the count does not drop, your injected constraints may not participate in any propagatable structure; pick v-structures adjacent to other undirected edges and re-run. (Recovery: ground truth is known, so you can choose constraints guaranteed to cascade.)
+
+**CLAUDE.md note:** Add "Discovery emits a CPDAG. Never render an undirected edge as directed. The undirected-edge count is the interview agenda for the bot — do not 'fill it in' programmatically."
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A graph someone (a vendor, a teammate, or an LLM) hands you with all edges directed — checking whether those arrows are *compelled* by the data or are tie-breaks dressed as findings.
+
+**Validation type:** Equivalence-class audit against the CPDAG and synthetic ground truth. **Risk level:** **High** — a reversible edge displayed as directed is the eight-figure vendor error; acting on it means targeting "influencers" who may be sure-things who would prescribe anyway.
+
+**Setup:** Use your Ex4 CPDAG, or this short pre-flawed artifact to practice on: a five-node DAG with every edge directed and a footnote "learned from prescribing and referral data with a state-of-the-art causal-discovery algorithm" — at least one of those arrows is a tie-break the algorithm could not justify.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 7 (Markov Equivalence)
+
+For the displayed graph below, mark each item PASS / FAIL / CANNOT-DETERMINE
+with a one-line reason:
+
+1. Correctness — For each directed edge, is it COMPELLED (same in every
+   member of the equivalence class) or could it flip? Demand the CPDAG behind
+   the DAG.
+2. Completeness — Are all reversible edges identified and listed, or are some
+   silently rendered as directed?
+3. Scope — Does the artifact claim only what the data settles (the
+   equivalence class), or does it claim the unique causal graph?
+4. Chapter-specific: V-structure check — Are the displayed v-structures
+   actually present in the skeleton, and do the compelled edges follow from
+   them (Verma–Pearl)?
+5. Chapter-specific: Outside-knowledge sourcing — For every oriented
+   reversible edge, is there a NAMED outside source (temporal order,
+   intervention, rep observation) — not the algorithm's tie-break?
+6. Failure-mode check — Scan for the fluent-but-wrong tell: a reversible edge
+   presented as a directed "finding," or an equivalence-class confusion where
+   chain and fork are treated as distinguishable. Any arrow oriented with no
+   outside source and no v-structure support is an automatic FAIL. Flag any
+   correctness claim that lacks a ground-truth comparison.
+
+Graph:
+<paste Ex4 CPDAG or the flawed five-node DAG here>
+```
+
+**What to do with findings:** All pass — the orientations are sourced; proceed. One fail — demand the outside source for that edge or downgrade it to undirected. Multiple fails — the graph is a tie-break rendered as truth; reject it and rebuild from the CPDAG.
+
+**AI Use Disclosure prompt (mandatory):** *Write two sentences naming what an AI tool did in this exercise and the one judgment it could not make. For example: "I used Claude to enumerate the Markov-equivalent stories and draft non-leading questions; I decided myself which edges in my CPDAG require rep knowledge to orient and what specific rep observation would supply each — a determination the data cannot make and the model cannot guess."*
+
+**Series connection:** The signature failure mode is **wrong edge orientation / equivalence-class confusion** — a reversible edge shown as directed with no outside source. This is a **T5 (Causal)** validation task, with a **T6 (Collective)** dimension whenever reps contradict each other on a contested edge.

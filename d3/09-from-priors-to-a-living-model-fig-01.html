@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 9.1 — Three-ingredient assembly into the SCM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+  @media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:transparent;color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .ttl{font-family:'EB Garamond','Garamond',Georgia,serif;}
+  .lbl{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+  .box{cursor:pointer;transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+  .box:focus{outline:2px solid var(--color-ochre);outline-offset:2px;}
+  #tip{position:absolute;pointer-events:none;opacity:0;background:var(--color-white);color:var(--color-ink);border:1px solid var(--color-border);border-radius:4px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;max-width:220px;transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" role="status" aria-live="polite"></div></div>
+<script>
+const FALLBACK_DATA = {
+  inputs:[
+    {id:"structure",title:"STRUCTURE",sub:"oriented prior DAG",desc:"Elicited prior DAG (Chapter 8): oriented edges, confidence tags. Supplies the qualitative skeleton."},
+    {id:"magnitude",title:"MAGNITUDE",sub:"IV / DiD estimates",desc:"Identified population effects from the natural experiment, with honest uncertainty bounds."},
+    {id:"history",title:"HISTORY",sub:"physician panel",desc:"Physician-by-time panel (Chapter 2): visit records, NRx, reactions. The unit-level record."}
+  ],
+  scm:{id:"scm",title:"SCM",sub:["DAG + equations","+ provenance"],desc:"Structural causal model: where structure, magnitude and history meet. Each node gets a structural equation X_i = f_i(parents, U_i)."},
+  outputs:[
+    {id:"engine",title:"COUNTERFACTUAL",sub:"engine",desc:"Runs abduction-action-prediction to produce individual Rung-3 recommendations."},
+    {id:"monitor",title:"DRIFT MONITOR",sub:"watches the model",desc:"Watches for parameter drift, structural drift, and opt-out-rate shifts."}
+  ]
+};
+const VB={w:700,h:420};
+const margin={top:48,right:40,bottom:56,left:64};
+const tip=d3.select("#tip");
+
+function draw(){
+  const data=FALLBACK_DATA;
+  d3.select("#wrap svg").remove();
+  const svg=d3.select("#wrap").append("svg")
+    .attr("viewBox",`0 0 ${VB.w} ${VB.h}`)
+    .attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Three ingredients converge into a structural causal model, which feeds two outputs");
+  svg.append("desc").attr("id","chart-desc").text("Three input boxes on the left send arrows into a central SCM box, which fans out to a counterfactual engine and a drift monitor.");
+
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+
+  svg.append("text").attr("class","ttl").attr("x",32).attr("y",34).attr("font-size",14).attr("fill","var(--color-ink)")
+    .text("Three ingredients assemble into one structural causal model");
+
+  const inY=[84,168,252];
+  function mkbox(g,d,x,y,w,h,stroke,fill,titleColor){
+    const b=g.append("g").attr("class","box").attr("tabindex",0).attr("role","button")
+      .attr("aria-label",d.title+". "+d.desc);
+    b.append("rect").attr("x",x).attr("y",y).attr("width",w).attr("height",h).attr("fill",fill).attr("stroke",stroke).attr("stroke-width",stroke==="var(--color-red)"?1.5:1);
+    b.append("text").attr("class","lbl").attr("x",x+w/2).attr("y",y+19).attr("text-anchor","middle").attr("font-size",12).attr("fill",titleColor).text(d.title);
+    const subs=Array.isArray(d.sub)?d.sub:[d.sub];
+    subs.forEach((s,i)=>b.append("text").attr("class","mono").attr("x",x+w/2).attr("y",y+36+i*16).attr("text-anchor","middle").attr("font-size",11).attr("fill","var(--color-secondary)").text(s));
+    b.on("mousemove",(e)=>showTip(e,d.desc)).on("mouseleave",hideTip)
+     .on("focus",function(e){const r=this.getBoundingClientRect();tip.style("opacity",1).style("left",(r.left+window.scrollX)+"px").style("top",(r.bottom+window.scrollY+6)+"px").text(d.desc);})
+     .on("blur",hideTip)
+     .on("keydown",(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip(e,d.desc);}});
+    return b;
+  }
+
+  const gi=svg.append("g");
+  data.inputs.forEach((d,i)=>mkbox(gi,d,32,inY[i],150,44,"var(--color-secondary)","var(--color-white)","var(--color-ink)"));
+
+  // arrows into SCM
+  const ai=[[182,106,300,180],[182,190,298,190],[182,274,300,200]];
+  ai.forEach(a=>svg.append("line").attr("x1",a[0]).attr("y1",a[1]).attr("x2",a[2]).attr("y2",a[3]).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)"));
+
+  // SCM
+  const gs=svg.append("g");
+  mkbox(gs,data.scm,304,142,112,96,"var(--color-red)","var(--color-white)","var(--color-red)");
+  // reposition SCM sub lines vertically centered
+  gs.selectAll(".lbl").attr("y",184);
+  gs.selectAll(".mono").attr("y",(d,i)=>202+i*16);
+
+  // fan-out arrows
+  [[416,166,520,128],[416,214,520,252]].forEach(a=>svg.append("line").attr("x1",a[0]).attr("y1",a[1]).attr("x2",a[2]).attr("y2",a[3]).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)"));
+
+  const go=svg.append("g");
+  mkbox(go,data.outputs[0],524,100,144,44,"var(--color-secondary)","var(--color-fill)","var(--color-ink)");
+  mkbox(go,data.outputs[1],524,236,144,44,"var(--color-secondary)","var(--color-fill)","var(--color-ink)");
+
+  const cap=["Structure orients the edges, magnitude scales them, history supplies the",
+    "unit-level record. Together they parameterize one SCM, which drives both",
+    "the counterfactual engine and the drift monitor."];
+  cap.forEach((t,i)=>svg.append("text").attr("class","lbl").attr("x",32).attr("y",330+i*14).attr("font-size",11).attr("fill","var(--color-secondary)").text(t));
+  svg.append("text").attr("class","lbl").attr("x",32).attr("y",404).attr("font-size",10).attr("fill","var(--color-secondary)").attr("letter-spacing","0.08em").text("SOURCE: CH.09 FROM PRIORS TO A LIVING MODEL");
+}
+function showTip(e,txt){tip.style("opacity",1).style("left",(e.pageX+12)+"px").style("top",(e.pageY+12)+"px").text(txt);}
+function hideTip(){tip.style("opacity",0);}
+draw();
+if(window.ResizeObserver){new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));}
+</script>
+</body>
+</html>

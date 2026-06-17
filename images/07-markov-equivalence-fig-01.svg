@@ -1,0 +1,74 @@
+<!--
+  Title: The three-node theorem (chain / fork / collider)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 07-markov-equivalence
+  Figure: 01
+  Type: Comparison panels (VG + MC)
+  Generated: 2026-06-16
+  Source: chapters/07-markov-equivalence.md
+-->
+<svg viewBox="0 0 700 420" role="img" aria-labelledby="fig-title-01" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-01">The three-node theorem: chain, fork, and collider over three nodes</title>
+  <desc>Three side-by-side panels each showing three nodes. The chain (A to B to C) and the fork (A from B to C) share the same independence signature and are rendered identically in gray to signal they cannot be told apart by data. The collider (A to B from C) is rendered in red to mark it as the one structure the data can orient.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="07-markov-equivalence" figure-number="01" figure-title="The three-node theorem (chain / fork / collider)" figure-slug="three-node-theorem" figure-type="Comparison panels" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/07-markov-equivalence.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#C8102E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">The three-node theorem: one signature, two stories, one exception</text>
+
+  <!-- panel frames -->
+  <rect x="32" y="64" width="200" height="220" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="250" y="64" width="200" height="220" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="468" y="64" width="200" height="220" fill="#FFFFFF" stroke="#C8102E" stroke-width="1"/>
+
+  <!-- panel labels -->
+  <text x="132" y="84" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">CHAIN</text>
+  <text x="350" y="84" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">FORK</text>
+  <text x="568" y="84" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E">COLLIDER</text>
+
+  <!-- PANEL 1: CHAIN  A -> B -> C  (left to right flow) -->
+  <!-- nodes -->
+  <circle cx="64" cy="180" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="132" cy="180" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="200" cy="180" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="64" y="185" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">A</text>
+  <text x="132" y="185" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">B</text>
+  <text x="200" y="185" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">C</text>
+  <line x1="82" y1="180" x2="114" y2="180" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="150" y1="180" x2="182" y2="180" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="132" y="244" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">A indep C given B</text>
+
+  <!-- PANEL 2: FORK  A <- B -> C  (B above, fans out) -->
+  <circle cx="282" cy="220" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="350" cy="140" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="418" cy="220" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="282" y="225" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">A</text>
+  <text x="350" y="145" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">B</text>
+  <text x="418" y="225" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">C</text>
+  <line x1="340" y1="153" x2="293" y2="206" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="360" y1="153" x2="407" y2="206" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="350" y="262" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">A indep C given B</text>
+
+  <!-- PANEL 3: COLLIDER  A -> B <- C  (converge into center, red emphasis) -->
+  <circle cx="500" cy="220" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="568" cy="140" r="16" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <circle cx="636" cy="220" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="500" y="225" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">A</text>
+  <text x="568" y="145" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">B</text>
+  <text x="636" y="225" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">C</text>
+  <line x1="513" y1="207" x2="556" y2="154" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <line x1="623" y1="207" x2="580" y2="154" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <text x="568" y="262" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">A indep C, NOT given B</text>
+
+  <!-- caption -->
+  <text x="32" y="318" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Chain and fork share one independence signature, so observational data cannot tell them apart - they are Markov-equivalent.</text>
+  <text x="32" y="336" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Only the collider (red) leaves a distinct fingerprint the data can read; orienting the gray pair needs outside (rep) knowledge.</text>
+  <text x="32" y="354" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Data identifies the equivalence class, not the graph (Verma-Pearl).</text>
+
+  <!-- source line -->
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.07 MARKOV EQUIVALENCE - WHY THE DATA CAN'T DECIDE</text>
+</svg>

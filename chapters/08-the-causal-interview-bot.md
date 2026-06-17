@@ -30,6 +30,9 @@ Identical data. Opposite causal inferences. The rep who has called on Dr. Martin
 
 There is a reframe worth holding here before the mechanics. In ordinary machine learning, the data scientist is the primary actor and the domain expert is consulted for a sanity check. In causal modeling the inversion is structural: the expert is the primary actor and supplies the edge-orientation the data cannot determine. She is not validating your model. She is building it. The rep who says "I've watched Dr. Johnson switch within two weeks of a colleague switching — never the other way" is reporting the result of an intervention she has observed many times but never formally ran. That is structural input, not anecdote. It is the only admissible source of the missing edge orientation short of a randomized trial, and every architecture that pretends otherwise is missing its most important data source.
 
+![Three knowledge sources and what each contributes: telemetry identifies the equivalence class; rep elicitation orients edges and supplies susceptibility/mediator weights; an RCT identifies the total effect. Elicitation fills the gap.](images/08-the-causal-interview-bot-fig-01.png)
+*Figure 8.1 — Knowledge sources and causal roles. Rep knowledge is necessary in principle; whether elicitation is reliable in practice is the open empirical question.*
+
 <!-- → [DIAGRAM: Knowledge sources mapped to causal identification roles — three columns: (1) Observational data / telemetry: identifies Markov equivalence class, leaves edges undirected; (2) Rep elicitation / KEBN: orients edges, supplies susceptibility indices and mediator weights; (3) RCT or natural experiment: identifies total effect, not pathway structure; arrows showing what each source contributes to the causal model; gap between column 1 and column 3 labeled "what elicitation fills"] -->
 
 ---
@@ -70,6 +73,9 @@ This maps to **mediator weights** — how much of the effect ran through educati
 
 **The dead end.** A first-pass bot asks all three rungs but, eager to be efficient, leads: "So the formulary clearing is what let her start writing, right?" The rep agrees. The edge `FORMULARY → PRESCRIBING` goes in tagged high-confidence — but it is the bot's hypothesis, not the rep's observation. The fix is sequencing and phrasing: Rung-1 open prompts first, before any hypothesis is on the table; never name the hypothesized edge in the question; and a contradiction probe that tests whether the rep actually holds the edge. Something like: "You said the formulary mattered for Dr. Martinez — does it matter the same way for your other accounts, or are there ones who write regardless?" A rep who held the edge with genuine structural knowledge answers consistently. A rep who was merely agreeing starts hedging.
 
+![The three-rung ladder — association, intervention, counterfactual — implementing Pearl's ladder in rep-natural language without naming the formalism.](images/08-the-causal-interview-bot-fig-02.png)
+*Figure 8.2 — The three-rung interview ladder. The ladder is necessary in principle; elicitation quality — resisting leading questions and hallucinated structure — remains the open question the evidence gate is built to guard.*
+
 <!-- → [DIAGRAM: Three-rung ladder diagram — three horizontal rungs labeled Rung 1 (Association), Rung 2 (Intervention), Rung 3 (Counterfactual); each rung shows: example prompt (in rep-natural language), what the system extracts, and what causal role the extracted information plays in the graph; connecting arrows show how Rung 1 output feeds Rung 2 framing and Rung 2 output feeds Rung 3 framing; side annotation: "Pearl's ladder, unspoken"] -->
 
 ---
@@ -86,7 +92,16 @@ For a worked transcript, this might yield the chain `OBJECTION → EDUCATION →
 
 And the deliverable requires one more section: a **"rejected edges" appendix** listing every edge the bot proposed but the rep did not support, with the reason for rejection. A prior DAG with no rejected edges is suspicious. It means either the rep confirmed everything — which suggests leading questions — or the bot proposed nothing that the rep didn't confirm — which suggests the bot had no prior of its own. Neither is credible. The rejected-edges appendix is the integrity check on the entire elicitation.
 
-<!-- → [TABLE: Annotated prior DAG edge format — columns: From node, To node, Evidence (rep quote), Confidence (high/med/low), Contradictions, Status (accepted/rejected); example rows including one accepted edge with full quote, one low-confidence edge with hedge preserved, one rejected edge with reason: "bot proposed, rep did not volunteer or support"] -->
+
+| From node | To node | Evidence (rep quote) | Confidence | Contradictions | Status |
+|---|---|---|---|---|---|
+| FORMULARY | PRESCRIBING_PROBABILITY | "She gets it but is formulary-blocked" | high | none | accepted |
+| SAMPLES | NP_PRESCRIBING | "I've seen her take samples for the nurse practitioner more than for herself" | med | none | accepted |
+| KOL | INSTITUTIONAL_NORM → PRESCRIBING | "I think the chief's opinion sort of trickles down, maybe — honestly I'm not sure how" | low | rep genuinely unsure of mechanism | accepted (low-confidence) |
+| PEER_INFLUENCE | PRESCRIBING (Dr. K) | Rep A: "peer influence is what drives Dr. K's writing" | med | Rep B asserts PRESCRIBING → PEER_INFLUENCE | accepted-contested |
+| MEAL | PRESCRIBING | (none — bot proposed, rep did not volunteer or support) | — | — | rejected |
+
+*Table 8.1 — Annotated prior DAG edge format.*
 
 ---
 
@@ -105,48 +120,6 @@ Two compliance points belong here rather than in an appendix, because they are s
 The first is the action-space constraint. Eliciting "how does Dr. X respond to the safety message" for educational-pathway modeling is appropriate. Eliciting "which physicians are most persuadable so we can target them more efficiently" edges toward the regulatory line from Chapter 5 and must not become a deployable targeting list. The elicitation is for *model construction*, not *susceptibility scoring for commercial use*. Keep those two purposes separate in how the prompts are framed and how the output is labeled.
 
 The second is the opening-case compliance consequence. A hallucinated M3 edge — reciprocity, the legally non-drivable channel — is not just a structural error. If that edge is carried into a downstream recommendation, it is the model asserting that meals drive prescribing for this brand, in this territory, for this physician. That assertion is a compliance liability. The evidence gate is not just methodological hygiene; it is what keeps the model's output on the M1 side of the regulatory map.
-
----
-
-**Five-Part AI Exercise Block**
-
-**When to use AI here.** Transcription of the rep interview; first-pass structure extraction tied strictly to rep quotes; contradiction surfacing across multiple transcripts. Use it as a clerk, not as a structural authority.
-
-**When NOT to use AI here.** Never let the LLM assert a causal edge from its training prior. Never let it phrase a leading question. Constrain it to open, hypothesis-free prompts at Rung 1, and reject any edge it proposes without a supporting rep quote.
-
-**LLM exercise (copy-paste prompt):**
-
-```
-You are a transcription-and-extraction assistant for expert elicitation.
-You will receive a transcript of an interview with a pharmaceutical sales rep.
-
-STRICT RULES:
-- Propose a causal edge ONLY if a specific quote from the REP supports it.
-  Quote the exact text in an "evidence" field for every edge.
-- Do NOT add edges from your own knowledge of pharma, meals, or prescribing.
-  If you believe an edge is plausible but the rep did not state it, list it
-  separately under "edges_i_would_have_guessed_but_rep_did_not_support"
-  and mark it REJECTED.
-- For each edge, output: from, to, evidence (rep quote), confidence
-  (high/med/low based on how firmly the rep held it — preserve hedges like
-  "usually" as medium/low), and contradictions (any conflicting statement
-  in the transcript).
-- Tag any in-visit signal (slide dwell time, reaction score) as
-  DOWNSTREAM-OF-MESSAGE — never as a confounder.
-
-Output JSON: { nodes: [...], edges: [...], rejected_edges: [...] }
-
-TRANSCRIPT:
-<paste transcript here>
-```
-
-**CLI exercise.** Pipe a folder of transcripts through the extraction prompt via a script, write each annotated DAG to JSON, then run a command-line aggregation (`jq` over the JSON files) that counts: (1) how many edges across all transcripts have an empty `evidence` field — hallucination candidates; (2) how many edges appear with opposite orientation across transcripts — the contradictions Chapter 9 must treat as sensitivity dimensions. These two counts are the elicitation's quality metrics.
-
-**AI validation.** For every machine-proposed edge, verify that the cited quote actually appears in the transcript and actually supports the stated orientation — LLMs paraphrase quotes into existence. Then run a held-out test: remove the last third of a transcript, have the bot extract the graph from the first two-thirds, and check whether the held-out portion would have changed any orientation. A graph that is stable to how much the rep said is more trustworthy than one that flips on the last few exchanges.
-
-**AI Use Disclosure**
-
-*Write two sentences naming what an AI tool did in your work for this chapter and the one judgment it could not make. For example: "I used an LLM to extract candidate edges from the transcript and to surface contradictions across three rep interviews; I determined myself which of the proposed edges had genuine rep-quote support and which were the model's training prior about formulary access, because the model cannot distinguish a quote it found from a quote it expected to find."*
 
 ---
 
@@ -198,3 +171,180 @@ The chapter's strong claim is that the LLM should only transcribe and structure,
 
 9. *(Open-ended — the recognition-explanation gap)* The rep knows Dr. Martinez will switch. She cannot state the rule. Propose a method — beyond the three-rung interview — that would either (a) convert her tacit recognition into an oriented structural edge, or (b) use her recognition as a calibration signal for the edge's parameters in Chapter 9 without requiring her to articulate the rule. Name the assumption your method relies on, the data it requires, and the way it could fail.
    *What this tests: attacking the chapter's standing unresolved problem rather than accepting it as a fixed ceiling.*
+
+---
+
+## Prompts
+
+### Figure 8.1 — Knowledge sources and causal roles
+
+Generate a single self-contained HTML file (inline CSS, no build step) that renders a three-column comparison diagram with D3 7.9.0 loaded only from `https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js`. Diagram type: multi-column comparison, viewBox 0 0 700 420. Data shape: three column objects, each with a label, a one-line subtitle, and a small graph fragment. Marks: a labeled source-box rect atop each column, plus node circles and connecting line edges drawn inside each column. Column 1 (TELEMETRY) shows three nodes joined by plain undirected segments; column 2 (REP ELICITATION, red accent) shows the same triangle with directed red arrowheads; column 3 (EXPERIMENT) shows two nodes joined by one thick total-effect arrow. Channels: color encodes source role (red = elicitation), stroke weight encodes the bold total-effect edge. Layout: columns left-to-right at x-centers 132 / 350 / 568. Annotation: a horizontal brace spanning column 1 to column 3 with the label "the gap only elicitation fills: edge orientation," plus a four-line caption noting elicitation is necessary in principle but reliability is the open question. Use only `var(--color-*)` tokens (no hardcoded hex). Include hover/focus tooltips, keyboard support, and a ResizeObserver redraw.
+
+### Figure 8.2 — The three-rung interview ladder
+
+Generate a single self-contained HTML file (inline CSS, no build step) that renders a three-rung ladder diagram with D3 7.9.0 loaded only from `https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js`. Diagram type: ladder / row-comparison, viewBox 0 0 700 420. Data shape: three rung objects (Rung 1 Association, Rung 2 Intervention, Rung 3 Counterfactual), each with a question type, what the system extracts, and the causal role; column headers QUESTION TYPE / SYSTEM EXTRACTS / CAUSAL ROLE. Marks: three rects per rung (one per column), with title and mono-font text labels; stroke darkens from bottom rung to top to signal deepening commitment. Channels: vertical position encodes rung order (bottom = association, top = counterfactual); stroke weight encodes depth. Layout: rungs stacked bottom-to-top at y 232 / 158 / 84, columns at x 116 / 286 / 468. Annotations: a left-side red up-arrow labeled "deepening causal commitment," right-side feed-forward arrows labeled "output frames the rung above," and a side annotation that the ladder is Pearl's, unspoken; caption notes elicitation quality is the open question the evidence gate guards. Use only `var(--color-*)` tokens. Include tooltips, keyboard support, ResizeObserver redraw.
+
+---
+
+## Chapter 8 Exercises: The Causal Interview Bot
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** The keystone build — the KEBN elicitation engine itself (three-rung ladder, evidence gate, rejected-edges appendix) and the annotated prior-DAG it emits.
+
+### Exercise 1 — When to Use AI
+
+This is the chapter where the bot becomes real, and the LLM is the engine of it — but only at the clerk tasks the chapter authorizes. Two places AI earns its keep:
+
+- **Transcribe a rep interview and extract candidate nodes and edges strictly tied to quotes.** *Why AI works here:* (transcription + grounded extraction) — turning speech into text and tagging quote-supported edges is mechanical, and you can verify every edge by finding its quote in the transcript.
+- **Surface contradictions across many transcripts** — where Rep A and Rep B assert opposite orientations of the same edge. *Why AI works here:* (pattern-matching across volume) — tracking edge agreement across dozens of interviews is tedious for a human and checkable by re-reading the two cited quotes.
+
+**The tell:** you can independently evaluate the output — every extracted edge points at a verbatim quote you can locate, and every flagged contradiction names two findable statements. The model is a fast transcriptionist and indexer, not a source of structure.
+
+### Exercise 2 — When NOT to Use AI
+
+- **Never let the bot assert a causal edge from its training prior.** *Why AI fails here:* (LLM-suggestibility / leading-the-witness) — a model trained on pharma literature "knows" meals correlate with prescribing and will volunteer `MEAL → PRESCRIBING`, then find a quote to support it; that reverses the evidence gate and, worse, lands a hallucinated edge on the legally non-drivable reciprocity pathway.
+- **Never let the LLM phrase the interview questions, or judge which proposed edges had genuine rep support.** *Why AI fails here:* (causal-ID + ground truth) — distinguishing a quote the model *found* from a quote it *expected to find* is exactly the judgment it cannot make, and a leading question manufactures the structural knowledge you needed the rep to supply unprompted.
+
+**The tell:** AI as reason vs tool — if the *reason* an edge is in the DAG is "the model proposed it," the elicitation has imported the interviewer's prior and stamped it "rep-confirmed" (the opening case). The rep's volunteered quote is the reason; the bot is the tool that records and audits it.
+
+**Series connection:** tier **T5 (Causal)** for the edge-orientation judgment and **T6 (Collective)** for eliciting and reconciling expert knowledge across reps — this chapter is the clearest case in the book where the irreducibly human core is *getting the structural knowledge out of the experts*, not computing anything. The LLM can clerk; it cannot be the expert or the interviewer of record.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building:** The extraction-and-evidence-gate core of the bot — the component that converts a rep transcript into an annotated prior DAG with verbatim evidence, hedged confidence, contradictions, and a rejected-edges appendix.
+
+**Tool:** Claude, as a **Claude Project** — the bot spec (strict rules, JSON schema, downstream-tagging, evidence gate) is persistent context, so every transcript you drop in is processed under the same discipline. A fresh chat would re-import its pharma prior; the Project is the firewall made durable.
+
+**The Prompt:**
+
+```
+You are the extraction-and-evidence-gate core of an expert-elicitation bot
+for pharmaceutical rep-visit data.
+
+STRICT RULES:
+- Propose a causal edge ONLY if a specific quote from the REP supports it.
+  Put the exact quote in an "evidence" field for every edge.
+- Do NOT add edges from your own knowledge of pharma, meals, or prescribing.
+  If an edge is plausible but the rep did not state it, list it under
+  "rejected_edges" with reason "bot-proposed, rep did not support".
+- For each edge output: from, to, evidence (verbatim rep quote), confidence
+  (high/med/low, preserving hedges — "usually" is medium, "I think maybe" is
+  low), contradictions (any conflicting statement in the transcript).
+- Tag any in-visit signal (slide dwell time, reaction score) as
+  DOWNSTREAM-OF-MESSAGE — never a confounder.
+- A prior DAG with an EMPTY rejected_edges list is suspicious; if you
+  proposed nothing the rep did not confirm, say so explicitly.
+
+Output JSON: { nodes:[...], edges:[...], rejected_edges:[...] }
+
+TRANSCRIPT:
+Bot: Walk me through your last visit with Dr. Okafor. What did she say at the
+safety data?
+Rep: She slowed right down there. Said she'd been burned by a withdrawal
+years back, so she reads every safety slide twice. After we went through it
+she said "okay, I can defend this one to my partners now."
+Bot: Anything outside the visit that affects whether she writes?
+Rep: Her formulary cleared it in March — before that she liked it but
+couldn't write it. Honestly once that cleared she was always going to come
+around, the safety talk just gave her the language for it.
+Bot: What about the lunch your team brought?
+Rep: I mean we bring lunch everywhere, I wouldn't read anything into that.
+```
+
+**What this produces:** A JSON annotated prior DAG with edges like `SAFETY_EDUCATION → PRESCRIBING_CONFIDENCE → PRESCRIBING` (high confidence, verbatim quote), `FORMULARY → PRESCRIBING` (high, "couldn't write it" / "once that cleared"), and `MEAL → PRESCRIBING` correctly sitting in `rejected_edges` because the rep waved it off.
+
+**How to adapt:** swap in your own synthetic transcript; run a folder of transcripts through and diff the outputs; on **ChatGPT or Gemini**, paste the STRICT RULES block above each transcript; in a **Claude Project**, store the rules and schema once as project instructions.
+
+**Connection to previous chapters:** The downstream-tagging rule is Chapter 6's collider screening; the edges this bot orients are Chapter 7's reversible edges, now closed by rep evidence rather than tie-breaks.
+
+**Preview of next chapter:** The annotated DAG this bot emits — with its confidence tags and contradictions — becomes Chapter 9's input: each edge gets a structural equation and a provenance tag, and contested edges become sensitivity dimensions.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** This is where the bot is actually scaffolded as code — the elicitation loop plus the prior-DAG emitter, run over synthetic transcripts, with the two quality metrics the chapter names.
+
+**Tool:** Claude Code — because the bot is a multi-file artifact (loop, extractor, emitter, aggregator) that you will iterate on. **Skill level:** intermediate (can run a script, read JSON, and use `jq` or equivalent).
+
+**Setup:**
+- [ ] Python 3.11+ (or Node), with access to an LLM API key OR a stubbed extractor for offline runs.
+- [ ] A `transcripts/` folder of 3–5 SYNTHETIC rep interviews (write them — no real interviews).
+- [ ] A `CLAUDE.md` stub: "synthetic transcripts only; evidence gate is non-negotiable; never invent quotes."
+
+**The Task:**
+
+```
+Work only in src/, transcripts/, and out/. Synthetic transcripts only — no
+real interview data exists in this repo. Do not call any real CRM system.
+
+Build the elicitation-loop scaffold:
+1. src/extract.py — reads one transcript, applies the evidence-gate prompt
+   (or a deterministic stub), and writes out/<name>.dag.json with fields:
+   nodes, edges (from,to,evidence,confidence,contradictions), rejected_edges.
+2. src/run_all.py — loops over every transcript in transcripts/ and writes
+   one DAG JSON per transcript.
+3. src/metrics.py — aggregates the JSON files and prints exactly two numbers:
+   (a) EMPTY-EVIDENCE EDGES: count of edges across all DAGs whose evidence
+       field is empty (hallucination candidates);
+   (b) CONTRADICTED EDGES: count of node-pairs that appear with OPPOSITE
+       orientation across transcripts (Chapter 9 sensitivity dimensions).
+
+Stopping condition: run_all produces one JSON per transcript and metrics
+prints both numbers.
+Verification step: assert every edge in every output has a non-empty evidence
+field OR appears in rejected_edges; print "EVIDENCE GATE HELD" if so, else
+list the offending edges.
+```
+
+**Expected output:** One annotated DAG JSON per transcript, plus two metrics — empty-evidence edge count (should be zero if the gate held) and contradicted-edge count (the contested edges Chapter 9 must treat as sensitivity dimensions).
+
+**What to inspect:** Open one DAG JSON and confirm every edge's `evidence` field contains text that actually appears in its source transcript. LLMs paraphrase quotes into existence; a quote that is not in the transcript is a gate breach.
+
+**If it goes wrong:** If "EVIDENCE GATE HELD" fails, an edge has an empty or invented quote — move bot-proposed edges to `rejected_edges` and re-run; if quotes are paraphrased, tighten the prompt to demand verbatim substrings. (Recovery: the transcripts are yours, so you can grep any cited quote.)
+
+**CLAUDE.md note:** Add "Bot is an elicitation clerk, not a structural authority. Every edge needs a verbatim rep quote or it goes in rejected_edges. Never invent quotes. In-visit signals are downstream-of-message. An empty rejected_edges list is a red flag, not a clean result."
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** The bot's own output — the annotated prior DAG from Ex3 or Ex4 — auditing whether the evidence gate actually held and whether any edge is a hallucination or a led-the-witness artifact.
+
+**Validation type:** Evidence-gate audit against the source transcript. **Risk level:** **High** — a hallucinated edge on the reciprocity (M3) pathway is a compliance liability that asserts meals drive prescribing; a led-the-witness edge launders the interviewer's prior as rep knowledge.
+
+**Setup:** Use your Ex3/Ex4 DAG. Or practice on this pre-flawed artifact: a DAG containing the edge `MEAL → PRESCRIBING` tagged "rep-confirmed, high confidence" whose only supporting quote is the rep agreeing to a bot-proposed leading question ("that's really what tipped her over, right?" / "Yeah, the timing lined up, sure").
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 8 (The Causal Interview Bot)
+
+For the annotated prior DAG and its source transcript below, mark each item
+PASS / FAIL / CANNOT-DETERMINE with a one-line reason:
+
+1. Correctness — Does every edge's evidence field contain a verbatim quote
+   that actually appears in the transcript and supports the stated
+   orientation?
+2. Completeness — Is there a rejected-edges appendix, and is it non-empty?
+   (An empty appendix is itself suspect.)
+3. Scope — Is the output for MODEL CONSTRUCTION only, not a deployable
+   susceptibility / targeting score?
+4. Chapter-specific: Evidence gate — Was each accepted edge VOLUNTEERED by
+   the rep, or merely CONFIRMED after the bot proposed it in a leading
+   question? Trace the surrounding turns.
+5. Chapter-specific: Downstream tagging — Are dwell time and reaction score
+   tagged downstream-of-message, never as confounders?
+6. Failure-mode check — Scan for the fluent-but-wrong tell: leading-the-
+   witness (rep agreeing to a bot-proposed edge) or a hallucinated edge with
+   no real quote — especially any M3/reciprocity edge (e.g. MEAL →
+   PRESCRIBING). Any such edge is an automatic FAIL. Flag any "rep-confirmed"
+   tag that lacks an unprompted volunteered quote (missing ground truth).
+
+DAG:
+<paste Ex3/Ex4 DAG here>
+TRANSCRIPT:
+<paste the source transcript here>
+```
+
+**What to do with findings:** All pass — the elicitation is auditable; carry the DAG to Chapter 9. One fail — move the offending edge to rejected_edges (or downgrade its confidence) and re-audit. Multiple fails — the bot is leading the witness or hallucinating; rebuild the prompt with the evidence gate and treat the DAG as untrustworthy.
+
+**AI Use Disclosure prompt (mandatory):** *Write two sentences naming what an AI tool did in this exercise and the one judgment it could not make. For example: "I used Claude to transcribe the interview and extract candidate edges and surface contradictions across three reps; I determined myself which proposed edges had genuine volunteered rep support versus which were the model's training prior about meals and formulary access, because the model cannot distinguish a quote it found from a quote it expected to find."*
+
+**Series connection:** The signature failure mode is **leading-the-witness or a hallucinated edge in the elicited prior** — an interviewer's prior laundered as rep knowledge, with no unprompted quote behind it. This is a **T5 (Causal)** and **T6 (Collective)** validation task: only a human who knows the transcript and the experts can certify the structural knowledge is genuinely the reps'.

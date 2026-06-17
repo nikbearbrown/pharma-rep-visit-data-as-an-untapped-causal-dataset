@@ -45,6 +45,10 @@ Goodman-Bacon (2021, *Journal of Econometrics* 225(2):254–277) proved that the
 
 de Chaisemartin and D'Haultfœuille (2020, *AER* 110(9):2964–2996) proved the same pathology from a different angle: TWFE estimates a weighted sum of average treatment effects whose weights may be negative. And Sun and Abraham (2021, *Journal of Econometrics* 225(2):175–199) showed the event-study version of the bug — apparent pre-trends in a TWFE event study can be a pure artifact of treatment-effect heterogeneity, not evidence of a real parallel-trends violation. TWFE can not only flip the sign of your effect; it can manufacture a fake pre-trend that makes you abandon a valid design.
 
+![Goodman-Bacon decomposition of a staggered TWFE estimate into three families of 2x2 difference-in-differences comparisons: newly-treated vs not-yet-treated (valid, positive weight), earlier vs later treated in the later cohort's pre-window (valid, positive weight), and later treated vs an already-treated control (forbidden, weight may go negative), which sum to the contaminated TWFE coefficient.](images/10-staggered-did-message-variants-fig-01.png)
+
+*Figure 10.1 — TWFE is a weighted average of 2×2 comparisons. The forbidden family — already-treated units used as controls — can carry negative weights and flip the sign of a real positive effect (Goodman-Bacon). The fix is Callaway–Sant'Anna, not a better TWFE.*
+
 <!-- → [DIAGRAM: Goodman-Bacon decomposition visualization — three panels showing "newly treated vs not yet treated" (valid, positive weight), "earlier vs later treated" (valid, positive weight), and "later vs earlier treated" (forbidden — already-treated as control, can carry negative weight). Weights sum to the TWFE coefficient. Caption: "TWFE is a weighted average of 2×2 comparisons. Forbidden comparisons — already-treated units used as controls — can carry negative weights and flip the sign of a real positive effect."] -->
 
 ---
@@ -61,7 +65,14 @@ The fix is to build comparisons by hand from clean 2×2 building blocks that nev
 
 **Goodman-Bacon (2021) — as diagnostic.** Run the decomposition to *show* how much of a naive TWFE estimate comes from forbidden comparisons. It is your teaching exhibit: it makes the bug visible before you switch estimators.
 
-<!-- → [TABLE: Four estimators side by side — Callaway–Sant'Anna, Sun–Abraham, de Chaisemartin–D'Haultfœuille, Goodman-Bacon. Columns: use case, key assumption, handles non-absorbing treatment, R package. Caption: "Choosing the right estimator. Goodman-Bacon is a diagnostic; the others are estimation strategies for different design structures."] -->
+| Estimator | Use case | Key assumption | Handles non-absorbing treatment | R package |
+| --- | --- | --- | --- | --- |
+| Callaway–Sant'Anna | Workhorse ATT(g, t) estimation; aggregate to event study, cohort, or overall ToT | Conditional parallel trends; absorbing treatment | No (absorbing design) | `did` |
+| Sun–Abraham | Uncontaminated event-study / dynamic path is the deliverable | Parallel trends; no anticipation | No (absorbing design) | `fixest::sunab` |
+| de Chaisemartin–D'Haultfœuille | Treatments that turn on *and off* (re-versioned, rolled-back decks) | Parallel trends per switch | Yes | `did_multiplegt` |
+| Goodman-Bacon | *Diagnostic only* — decompose a naive TWFE into its 2×2 comparisons and expose forbidden-comparison weight | (Decomposition identity, not an estimator) | n/a | `bacondecomp` |
+
+*Table 10.1 — Choosing the right estimator. Goodman-Bacon is a diagnostic; the others are estimation strategies for different design structures. Naive TWFE on staggered adoption with heterogeneous effects is biased (Goodman-Bacon negative weights) — none of these columns is "run TWFE."*
 
 ---
 
@@ -131,6 +142,10 @@ Under conditional parallel trends — conditioning on rep tenure, baseline presc
 
 **One dead end to name explicitly.** A tempting "improvement" is to add in-visit engagement — dwell time, reaction score — to the conditioning set "to control for how engaged the physician was." Do not. Those variables are caused by the very message you are studying: they are post-treatment colliders. Conditioning on them inside the DiD reopens a closed path and corrupts the message-to-prescribing estimate. This is the collider discipline from Chapter 6, now operating inside Project 1. Chapter 11 makes it the central worked example.
 
+![Event-study coefficient plot over relative event time with a visible zero line. The naive TWFE path (dashed) shows spurious sloping pre-trend leads and artificially negative early lags; the Callaway-Sant'Anna path (solid) shows flat leads near zero and a positive growing staircase of lags that recovers the planted synthetic ground truth shown as a horizontal reference.](images/10-staggered-did-message-variants-fig-02.png)
+
+*Figure 10.2 — The same data, two estimators. TWFE reverses the sign of a real positive effect; the clean estimator recovers the planted ground truth. This is an event-study plot of signed coefficients around a zero line, not a zero-baseline bar chart — and the falsification test runs before any of these coefficients is believed.*
+
 <!-- → [DIAGRAM: Event-study plot with two overlapping lines — TWFE (dashed, showing artificially negative early lags and spurious pre-trends) and Callaway–Sant'Anna (solid, showing flat pre-treatment leads and growing positive post-treatment lags). Known synthetic ground truth marked as horizontal reference. Caption: "The same data, two estimators. TWFE reverses the sign of a real positive effect. The clean estimator recovers the planted ground truth."] -->
 
 ---
@@ -157,20 +172,6 @@ I would weaken the claim that Project 1 is the most feasible, highest-value stud
 How non-absorbing is a real message rollout in practice? Decks get re-versioned. Reps informally revert to old slides on difficult calls. The "treatment is on" assumption that Callaway–Sant'Anna requires is a modeling choice, and it may be a poor one for real field data. What is the right treatment representation for "deck version 3.2 versus 3.1 versus 2.0"?
 
 What is the correct outcome scale? Prescribing counts are bounded and skewed. Parallel trends in counts and parallel trends in log counts are different assumptions, and for a drug entering a market they can disagree sharply. The functional-form choice is load-bearing and under-discussed in pharma analytics.
-
----
-
-**LLM exercise (copy-paste prompt):**
-
-> "I have a physician-by-month panel: columns npi, month, nrx, cohort_g (treatment-start month; 0 = never treated), territory, rep_tenure, baseline_nrx. Treatment is a message-deck rollout staggered across training cohorts; I am not yet sure whether decks ever get rolled back. Do four things: (1) explain in plain language a brand manager would understand why a naive TWFE regression of nrx on a post-treatment dummy could return a NEGATIVE coefficient even if the deck helped every cohort — name the mechanism; (2) give me R code using the `did` package to estimate group-time ATTs with a doubly-robust estimator, a not-yet-treated control group, and conditioning on rep_tenure plus baseline_nrx plus territory, then aggregate to an event study and an overall ToT; (3) tell me which TWO checks I must run BEFORE I interpret the ToT, and what result on each would kill the design; (4) tell me what to do differently if decks DO get rolled back. Do not tell me parallel trends is satisfied — I will test that myself. List any variable in my schema I should NOT condition on, and why."
-
-**CLI exercise.** In a repo containing the synthetic panel, ask Claude Code to: (a) write the falsification-first pipeline as a runnable script with pytest checks that *assert the method recovers the synthetic ground-truth ToT within tolerance* and *assert that naive TWFE does not*; (b) wire a `make verify` target that runs both and prints a pass/fail table. The validation artifact — "CS recovers truth, TWFE fails" — is the test suite itself.
-
-**AI Validation exercise.** The check is recovery, not plausibility. The synthetic dataset has a known ground-truth ToT; your estimate is validated by recovering that number within its confidence interval. An estimate that "looks reasonable" but misses the planted truth is a failed validation. Confirm also that TWFE *fails* on the identical data — the failure is not a bug, it is the teaching exhibit.
-
-**AI Use Disclosure**
-
-*Write two sentences naming exactly what an AI tool did in your work for this chapter and what judgment you supplied that the AI could not. The judgment most specific to this chapter: whether the falsification test passed on your rollout's data — a domain determination about whether cohort timing was actually driven by logistics rather than physician characteristics, which the model cannot assess and which you must defend from knowledge of how this rollout actually happened.*
 
 ---
 
@@ -201,3 +202,178 @@ What is the correct outcome scale? Prescribing counts are bounded and skewed. Pa
 **Challenge**
 
 9. *(Challenge — produce the named artifact)* Build the full falsification-first Project 1 pipeline on the synthetic panel: the Bacon decomposition showing TWFE bias, the falsification regression and event-study leads with explicit pass/kill reporting, the Callaway–Sant'Anna estimation with doubly-robust conditioning, the Honest-DiD sensitivity band, and the ToT readout paragraph with assumptions and sensitivity stated. Confirm that the method recovers the planted ground truth and TWFE does not. *What this tests: whether you can execute the full discipline end to end as a complete, reproducible artifact.*
+
+---
+
+## Prompts
+
+### Figure 10.1 — Goodman-Bacon decomposition of TWFE into 2×2 comparisons
+
+Generate a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a three-panel process/comparison diagram. Each panel is a horizontal pre/post timeline pair: Panel A "newly treated vs not-yet-treated" (valid, positive weight); Panel B "earlier vs later treated, later's pre-window" (valid, positive weight); Panel C "later treated vs ALREADY-treated control" (forbidden, weight may go negative), with the already-treated control row colored in the single red data accent and a blocked terminator. Treated rows split gray (pre) then ink (post) at a dashed onset line; each panel carries a small +w / -w weight tag. Three convergence arrows feed a summation node, then one arrow to a "combined TWFE / contaminated mix" box. Brutalist style: white background, ink #2a1a0e, one red series #C8102E, gray hairlines, no gradients, rx=0 rects, EB Garamond title / Inter body / JetBrains Mono ticks (full font chains, CSS variables, light+dark). Marks: rects for timeline blocks, lines with an arrowhead marker for flow. Sort panels valid-then-forbidden top to bottom. Not a quantitative chart — no axes. Annotate the negative-weight caveat in the caption. Deliverable: one HTML file.
+
+### Figure 10.2 — Two-estimator event-study overlay (TWFE vs Callaway–Sant'Anna)
+
+Generate a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering an event-study line chart of ATT coefficients over relative event time (x: ordered points -4,-3,-1,1,3,5; y: signed coefficient with an explicit zero line — NOT a zero-baseline bar chart). Two series: naive TWFE (dashed gray, spurious sloping leads and artificially negative early lags) and Callaway–Sant'Anna (solid red, flat leads near zero, growing positive lags). Add a horizontal dashed "planted truth" reference line and a vertical dashed onset guide at relative time 0. Channels: x=relative time (point scale), y=coefficient (linear, includes zero), color/dash=estimator. Square point markers, interactive (tabindex, aria-label, Enter/Space, tooltip position:absolute pointer-events:none), gridlines aria-hidden. Brutalist palette and full font chains via CSS variables (light+dark), margins top48/right40/bottom56/left64, ResizeObserver redraw, reduced-motion guard, inline FALLBACK_DATA literal. Caption notes magnitudes are inferred and the falsification test precedes belief. Deliverable: one HTML file.
+
+---
+
+## Chapter 10 Exercises: Staggered Difference-in-Differences on Message-Variant Transitions
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** The bot's elicited priors inform the DiD design itself — which message variants to compare, which controls satisfy exclusion, and what to falsify first — before a single ATT(g, t) is estimated.
+
+### Exercise 1 — When to Use AI
+
+You have a physician-by-month panel and a staggered message-deck rollout, and you have already run the Causal Interview Bot from Chapter 8 to elicit rep priors. Three places where reaching for an LLM is the right move, and the discipline that makes each one safe.
+
+- **Task A.** Have the model scaffold the `did` package call — `att_gt` with a doubly-robust estimator, not-yet-treated control, conditioning on rep tenure, baseline prescribing, and territory — and the `aggte` aggregations to a dynamic event study and overall ToT. *Why AI works here:* the API surface of `did` is stable and documented; you can run the code on the synthetic panel and confirm it recovers the planted ground truth, so a wrong call fails loudly rather than silently.
+- **Task B.** Ask the model to translate the Goodman-Bacon decomposition output into one plain-language paragraph a brand manager would follow — "X percent of your estimate came from already-treated-as-control comparisons that run backwards while the effect is still growing." *Why AI works here:* you hold the decomposition numbers; the model only rewords them, and you can check the rewording against the table line by line.
+- **Task C.** Feed the model the bot's elicited prior — the ranked list of which variant transitions reps believe moved prescribing — and ask it to draft the *falsification order*: which cohort-on-pre-prescribing regression to run first and which exclusion threat (early-trained reps being better sellers generally) to defend first. *Why AI works here:* the prior is the input you supply and own; the model is sequencing checks you will still execute and judge.
+
+**The tell:** in every case you can independently evaluate the output — recover ground truth, check a number against a table, run a regression you ordered. If you could not verify it, it would not belong here.
+
+### Exercise 2 — When NOT to Use AI
+
+Three judgments the model must not make, no matter how fluent it sounds.
+
+- **Task A.** Do not ask the model whether parallel trends holds on *your* rollout. *Why AI fails here:* this is a causal-ID judgment about whether cohort timing was driven by training logistics or by physician prescribing dynamics — a ground-truth fact about how the rollout actually happened that lives in the field, not in the schema. The model will pattern-match to "trends look parallel" from the flat leads, which Roth (2022) shows is exactly the underpowered, selection-biased inference you must not lean on.
+- **Task B.** Do not let the model "improve" the conditioning set by adding in-visit engagement — dwell time, reaction score. *Why AI fails here:* it ranks variables by predictiveness, and these are post-treatment colliders caused by the very message under study. Including them reopens a closed path. This is a values-and-structure call the SCM decides, not a feature-importance ranking. (LLM-suggestibility: the model will offer the collider as a "useful control" because it correlates with the outcome.)
+- **Task C.** Do not let the model decide whether the recovered ToT licenses a targeting decision. *Why AI fails here:* the ToT is a total effect with no pathway decomposition; whether it should drive volume is a values/consent judgment the model cannot weigh.
+
+**The tell:** if the AI is functioning as the *reason* you believe the design is valid, stop — it must be a *tool* that drafts and rewords while you supply the domain determination. **Series connection:** Tier **T4 (Bounded Reliability)** — the DiD machinery is reliable to scaffold and verify against synthetic ground truth, but the load-bearing identification judgment (did logistics or physician characteristics drive cohort timing) is yours and cannot be delegated.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building:** a falsification-ordered DiD design memo for the message-variant rollout, with the Causal Interview Bot's elicited prior wired in as the input that decides which variants and controls to test first.
+
+**Tool:** Claude, run as a **Claude Project**. Use a Project (not a one-off chat) because the bot you built in Chapter 8 — its elicited priors, its variant taxonomy, its rep-knowledge structure — is persistent context you will carry across Chapters 10–13; loading it once into the Project knowledge base means every later chapter's prompt inherits it without re-pasting.
+
+**The Prompt:**
+
+```
+You are helping me design a staggered difference-in-differences study on a
+pharma message-deck rollout. I have a physician-by-month panel with columns:
+npi, month, nrx, cohort_g (treatment-start month; 0 = never treated),
+territory, rep_tenure, baseline_nrx. The deck shifted from efficacy-first to
+safety-first messaging, rolled out across three training cohorts (West Jan,
+Midwest Feb, Southeast Mar) because of training logistics.
+
+From my Causal Interview Bot I have elicited this rep prior: reps believe the
+safety-first deck moved prescribing most for mid-tier physicians with an
+unresolved renal-dosing concern, moved nothing for high-volume loyalists, and
+may have BACKFIRED with two industry-skeptical accounts. Reps also flagged that
+early-trained (West) reps were the most senior and best sellers overall.
+
+Do five things:
+1. Using the rep prior, tell me which cohort comparison and which subgroup I
+   should be most suspicious of for an exclusion violation, and why.
+2. Give me the falsification ORDER: which check to run first, second, third,
+   and for each the specific result that kills the design. Include the
+   cohort-on-pre-prescribing-slope regression and the pre-treatment event-study
+   leads.
+3. Give me R code using the `did` package: att_gt with a doubly-robust
+   estimator, a not-yet-treated control group, conditioning on rep_tenure +
+   baseline_nrx + territory, then aggte to a dynamic event study and an overall
+   ToT.
+4. List every variable I should NOT condition on and label each as a
+   pre-treatment confounder I kept or a post-treatment collider I excluded.
+5. Tell me what the rep "backfire" prior implies for how I should read a
+   negative lag for those two accounts — and why I must not treat that prior as
+   evidence the design is valid.
+
+Do not tell me parallel trends is satisfied. Do not adjudicate whether the
+effect should drive targeting. Flag anything you are unsure of as [verify].
+```
+
+**What this produces:** a design memo that orders falsification before estimation, names the exclusion threat the rep prior surfaced, gives runnable `did` code, and an explicit kept/excluded variable ledger — the front half of the Project 1 named artifact.
+
+**How to adapt:** swap in your own synthetic panel's column names; if you use ChatGPT or Gemini instead, paste the bot's elicited prior inline at the top of the prompt rather than relying on Project knowledge (those tools lack the persistent bot context, so you re-supply it each session). Keep a Claude Project if you are doing Chapters 10–13 in sequence.
+
+**Connection to previous chapters:** the elicited prior comes straight from the Chapter 8 Causal Interview Bot; the collider-exclusion ledger applies Chapter 6's discipline inside a live DiD; the estimand (ToT, not ATE) is Chapter 4's.
+
+**Preview of next chapter:** Chapter 11 takes the same kept/excluded ledger and makes it the central worked example — you will specify the full SCM *before* any DML or causal forest runs, so the bot's prior stops being advice and becomes the graph that chooses the controls.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** a falsification-first DiD pipeline as a runnable script with a test suite that asserts the method recovers the synthetic ground-truth ToT and that naive TWFE does not.
+
+**Tool:** Claude Code — because this is a read-write-test loop across a repo (data, script, tests, a `make verify` target), which is exactly what an agentic CLI does well and a chat cannot. · **Skill level:** intermediate (you should be able to read R/Python and a pytest assertion).
+
+**Setup:**
+- [ ] A repo containing the synthetic rep-visit panel (synthetic only — real CRM telemetry is partner-proprietary and behind the firewall).
+- [ ] R with the `did`, `bacondecomp`, and `HonestDiD` packages, or the Python equivalents, installed.
+- [ ] The known planted ground-truth ToT recorded somewhere the test can read it.
+
+**The Task:**
+
+```
+Read the synthetic physician-by-month panel in data/synthetic_panel.csv and the
+ground-truth ToT in data/ground_truth.json. Do NOT touch anything in private/ or
+any file matching *_real_* — those are proprietary and out of scope.
+
+Write a single runnable pipeline script that, in order:
+1. runs naive TWFE and a Goodman-Bacon decomposition, printing the
+   forbidden-comparison weight share;
+2. runs the falsification regression (cohort on pre-rollout prescribing slope,
+   controlling for specialty and territory) and prints PASS/KILL;
+3. estimates ATT(g, t) via Callaway-Sant'Anna (doubly robust, not-yet-treated
+   control, conditioning on rep_tenure + baseline_nrx + territory) and
+   aggregates to an event study and overall ToT;
+4. attaches an Honest-DiD relative-magnitude sensitivity band.
+
+Then write pytest tests that ASSERT (a) Callaway-Sant'Anna recovers the
+ground-truth ToT within its confidence interval, and (b) naive TWFE does NOT
+recover it (the failure is the teaching exhibit, not a bug). Wire a `make verify`
+target that runs the pipeline and the tests and prints a pass/fail table.
+
+Stopping condition: `make verify` runs green with both assertions passing. Do not
+hard-code the estimate to match ground truth — read it from the estimator output.
+After it passes, print which lines of the script choose the conditioning set, so
+I can confirm no post-treatment variable entered.
+```
+
+**Expected output:** a pipeline script, a passing test file, a `make verify` target, and a printed pass/fail table showing CS recovers truth and TWFE fails.
+
+**What to inspect:** the conditioning-set lines (confirm dwell/reaction never entered), and that the ground-truth value is *read*, not pasted into the assertion to force a pass.
+
+**If it goes wrong:** the agent may make the TWFE assertion pass trivially by loosening tolerance until everything "recovers." Recovery: require the TWFE test to assert a *signed* miss (TWFE estimate falls outside the CI on the wrong side), so a loose tolerance cannot satisfy both tests at once.
+
+**CLAUDE.md note:** add a line — "Synthetic data only; never read or write `private/` or `*_real_*`. Conditioning sets are chosen by the SCM, never by feature importance; dwell time and reaction score are post-treatment colliders and must never enter a DiD or DML control set."
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-produced DiD analysis of the message-variant rollout — either your Exercise 3/4 output, or a deliberately flawed pre-generated artifact that ran naive TWFE on the staggered data, reported the attenuated/negative coefficient as the headline, and skipped the pre-trends check.
+
+**Validation type:** ground-truth recovery plus design-discipline audit. **Risk level:** **high** — because a fluent TWFE readout can ship a sign-flipped conclusion (a recommendation to roll back a deck that actually worked) and nothing on the dashboard flags it.
+
+**Setup:** take the Exercise 3 memo or Exercise 4 pipeline output (or the flawed naive-TWFE artifact) and run it against the checklist below on the synthetic panel where the planted ToT is known.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 10 (Staggered DiD)
+Mark each Pass / Fail / Cannot-determine.
+
+[ ] Correctness: does the reported ToT recover the planted synthetic
+    ground-truth ToT within its confidence interval?
+[ ] Completeness: are all three falsification checks present (independence,
+    pre-trend leads, Honest-DiD sensitivity) and reported BEFORE the effect?
+[ ] Scope: is the estimand stated as ToT (not ATE), and is the readout limited
+    to the consenting, logged sampling frame?
+[ ] Chapter-specific 1 — estimator: was Callaway-Sant'Anna (or an appropriate
+    clean estimator) used, and is TWFE shown only as a diagnostic exhibit?
+[ ] Chapter-specific 2 — conditioning set: is every control pre-treatment, with
+    no dwell time or reaction score in the adjustment set?
+[ ] Failure-mode check (fluent-but-wrong): does the artifact present a naive-TWFE
+    coefficient as the headline, OR treat flat pre-trend leads as proof that
+    parallel trends holds (failed-pre-trends reasoning)? Either is a FAIL even if
+    the writeup reads cleanly.
+[ ] Ground truth: is the conclusion anchored to recovery of the planted truth,
+    not to plausibility?
+```
+
+**What to do with findings:** if everything passes, the analysis is shippable as a Level-3 (quasi-experimentally identified) finding pending real-data replication. One fail — fix it and re-run before believing the number. Multiple fails, especially Correctness plus the failure-mode check — discard the headline; the artifact is confidently wrong, which is the chapter's whole warning.
+
+**AI Use Disclosure prompt:** *Write two sentences naming exactly what an AI tool did in your DiD work and the one judgment you supplied that it could not — specifically whether the falsification test passed on your rollout, a determination about whether cohort timing was driven by logistics rather than physician characteristics that the model cannot assess and you must defend from how this rollout actually happened.* (Mandatory.)
+
+**Series connection:** the failure mode here is **naive-TWFE / failed pre-trends** — a fluent estimate with the wrong sign and no ground-truth anchor. Tier **T4 (Bounded Reliability)**: the estimator is reliable to run and verify, but the identifying judgment behind it is not the model's to make.

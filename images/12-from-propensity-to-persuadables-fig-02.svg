@@ -1,0 +1,69 @@
+<!--
+  Figure: Two target lists for the same 200 physicians (propensity vs persuadability)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 12-from-propensity-to-persuadables
+  Figure: 02
+  Type: Side-by-side comparison diagram
+  Generated: 2026-06-16
+  Source: chapters/12-from-propensity-to-persuadables.md
+-->
+<svg viewBox="0 0 760 480" role="img" aria-labelledby="fig-title-02" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-02">Two rankings of the same 200 physicians: propensity buys conversions, persuadability causes them</title>
+  <desc>Two side-by-side panels for the same 200-physician population. The left panel is the propensity-ranked next-best-action list, sorted by predicted prescribing probability; its top decile is shaded as low-persuadability Sure Things and annotated as receiving most of the budget while producing almost no caused increment. The right panel is the persuadability-ranked list, sorted by conditional average treatment effect; its top decile is shaded as high-persuadability Persuadables and annotated as receiving the same budget share while producing most of the caused increment. A band beneath reports the low overlap between the two top deciles. Magnitudes are illustrative.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="12-from-propensity-to-persuadables" figure-number="02" figure-title="Two target lists for the same 200 physicians" figure-slug="two-target-lists-propensity-vs-persuadability" figure-type="Side-by-side comparison diagram" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/12-from-propensity-to-persuadables.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="760" height="480" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Same budget, same physicians, two rankings: which decile gets the money</text>
+  <text x="32" y="46" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">The propensity list buys conversions; the persuadables list causes them</text>
+
+  <!-- LEFT panel: propensity-ranked NBA list -->
+  <text x="200" y="72" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">Propensity-ranked NBA list</text>
+  <text x="200" y="88" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">sorted by P(NRx | X), high to low</text>
+  <rect x="96" y="100" width="208" height="240" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <!-- top decile shaded as Sure Things (gray) -->
+  <rect x="96" y="100" width="208" height="32" fill="#ADADAD"/>
+  <text x="200" y="120" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">top decile: mostly Sure Things</text>
+  <!-- remaining rows hairlines -->
+  <line x1="96" y1="158" x2="304" y2="158" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="96" y1="190" x2="304" y2="190" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="96" y1="222" x2="304" y2="222" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="96" y1="254" x2="304" y2="254" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="96" y1="286" x2="304" y2="286" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="96" y1="318" x2="304" y2="318" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="200" y="248" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">lower deciles: mixed</text>
+  <!-- budget annotation on top decile -->
+  <text x="96" y="362" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">top decile gets 84% of budget</text>
+  <text x="96" y="378" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#C8102E">but causes only ~3% of increment</text>
+
+  <!-- RIGHT panel: persuadables list -->
+  <text x="560" y="72" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">Persuadability-ranked list</text>
+  <text x="560" y="88" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">sorted by tau(x) = CATE, high to low</text>
+  <rect x="456" y="100" width="208" height="240" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <!-- top decile shaded as Persuadables (red, the one data series) -->
+  <rect x="456" y="100" width="208" height="32" fill="#C8102E"/>
+  <text x="560" y="120" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF">top decile: Persuadables</text>
+  <line x1="456" y1="158" x2="664" y2="158" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="456" y1="190" x2="664" y2="190" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="456" y1="222" x2="664" y2="222" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="456" y1="254" x2="664" y2="254" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="456" y1="286" x2="664" y2="286" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="456" y1="318" x2="664" y2="318" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="560" y="248" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">lower deciles: Sure Things, Lost Causes</text>
+  <text x="456" y="362" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">top decile gets 84% of budget</text>
+  <text x="456" y="378" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">and causes ~61% of increment</text>
+
+  <!-- overlap band between the two top deciles -->
+  <line x1="304" y1="116" x2="456" y2="116" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <line x1="456" y1="116" x2="304" y2="116" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="380" y="108" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">top-decile overlap: low</text>
+
+  <!-- Caption / honesty caveat -->
+  <text x="32" y="412" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Same 200 physicians, same budget. The NBA list ranks sure-things (waste); the Living Model ranks persuadables. That the two</text>
+  <text x="32" y="426" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">lists differ SYSTEMATICALLY is a TESTABLE hypothesis (held-out Qini comparison), not a settled fact (Ascarza 2018). Budget</text>
+  <text x="32" y="440" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">and increment shares are illustrative [inferred]; only the direction of the contrast is claimed.</text>
+  <text x="32" y="462" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.12 FROM PROPENSITY TO PERSUADABLES</text>
+</svg>

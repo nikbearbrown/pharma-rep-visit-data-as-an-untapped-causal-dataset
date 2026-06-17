@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 11.3 — Collider-contaminated DML</title>
+<style>
+:root{
+  --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+  --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+}
+@media(prefers-color-scheme:dark){:root{
+  --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+  --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+}}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--color-white);color:var(--color-ink);
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+#wrap{max-width:700px;margin:0 auto;padding:16px;}
+h1{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:22px;line-height:1.25;margin:0 0 4px;}
+.sub{font-size:13px;color:var(--color-secondary);margin:0 0 12px;}
+svg{width:100%;height:auto;display:block;}
+.fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--color-secondary);margin:0 0 8px;}
+.axis-label{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;
+  font-size:12px;fill:var(--color-secondary);}
+.tick text{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;fill:var(--color-secondary);}
+.tick line{stroke:var(--color-border);}
+.est-name{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;
+  font-size:12px;font-weight:600;fill:var(--color-ink);}
+.est-sub{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;fill:var(--color-secondary);}
+.ref-label{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;fill:var(--color-secondary);}
+.bias-label{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;fill:var(--color-red);}
+.caption{font-size:11.5px;line-height:1.5;color:var(--color-secondary);margin:12px 0 4px;}
+.source{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;letter-spacing:.04em;color:var(--color-secondary);margin:0;}
+.marker:focus{outline:2px solid var(--color-ochre);outline-offset:2px;}
+#tooltip{position:absolute;pointer-events:none;opacity:0;background:var(--color-white);
+  color:var(--color-ink);border:1px solid var(--color-border);padding:6px 8px;
+  font-size:11px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;
+  max-width:200px;transition:opacity .15s cubic-bezier(0.2,0.8,0.2,1);}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <p class="fig-title">Figure 11.3 — Collider-contaminated DML: a tight interval around the wrong number</p>
+  <h1>Conditioning on a collider buys you precision around a lie</h1>
+  <p class="sub">Point-and-whisker estimates against a planted ground truth; not a zero-baseline bar</p>
+  <div id="chart"></div>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+  <p class="caption">The contaminated estimate's tighter whisker is the trap: a confident-looking interval that excludes the truth. Specify the SCM first so reaction and dwell (post-treatment colliders) never enter Z. Magnitudes [inferred]; only relative displacement and relative whisker width are claimed. Project 3 needs proprietary or synthetic data (the firewall).</p>
+  <p class="source">SOURCE: ILLUSTRATIVE ESTIMATE COMPARISON AS DESCRIBED IN CHAPTER 11</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA = {
+  truth: 0.62,
+  estimates: [
+    {name:"correct DML", sub:"pre-treatment Z only", point:0.62, lo:0.40, hi:0.84, color:"ink"},
+    {name:"contaminated DML", sub:"collider in Z", point:0.40, lo:0.30, hi:0.50, color:"red"}
+  ]
+};
+
+const VBW = 700, VBH = 440;
+const margin = {top:48,right:40,bottom:56,left:64};
+const tooltip = d3.select("#tooltip");
+
+function colorFor(c){ return c === "red" ? "var(--color-red)" : "var(--color-ink)"; }
+
+function draw(){
+  const container = d3.select("#chart");
+  container.selectAll("svg").remove();
+  const data = FALLBACK_DATA;
+
+  const svg = container.append("svg")
+    .attr("viewBox", `0 0 ${VBW} ${VBH}`)
+    .attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title")
+    .text("Collider-contaminated DML estimate comparison");
+  svg.append("desc").attr("id","chart-desc")
+    .text("Two point-and-whisker estimates of a sequence effect against a planted ground truth of 0.62. The correct DML estimate sits on the truth with a wider interval; the contaminated DML estimate sits below the truth at 0.40 with a narrower interval that excludes the truth.");
+
+  const defs = svg.append("defs");
+  const marker = defs.append("marker")
+    .attr("id","arrow").attr("viewBox","0 0 10 10")
+    .attr("refX",8).attr("refY",5)
+    .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto-start-reverse");
+  marker.append("path").attr("d","M0,0 L10,5 L0,10 z").attr("fill","var(--color-ink)");
+
+  const plotW = VBW - margin.left - margin.right;
+  const plotH = VBH - margin.top - margin.bottom;
+  const x0 = margin.left, x1 = margin.left + plotW;
+  const y0 = margin.top, y1 = margin.top + plotH;
+
+  const y = d3.scaleLinear().domain([0,1.0]).range([y1,y0]);
+
+  // plot frame
+  svg.append("rect")
+    .attr("x",x0).attr("y",y0).attr("width",plotW).attr("height",plotH)
+    .attr("rx",0).attr("fill","var(--color-fill)")
+    .attr("stroke","var(--color-border)").attr("stroke-width",1);
+
+  // y ticks
+  const yTicks = y.ticks(5);
+  const tg = svg.append("g").attr("class","y-axis").attr("aria-hidden","true");
+  tg.selectAll("g.tick").data(yTicks).join("g")
+    .attr("class","tick")
+    .attr("transform",d=>`translate(0,${y(d)})`)
+    .each(function(d){
+      const g = d3.select(this);
+      g.append("line").attr("x1",x0-6).attr("x2",x0).attr("stroke","var(--color-border)");
+      g.append("text").attr("x",x0-9).attr("y",0).attr("dy","0.32em")
+        .attr("text-anchor","end").attr("fill","var(--color-secondary)")
+        .style("font-family","'JetBrains Mono','Fira Code','Courier New',monospace")
+        .style("font-size","10px").text(d3.format(".1f")(d));
+    });
+
+  // y axis label
+  svg.append("text").attr("class","axis-label")
+    .attr("transform",`translate(${18},${y0+plotH/2}) rotate(-90)`)
+    .attr("text-anchor","middle").text("sequence effect");
+
+  // ZERO baseline (visible, bottom of plot)
+  svg.append("line").attr("aria-hidden","true")
+    .attr("x1",x0).attr("x2",x1).attr("y1",y(0)).attr("y2",y(0))
+    .attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+  svg.append("text").attr("class","ref-label")
+    .attr("x",x1-4).attr("y",y(0)-5).attr("text-anchor","end")
+    .text("zero");
+
+  // planted truth dashed line
+  svg.append("line").attr("aria-hidden","true")
+    .attr("x1",x0).attr("x2",x1).attr("y1",y(data.truth)).attr("y2",y(data.truth))
+    .attr("stroke","var(--color-secondary)").attr("stroke-width",1)
+    .attr("stroke-dasharray","5 4");
+  svg.append("text").attr("class","ref-label")
+    .attr("x",x0+6).attr("y",y(data.truth)-5).attr("text-anchor","start")
+    .text("planted truth");
+
+  // x positions for estimates
+  const xPos = d3.scalePoint()
+    .domain(data.estimates.map(d=>d.name))
+    .range([x0 + plotW*0.30, x0 + plotW*0.70]);
+
+  // bias displacement indicator (truth -> contaminated point)
+  const contaminated = data.estimates.find(d=>d.color==="red");
+  if(contaminated){
+    const bx = xPos(contaminated.name) + 26;
+    svg.append("line").attr("aria-hidden","true")
+      .attr("x1",bx).attr("x2",bx)
+      .attr("y1",y(data.truth)).attr("y2",y(contaminated.point))
+      .attr("stroke","var(--color-red)").attr("stroke-width",1)
+      .attr("stroke-dasharray","5 4");
+    svg.append("text").attr("class","bias-label")
+      .attr("x",bx+5).attr("y",(y(data.truth)+y(contaminated.point))/2)
+      .attr("dy","0.32em").attr("text-anchor","start").text("bias");
+  }
+
+  // estimates: whiskers + markers
+  const cap = 9;
+  const eg = svg.selectAll("g.est").data(data.estimates).join("g")
+    .attr("class","est")
+    .attr("transform",d=>`translate(${xPos(d.name)},0)`);
+
+  // whisker line
+  eg.append("line").attr("aria-hidden","true")
+    .attr("x1",0).attr("x2",0)
+    .attr("y1",d=>y(d.lo)).attr("y2",d=>y(d.hi))
+    .attr("stroke",d=>colorFor(d.color)).attr("stroke-width",1.5);
+  // end caps
+  eg.append("line").attr("aria-hidden","true")
+    .attr("x1",-cap).attr("x2",cap).attr("y1",d=>y(d.lo)).attr("y2",d=>y(d.lo))
+    .attr("stroke",d=>colorFor(d.color)).attr("stroke-width",1.5);
+  eg.append("line").attr("aria-hidden","true")
+    .attr("x1",-cap).attr("x2",cap).attr("y1",d=>y(d.hi)).attr("y2",d=>y(d.hi))
+    .attr("stroke",d=>colorFor(d.color)).attr("stroke-width",1.5);
+
+  // square marker (interactive)
+  const ms = 12;
+  eg.append("rect")
+    .attr("class","marker")
+    .attr("x",-ms/2).attr("y",d=>y(d.point)-ms/2)
+    .attr("width",ms).attr("height",ms).attr("rx",0)
+    .attr("fill",d=>colorFor(d.color))
+    .attr("tabindex",0)
+    .attr("role","button")
+    .attr("aria-label",d=>`${d.name}, ${d.sub}. Point estimate ${d.point}, interval ${d.lo} to ${d.hi}. Planted truth ${data.truth}.`)
+    .on("mouseenter focus",function(event,d){ showTip(event,d,data.truth); })
+    .on("mouseleave blur",hideTip)
+    .on("keydown",function(event,d){
+      if(event.key==="Enter"||event.key===" "){ event.preventDefault(); showTip(event,d,data.truth); }
+    });
+
+  // labels below
+  eg.append("text").attr("class","est-name")
+    .attr("x",0).attr("y",y1+22).attr("text-anchor","middle").text(d=>d.name);
+  eg.append("text").attr("class","est-sub")
+    .attr("x",0).attr("y",y1+38).attr("text-anchor","middle").text(d=>d.sub);
+}
+
+function showTip(event,d,truth){
+  const node = document.getElementById("chart");
+  const r = node.getBoundingClientRect();
+  let px, py;
+  if(event && event.clientX !== undefined && event.type==="mouseenter"){
+    px = event.clientX; py = event.clientY;
+  } else {
+    const t = event.target.getBoundingClientRect();
+    px = t.left + t.width/2; py = t.top;
+  }
+  tooltip.html(`<strong>${d.name}</strong><br>${d.sub}<br>point ${d.point} (${d.lo}–${d.hi})<br>truth ${truth}`)
+    .style("left",(px+12+window.scrollX)+"px")
+    .style("top",(py-8+window.scrollY)+"px")
+    .style("opacity",1);
+}
+function hideTip(){ tooltip.style("opacity",0); }
+
+draw();
+if(window.ResizeObserver){
+  const ro = new ResizeObserver(()=>draw());
+  ro.observe(document.getElementById("wrap"));
+}
+</script>
+</body>
+</html>

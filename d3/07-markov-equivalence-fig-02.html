@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The CPDAG two-color map (compelled vs reversible edges)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+  @media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{display:block;width:100%;height:auto;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .legend-head{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .legend{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .legend-red{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-red);}
+  .count-red{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-red);}
+  .count-sec{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .source{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:10px;fill:var(--color-secondary);letter-spacing:0.08em;}
+  .node{cursor:pointer;}
+  .node:focus{outline:none;}
+  .node:focus circle{stroke-width:3;}
+  #tt{position:absolute;pointer-events:none;opacity:0;background:var(--color-ink);color:var(--color-white);
+      font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;padding:6px 8px;border-radius:4px;
+      transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);max-width:220px;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"></div>
+<div id="tt"></div>
+<script>
+const FALLBACK_DATA = {
+  nodes:[
+    {id:"n1",x:110,y:130},{id:"n2",x:110,y:250},
+    {id:"n3",x:240,y:130},{id:"n4",x:240,y:250},
+    {id:"n5",x:368,y:130},{id:"n6",x:368,y:250}
+  ],
+  edges:[
+    {s:"n1",t:"n4",type:"compelled"},
+    {s:"n2",t:"n4",type:"compelled"},
+    {s:"n4",t:"n5",type:"compelled"},
+    {s:"n3",t:"n5",type:"reversible"},
+    {s:"n4",t:"n6",type:"reversible"},
+    {s:"n5",t:"n6",type:"reversible"}
+  ]
+};
+const W=700,H=420,R=16;
+const tt=d3.select("#tt");
+function showTip(html,x,y){tt.html(html).style("left",(x+14)+"px").style("top",(y+14)+"px").style("opacity",1);}
+function hideTip(){tt.style("opacity",0);}
+
+function draw(data){
+  const reversibleCount=data.edges.filter(e=>e.type==="reversible").length;
+  const wrap=d3.select("#wrap");wrap.selectAll("*").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("A CPDAG: directed compelled edges in black, undirected reversible edges in red");
+  svg.append("desc").attr("id","chart-desc").text(`A completed partially directed acyclic graph. Black directed edges are compelled and point the same way in every member of the equivalence class. ${reversibleCount} red undirected segments are reversible, left open for an expert to orient.`);
+
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+
+  svg.append("rect").attr("width",W).attr("height",H).attr("fill","var(--color-white)").attr("aria-hidden","true");
+  svg.append("text").attr("class","fig-title").attr("x",32).attr("y",34)
+    .text("The CPDAG: what the data has settled, and what it leaves open");
+  svg.append("rect").attr("x",32).attr("y",56).attr("width",420).attr("height",280)
+    .attr("fill","var(--color-fill)").attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+
+  const nmap={};data.nodes.forEach(n=>nmap[n.id]=n);
+  const g=svg.append("g");
+  g.selectAll("line.edge").data(data.edges).join("line").attr("class","edge")
+    .each(function(e){
+      const a=nmap[e.s],b=nmap[e.t];
+      const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+      const sel=d3.select(this)
+        .attr("x1",a.x+ux*(R+2)).attr("y1",a.y+uy*(R+2))
+        .attr("x2",b.x-ux*(R+2)).attr("y2",b.y-uy*(R+2))
+        .attr("stroke-width",1.5);
+      if(e.type==="compelled"){sel.attr("stroke","var(--color-ink)").attr("marker-end","url(#arrow)");}
+      else{sel.attr("stroke","var(--color-red)");}
+    });
+
+  const ng=g.selectAll("g.node").data(data.nodes).join("g").attr("class","node")
+    .attr("tabindex",0).attr("role","img")
+    .attr("aria-label",d=>`CPDAG node ${d.id}`)
+    .on("mouseenter",(ev,d)=>showTip(`Node ${d.id}. Incident edges may be compelled (black) or reversible (red).`,ev.clientX,ev.clientY))
+    .on("mousemove",(ev,d)=>showTip(`Node ${d.id}. Incident edges may be compelled (black) or reversible (red).`,ev.clientX,ev.clientY))
+    .on("mouseleave",hideTip)
+    .on("focus",function(ev,d){const r=this.getBoundingClientRect();showTip(`Node ${d.id}.`,r.left,r.top);})
+    .on("blur",hideTip)
+    .on("keydown",function(ev,d){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();const r=this.getBoundingClientRect();showTip(`Node ${d.id}.`,r.left,r.top);}});
+  ng.append("circle").attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",R)
+    .attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5);
+
+  // legend
+  svg.append("rect").attr("x",476).attr("y",80).attr("width",192).attr("height",120)
+    .attr("fill","var(--color-white)").attr("stroke","var(--color-border)").attr("stroke-width",1).attr("aria-hidden","true");
+  svg.append("text").attr("class","legend-head").attr("x",488).attr("y",100).text("EDGE TYPES");
+  svg.append("line").attr("x1",488).attr("y1",126).attr("x2",528).attr("y2",126)
+    .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+  svg.append("text").attr("class","legend").attr("x",540).attr("y",123).text("compelled");
+  svg.append("text").attr("class","legend").attr("x",540).attr("y",137).text("(data settled)");
+  svg.append("line").attr("x1",488).attr("y1",166).attr("x2",528).attr("y2",166)
+    .attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("aria-hidden","true");
+  svg.append("text").attr("class","legend-red").attr("x",540).attr("y",163).text("reversible");
+  svg.append("text").attr("class","legend").attr("x",540).attr("y",177).text("(data silent)");
+
+  // count annotation (driven by data)
+  svg.append("text").attr("class","count-red").attr("x",476).attr("y",232).text(`${reversibleCount} reversible edges`);
+  svg.append("text").attr("class","count-sec").attr("x",476).attr("y",250).text("await orientation");
+
+  const caps=[
+    "Black edges are compelled - identical across every graph in the Markov-",
+    "equivalence class. Red segments are reversible: the data is silent on their",
+    "direction. The CPDAG names the whole class at once (Verma-Pearl); rep",
+    "knowledge is what orients the red edges."
+  ];
+  svg.selectAll("text.caption").data(caps).join("text").attr("class","caption")
+    .attr("x",32).attr("y",(d,i)=>356+i*14).text(d=>d);
+  svg.append("text").attr("class","source").attr("x",32).attr("y",410)
+    .text("SOURCE: CH.07 MARKOV EQUIVALENCE - WHY THE DATA CAN'T DECIDE");
+}
+draw(FALLBACK_DATA);
+new ResizeObserver(()=>draw(FALLBACK_DATA)).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

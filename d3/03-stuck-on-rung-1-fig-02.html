@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The do-operator severs incoming arrows</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;--color-mid:#787878;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;--color-mid:#9A9A9A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .panel-label{font-size:12px;fill:var(--color-secondary);}
+  .node-label{font-size:11px;}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .gnode{cursor:pointer;}
+  .gnode:focus{outline:none;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;max-width:260px;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 480" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const NODES = [
+  {key:"receptivity",label:"receptivity",fill:"var(--color-mid)",txt:"var(--color-white)",
+   note:"Physician receptivity - an unobserved cause of which message was deployed and of prescribing. A confounder."},
+  {key:"strategy",label:"rep strategy",fill:"var(--color-mid)",txt:"var(--color-white)",
+   note:"Rep deployment strategy - reps choose where to spend the message. A second confounder into message."},
+  {key:"message",label:"message",fill:"var(--color-ink)",txt:"var(--color-white)",
+   note:"The treatment. Observationally it is caused by receptivity and rep strategy; under do(message) those arrows are cut."},
+  {key:"prescribing",label:"prescribing",fill:"var(--color-red)",txt:"var(--color-white)",
+   note:"The outcome (NRx). The arrow message -> prescribing is the causal effect we want to isolate."}
+];
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+svg.append("title").attr("id","chart-title").text("The do-operator severs incoming arrows");
+svg.append("desc").attr("id","chart-desc").text("Two identical four-node causal graphs. Left observational: receptivity and rep strategy both point into message, message points to prescribing. Right interventional: the two incoming arrows to message are severed, leaving only message to prescribing.");
+
+svg.append("defs").html('<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--color-ink)"/></marker>');
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",480).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",30).attr("class","fig-title").text("Observation keeps the incoming arrows; intervention cuts them");
+svg.append("text").attr("x",180).attr("y",60).attr("text-anchor","middle").attr("class","panel-label").text("observational");
+svg.append("text").attr("x",520).attr("y",60).attr("text-anchor","middle").attr("class","panel-label").text("interventional - do(message)");
+svg.append("line").attr("x1",350).attr("y1",72).attr("x2",350).attr("y2",356)
+   .attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("stroke-dasharray","5 4").attr("aria-hidden","true");
+
+function showTip(event,d){
+  tip.style("opacity",1).html(`<strong>${d.label}</strong><br>${d.note}`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+// positions for each panel: receptivity, strategy, message, prescribing
+const POS = {
+  left:  {receptivity:[48,90,110,40], strategy:[48,260,110,40], message:[208,175,110,44], prescribing:[208,320,110,40]},
+  right: {receptivity:[388,90,110,40], strategy:[388,260,110,40], message:[548,175,110,44], prescribing:[548,320,110,40]}
+};
+function drawNode(side,d){
+  const [x,y,w,h]=POS[side][d.key];
+  const g=svg.append("g").attr("class","gnode").attr("tabindex",0).attr("role","img")
+    .attr("aria-label",`${side} graph, ${d.label}: ${d.note}`)
+    .on("mouseover",e=>showTip(e,d)).on("mousemove",e=>showTip(e,d)).on("mouseout",hideTip)
+    .on("focus",()=>showTip({pageX:window.scrollX+x+w,pageY:window.scrollY+y},d)).on("blur",hideTip)
+    .on("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+x+w,pageY:window.scrollY+y},d);}});
+  g.append("rect").attr("x",x).attr("y",y).attr("width",w).attr("height",h)
+    .attr("fill",d.fill).attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+  g.append("text").attr("x",x+w/2).attr("y",y+h/2+4).attr("text-anchor","middle").attr("class","node-label").attr("fill",d.txt).text(d.label);
+}
+NODES.forEach(d=>{drawNode("left",d);drawNode("right",d);});
+
+// left edges (all intact)
+const E=svg.append("g").attr("aria-hidden","true");
+E.append("line").attr("x1",158).attr("y1",118).attr("x2",206).attr("y2",183).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+E.append("line").attr("x1",158).attr("y1",278).attr("x2",206).attr("y2",210).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+E.append("line").attr("x1",263).attr("y1",219).attr("x2",263).attr("y2",318).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+
+// right edges: two faint cut, one intact
+E.append("line").attr("x1",498).attr("y1",118).attr("x2",546).attr("y2",183).attr("stroke","var(--color-border)").attr("stroke-width",1.5);
+E.append("line").attr("x1",498).attr("y1",278).attr("x2",546).attr("y2",210).attr("stroke","var(--color-border)").attr("stroke-width",1.5);
+// severing X marks
+[[513,132,531,148],[531,132,513,148],[513,240,531,256],[531,240,513,256]].forEach(([x1,y1,x2,y2])=>
+  E.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2).attr("stroke","var(--color-red)").attr("stroke-width",2.5));
+E.append("line").attr("x1",603).attr("y1",219).attr("x2",603).attr("y2",318).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+
+svg.append("text").attr("x",32).attr("y",392).attr("class","caption").text("The do-operator replaces message's equation with a set value and severs every");
+svg.append("text").attr("x",32).attr("y",406).attr("class","caption").text("arrow into it - only message to prescribing remains.");
+svg.append("text").attr("x",32).attr("y",428).attr("class","caption").text("This severance is structure (what randomization does physically, a model does");
+svg.append("text").attr("x",32).attr("y",442).attr("class","caption").text("mathematically) - it depicts the operation, not a proof of identifiability.");
+
+new ResizeObserver(()=>{}).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

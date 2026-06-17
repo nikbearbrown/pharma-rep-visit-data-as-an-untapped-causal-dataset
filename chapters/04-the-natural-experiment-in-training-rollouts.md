@@ -25,6 +25,10 @@ In rep-visit data the lever is **training-cohort timing**. A new clinical messag
 
 Whether the nudge is *actually* as-good-as-random — rather than correlated with physician prescribing propensity through a mechanism like star-rep assignment — is not an assumption to state and move past. It is a **testable claim**, and you must test it before reporting any estimate. The test is the opening case's missing step.
 
+![Two parallel training-cohort timelines: cohort A switches to the new deck in month 1 and cohort B in month 3, so two otherwise-comparable physicians hear different messages in the same month — the administrative variation that serves as the instrument.](images/04-the-natural-experiment-in-training-rollouts-fig-01.png)
+
+*Figure 4.1 — The natural experiment: scheduling decided which physician heard which message when*
+
 <!-- → [DIAGRAM: Two parallel timelines — "Training cohort A" and "Training cohort B" — with cohort A switching to the new deck in month 1 and cohort B in month 3. Arrows from each cohort to a sample physician, showing different message exposure for otherwise comparable physicians in the same month. Caption: "The natural experiment: administrative scheduling determined which physician heard which message when. That variation is the instrument."] -->
 
 ---
@@ -44,6 +48,10 @@ The mapping for this design:
 The estimation has two visible regressions. The **first stage** regresses treatment on the instrument: does cohort timing actually predict which deck got delivered? The **reduced form** regresses the outcome on the instrument: does cohort timing predict prescribing? The IV estimate is, roughly, the reduced form divided by the first stage — the part of the prescribing difference that travels through the message, scaled by how strongly the instrument moved the message.
 
 A critical honesty point about *what* IV estimates. When treatment effects are heterogeneous — and they certainly are, since some physicians are persuadable and many are not — IV does not recover the average effect over everyone. It recovers the **Local Average Treatment Effect (LATE)**: the average effect among **compliers**, the physicians whose message exposure actually tracked their rep's cohort timing (Imbens & Angrist 1994, *Econometrica* 62(2):467–475; Angrist, Imbens & Rubin 1996, *JASA* 91(434):444–455). Physicians whose reps would have delivered the new deck regardless of training, or never, are not in the estimate. The LATE is real and useful, but it is a statement about a subpopulation you do not get to name in advance. Report it as such.
+
+![Three-node identification graph: training cohort (Z) points to message variant (D), which points to NRx (Y); an unobserved physician-openness confounder sends dashed arrows into both D and Y; there is no direct Z-to-Y edge, so the instrument reaches the outcome only through the treatment.](images/04-the-natural-experiment-in-training-rollouts-fig-02.png)
+
+*Figure 4.2 — The IV structure: Z's only path to Y runs through D (cohort instrument testable, not assumed)*
 
 <!-- → [DIAGRAM: Three-node DAG — training cohort (Z) → message variant (D) → NRx (Y). A dashed bidirectional arrow between an unlabeled "unobserved confounder" node and both D and Y. The Z→Y path is visibly absent except through D. Caption: "The IV structure: Z shifts D; the confounders corrupt the direct D→Y comparison; Z's only path to Y is through D."] -->
 
@@ -76,6 +84,10 @@ Lee, McCrary, Moreira, and Porter (2022, *American Economic Review* 112(10):3260
 The threshold that controls one quantity — bias — does not license a claim about a different quantity — inferential precision. "Everyone uses F > 10" is not a defense.
 
 The teaching move for this dataset: report the first-stage F, but do not stop there. With a single cohort instrument, apply the tF standard-error adjustment, and additionally report **Anderson–Rubin** weak-instrument-robust confidence sets, which stay valid however weak the instrument is. Use the **effective F** of Montiel Olea and Pflueger (2013) [verify cite] because NRx data is clustered by rep and territory and the classical F assumes it is not. The review by Andrews, Stock, and Sun (2019, *Annual Review of Economics* 11:727–753) is the practitioner's summary and recommends exactly this combination.
+
+![Line chart of first-stage F-statistic (x-axis, 1 to 200) against the actual size of a nominal 5 percent t-test (y-axis). The descending curve sits well above 5 percent at the legacy F=10 guide and only meets the 5 percent reference line near F=104.7.](images/04-the-natural-experiment-in-training-rollouts-fig-03.png)
+
+*Figure 4.3 — F > 10 controls bias, not size; the tF correction is required for valid inference (weak-IV F>10 is legacy)*
 
 <!-- → [CHART: Relationship between first-stage F-statistic and the effective size of a nominal 5% t-test — x-axis: F from 1 to 200; y-axis: actual test size. Horizontal line at 5%. The curve descends to 5% only around F ≈ 104.7. Vertical line at F = 10 showing the actual test size there is well above 5%. Caption: "F > 10 controls bias, not size. The tF correction is required for valid inference at conventional F values."] -->
 
@@ -137,20 +149,6 @@ It is also unresolved how to combine the cohort instrument with the staggered-Di
 
 ---
 
-**LLM exercise (copy-paste prompt):**
-
-> "I have a staggered rollout of a new sales message across training cohorts, and I want to use cohort timing as an instrument for message exposure to estimate the effect on prescribing. Here is my setup: [paste your Z/D/Y mapping]. Do three things: (1) list every distinct way the independence assumption could fail for a training-cohort instrument, and for each, name the falsification check that would detect it; (2) list the threats to the exclusion restriction specific to sales-rep training and the control variables that would defend against each; (3) tell me explicitly which of these checks the data can test and which are assumptions I must argue. Do not estimate anything or tell me whether my instrument is valid — only enumerate the threats and checks."
-
-**CLI exercise.** In your repo, ask Claude Code to scaffold a reproducible falsification-first pipeline: a script that (a) loads the synthetic panel, (b) runs and prints the falsification regression with its p-value and a hard `assert` or exit that stops the pipeline if significant at 5 percent, and (c) only then proceeds to the first stage and the Callaway–Sant'Anna estimate. The point is to encode the order-of-operations discipline in code so the estimate cannot run until the test passes.
-
-**AI Validation exercise.** Whatever the AI scaffolds, validate it against the known ground truth in the synthetic dataset. The planted message effect is known, so check that your pipeline recovers it within its confidence set on the clean data and fails loudly on the version with the planted independence violation. If the AI-generated code produces a confident estimate on the violated version, the code is wrong, not the data.
-
-**AI Use Disclosure**
-
-*Write two sentences naming exactly what an AI tool did in your work for this chapter and what judgment you supplied that the AI could not. The judgment most specific to this chapter: whether the independence assumption survives on your particular brand's rollout — a domain judgment about who got trained first and why that depends on facts about this rollout's history that the model does not have and cannot verify.*
-
----
-
 ## Exercises
 
 **Warm-up**
@@ -178,3 +176,177 @@ It is also unresolved how to combine the cohort instrument with the staggered-Di
 **Challenge**
 
 9. *(Challenge — produce the named artifact)* Build the full identification design of §8 for a message transition in your thread's data: the three-node DAG, the IV mapping with exact field names, all three conditions with their checks and the tF correction plan, the monotonicity statement, and the explicit pre-registered kill criterion. Submit it before running any estimate. *What this tests: whether you can execute the order-of-operations discipline — design before estimation — as a complete artifact rather than as a checklist.*
+
+---
+
+## Prompts
+
+### Figure 4.1 — The natural experiment: scheduling decided which physician heard which message when
+
+Produce a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a two-track timeline diagram. Chart type: parallel horizontal timelines, not a quantitative chart — no axes from data. Data shape: two cohort tracks ("Training cohort A", "Training cohort B"), each a horizontal lane spanning months 1 through 6; cohort A switches from the old efficacy-first deck to the new safety-first deck at month 1, cohort B at month 3. Marks: two lanes as light rectangles, a deck-switch marker (vertical tick) on each lane at its switch month, and two physician nodes on the right, each linked by an arrow back to one cohort track to show different message exposure in the same calendar month. Channels: vertical position separates the two cohorts; horizontal position is calendar time; a single red accent marks the new-deck segment. No zero-baseline question (categorical/temporal). Annotations: a caption stating that administrative scheduling, not physician choice, determined message timing, and a note that this variation is the instrument. Brutalist style: white background, ink #2a1a0e, one red data accent #C8102E, hairline #D4D4D4, EB Garamond title / Inter body / JetBrains Mono labels. Deliverable: one HTML file.
+
+### Figure 4.2 — The IV structure: Z's only path to Y runs through D
+
+Produce a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a causal directed-acyclic graph. Chart type: node-link DAG laid out left-to-right. Data shape: three observed nodes on a horizontal spine — training-cohort assignment (Z, instrument), message-variant exposure (D, treatment), NRx (Y, outcome) — plus one latent confounder node (physician openness) above center drawn with a dashed outline. Marks: rectangles for observed nodes, a dashed-outline node for the latent confounder, directed arrows Z→D and D→Y as the identified red chain, dashed arrows from the latent confounder into both D and Y, and a deliberately absent Z→Y edge annotated as the exclusion restriction. Channels: horizontal position encodes causal order; line style (solid vs dashed) distinguishes observed from latent; red marks the one identified path. No quantitative axes. Annotations: label that the absent Z→Y edge is the exclusion restriction; caption that the cohort instrument is testable, not assumed, and exclusion is threatened if early training improves general selling skill. Brutalist palette and font chains as above. Deliverable: one HTML file.
+
+### Figure 4.3 — F > 10 controls bias, not size
+
+Produce a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a line chart. Chart type: single-series monotone-decreasing line. Data shape: x = first-stage F-statistic from 1 to 200; y = actual size of a nominal 5 percent t-test, descending from roughly 30 percent at low F and asymptotically approaching 5 percent. Marks: one red line, two emphasis dots where the curve crosses the F=10 and F=104.7 vertical guides, a dashed horizontal reference at 5 percent, and two dashed vertical guides at F=10 and F=104.7. Channels: x position = F, y position = test size; a single red series. Sort: by x ascending. Zero-baseline y: yes (y axis starts at 0 percent). Annotations: label "F = 10: true size well above 5%" and "F = 104.7: size finally hits 5%"; caption noting F>10 is the legacy bias-control rule and the modern size-valid bar is F≈104.7 (Lee, McCrary, Moreira & Porter 2022), curve illustrative. Brutalist palette, chart margins top 48 / right 40 / bottom 56 / left 64, font chains as above. Deliverable: one HTML file.
+
+---
+
+## Chapter 4 Exercises: The Natural Experiment in Every Training Rollout
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** IV-assumption probes — bot questions that ask the rep whether the training-cohort timing was as-good-as-random for a given physician, surfacing threats to independence and exclusion the rollout calendar alone cannot reveal.
+
+### Exercise 1 — When to Use AI
+
+Three tasks the model handles cleanly.
+
+First, **drafting rep-natural questions that probe how cohorts were scheduled.** You want questions like "who on your team got trained on the new deck first, and why them?" — phrased so a rep just answers. *Why AI works here:* drafting in a constrained register, option-generation you cull. **The tell:** you can judge whether each question would surface the star-rep-first pattern.
+
+Second, **enumerating the ways independence could fail.** Ask the model to list every reason cohort timing might correlate with physician prescribing propensity. *Why AI works here:* breadth-of-threats is a brainstorming task, and you keep only the real ones. **The tell:** you can map each listed threat to a concrete falsification check.
+
+Third, **reformatting HR/training scheduling notes into a structured timeline.** *Why AI works here:* mechanical structure-imposition on text you supply. **The tell:** the source schedule sits beside the output.
+
+### Exercise 2 — When NOT to Use AI
+
+Two judgments the model cannot make.
+
+First, **deciding whether the cohort timing was actually as-good-as-random for this brand's rollout.** *Why AI fails here:* this is the independence assumption — the core causal-identification call — and it depends on facts about who got trained first and why that exist only in this rollout's history, not in the model's training data. The model will assert "plausibly random" with unearned confidence. **The tell:** if the model's verdict is your *reason* for proceeding to estimation, you have skipped the falsification test; if you use it only to generate the questions that surface the scheduling facts, you have used it as a tool.
+
+Second, **judging whether the exclusion restriction holds** — whether early training improved general selling skill, a side channel the data cannot see. *Why AI fails here:* exclusion is not testable; it is argued from domain facts the model lacks. **The tell:** the model can list exclusion threats; it cannot certify the restriction. **Series connection:** this is a **T5 (Causal)** task — the independence and exclusion judgments are the identification strategy itself, and the bot's role is to elicit the scheduling history a human needs to defend or kill the instrument.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** the bot's *IV-assumption probe set* — rep-natural questions that surface, for a specific physician and rollout, whether cohort timing was plausibly as-good-as-random (independence) and whether early training carried side effects beyond the message (exclusion).
+
+**Tool:** the **Claude Project** ("Causal Interview Bot"). The Project holds the ladder-structured bank from Chapter 3; these probes are Rung-2 questions about the instrument, so they extend the existing rung structure rather than starting fresh.
+
+**The Prompt:**
+
+```
+Building on the ladder-structured question bank already in this Project, write the
+bot's INSTRUMENT-PROBE set for a training-cohort natural experiment.
+
+Background (do NOT use this language with the rep): we are using training-cohort
+timing as an instrument for which message a physician's rep delivered. For the
+instrument to be valid, two things must roughly hold:
+- INDEPENDENCE: which reps were trained first must be unrelated to how much their
+  physicians were already going to prescribe. (It FAILS if star reps with
+  high-potential territories were trained first.)
+- EXCLUSION: training timing must affect prescribing ONLY through the message, not
+  through a side channel (e.g., early-trained reps also got more selling days, more
+  manager attention, earlier samples, or simply sell better in general).
+
+Concrete scenario: Dr. Castellano, a rheumatologist, is covered by a rep who was in
+the FIRST training cohort for the new safety-first deck.
+
+Produce, in rep-natural English with NO jargon (no "instrument," "independence,"
+"exclusion," "confounder," "as-good-as-random"):
+
+1. THREE questions that surface HOW cohorts were scheduled and whether the
+   best reps / best territories went first (independence threats).
+2. THREE questions that surface whether being trained early changed anything OTHER
+   than which slides the rep showed — more selling time, more samples, more coaching
+   (exclusion threats).
+
+After EACH question, add a bracketed note to ME naming which assumption it probes
+and what answer would be a red flag for the instrument. Do not tell me whether the
+instrument is valid — only design questions that surface the facts I need to judge.
+```
+
+**What this produces:** six rep-natural probes — three for independence, three for exclusion — each annotated with the assumption it tests and the answer that would threaten the design.
+
+**How to adapt:** *For your dataset:* replace Dr. Castellano and the safety-first rollout with a real message transition and a real first-cohort rep from your panel. *For ChatGPT/Gemini:* prepend the Chapter 3 question bank. *For a Claude Project:* the assumption definitions go in the system prompt; send the scenario and the two-part request as a message.
+
+**Connection to previous chapters:** Chapter 3 gave the bot Rung-2 questions about what would move a physician; this chapter points those Rung-2 questions at the *instrument itself*, eliciting the scheduling facts that decide whether the natural experiment is real.
+
+**Preview of next chapter:** Chapter 5 adds questions that separate the three pathways — education, relationship-maintenance, reciprocity — so the bot can attribute an elicited effect to a channel, not just confirm the effect exists.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** a falsification-first probe file plus a synthetic-data check that the bot's independence probes line up with the actual (synthetic) rollout calendar — encoding the chapter's order-of-operations discipline.
+
+**Tool:** Claude Code — because the discipline (test independence before estimating) is best enforced as code that refuses to proceed, and the probes belong in the versioned question bank. **Skill level:** Advanced.
+
+**Setup:**
+1. Prereq artifact: the six instrument probes from Exercise 3, plus the synthetic panel from Chapter 2's CLI work.
+2. Tool: Claude Code in the bot repo.
+3. CLAUDE.md rule: synthetic-only; add "Any estimate must be preceded by the independence falsification test; code that estimates without it is a bug."
+
+**The Task:**
+
+```
+Work only inside this repo, synthetic data only. Two deliverables:
+
+1. Append to spec/interview-stems.md a section "## Chapter 4 — Instrument probes
+   (independence + exclusion)" and write in the six probes I paste, each with an
+   HTML comment <!-- probes: independence|exclusion; red_flag: ... -->.
+
+2. Write checks/falsification_first.py against data/synthetic/panel.csv (create a
+   small synthetic panel with columns npi, cohort_order, pre_rollout_NRx,
+   message_delivered, NRx_60d if it does not exist). The script must:
+   (a) regress cohort_order on pre_rollout_NRx (controlling for a synthetic
+       specialty column) and print the coefficient and p-value;
+   (b) if p < 0.05, print "INDEPENDENCE FAILED — design abandoned" and sys.exit(1)
+       BEFORE any effect estimate;
+   (c) only if it passes, print "independence OK — proceed" and stop (do NOT
+       estimate the effect; estimation is out of scope here).
+
+Read/modify only these two files. Leave the rest alone.
+
+Verification step: run the script twice — once on the panel as given, once after
+flipping it to a planted-violation version (make cohort_order correlate with
+pre_rollout_NRx). Confirm the clean run prints "proceed" and the violated run exits
+with code 1. Print both outcomes.
+```
+
+**Expected output:** the updated probe section, plus a `falsification_first.py` that exits 1 on the planted-violation panel and prints "proceed" on the clean one.
+
+**What to inspect:** confirm the script exits *before* any estimate when independence fails — read the control flow, don't just trust the printout. Confirm the regression controls for specialty as specified.
+
+**If it goes wrong:** the typical failure is the agent computing an effect estimate anyway, "for completeness." Recovery: re-run with the explicit "estimation is out of scope; exit before estimating on failure" instruction, and check the `sys.exit(1)` sits above any modeling code.
+
+**CLAUDE.md note:** keep the "no estimate before falsification" rule — it is the order-of-operations discipline encoded so the bot's downstream prior can't inherit a dead instrument.
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** the instrument probes from Exercise 3 — whether they genuinely surface the scheduling facts, or lead the rep into confirming the instrument is fine.
+
+**Validation type:** Reasoning · **Risk level:** High — a probe that leads the rep to say "yeah, scheduling was basically random" gives false comfort that lets a dead instrument through, and every downstream estimate inherits the failure.
+
+**Setup:** use your Exercise 3 probes. If clean, inject a leading one — "training was just whoever was available, right?" — to confirm your checklist catches it.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 4 (Instrument Probes)
+
+For each probe, mark Pass / Fail / Cannot-determine on:
+
+1. Correctness — does the probe surface a FACT about scheduling or side channels,
+   rather than ask the rep to endorse a conclusion?
+2. Completeness — do the six probes cover both independence (who trained first and
+   why) and exclusion (what else early training changed)?
+3. Scope — is every rep-facing string free of jargon (instrument, independence,
+   exclusion, as-good-as-random)?
+4. Chapter-specific: Red-flag reachability — for each probe, is there an honest rep
+   answer that would threaten the instrument, or does the question only admit
+   reassuring answers?
+5. Chapter-specific: Independence vs exclusion separation — is each probe clearly
+   pointed at one assumption, not muddling both?
+6. Failure-mode check — leading-the-witness: does any probe presuppose the
+   instrument is valid ("scheduling was random, right?")? A probe can be fluent and
+   on-topic and still steer the rep toward the answer that saves the design. Flag
+   it. Also flag any case where you cannot tell from the rep's likely answer whether
+   independence holds (missing ground truth — by design the bot surfaces facts, the
+   falsification test decides).
+```
+
+**What to do with findings:** all pass — commit the probes and wire them ahead of the falsification script. One fail — rewrite that probe to be fact-eliciting and neutral. Multiple uncertain — the probe set is leading; regenerate with the "no probe may presuppose validity" rule.
+
+**AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 4 work and the one judgment it could not make. The judgment most specific here: whether the cohort timing was as-good-as-random on this brand's rollout — a domain fact about who got trained first and why that the model does not have and cannot verify, and that only the falsification test plus the rep's honest answers can settle.*
+
+**Series connection:** the failure mode is **leading-the-witness** into a false all-clear on the instrument, which maps to **T5 (Causal)**: independence and exclusion are the identification claim, and the bot's job is to surface the scheduling history a human uses to defend or abandon the natural experiment — never to bless it.

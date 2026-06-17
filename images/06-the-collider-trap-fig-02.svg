@@ -1,0 +1,92 @@
+<!--
+  figure-title: Dwell/reaction collider - path closed vs path opened by conditioning
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 06-the-collider-trap
+  Figure: 02
+  Type: two-state DAG
+  Generated: 2026-06-16
+  Source: chapters/06-the-collider-trap.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">Conditioning on in-visit engagement opens a spurious message-to-NRx path</title>
+  <desc>Two identical four-node graphs. Message and NRx sit left and right; latent physician openness above center (dashed outline, unobserved); in-visit engagement (dwell/reaction) below center is a common effect of message and openness -- a collider. Left graph: engagement untouched, the path through openness stays blocked. Right graph: a box conditions on engagement and a dashed spurious path links message to NRx through openness.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="06-the-collider-trap" figure-number="02" figure-title="Dwell/reaction collider: path closed vs path opened" figure-slug="dwell-reaction-collider-two-state" figure-type="two-state DAG" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/06-the-collider-trap.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+    <marker id="arrowred" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#C8102E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">The path was closed before she touched it</text>
+  <text x="32" y="50" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Same four nodes. The only change is conditioning on engagement (right).</text>
+
+  <!-- ====== LEFT PANEL: unconditioned, path blocked. x in [40,330] ====== -->
+  <text x="186" y="78" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">WITHOUT conditioning -- path blocked</text>
+
+  <!-- latent openness (dashed circle, unobserved) top center -->
+  <ellipse cx="186" cy="120" rx="50" ry="28" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="186" y="118" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">physician</text>
+  <text x="186" y="132" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">openness</text>
+
+  <!-- Message left -->
+  <rect x="48" y="200" width="76" height="40" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="86" y="224" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">message</text>
+  <!-- NRx right -->
+  <rect x="248" y="200" width="76" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="286" y="224" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">NRx</text>
+  <!-- engagement collider lower center -->
+  <rect x="148" y="288" width="76" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="186" y="306" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">dwell /</text>
+  <text x="186" y="320" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">reaction</text>
+
+  <!-- edges: message->NRx (direct), message->engagement, openness->engagement, openness->NRx -->
+  <line x1="124" y1="216" x2="244" y2="216" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="100" y1="240" x2="150" y2="290" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="186" y1="148" x2="186" y2="284" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="214" y1="140" x2="278" y2="196" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ====== RIGHT PANEL: conditioned, path opened. x in [370,660] ====== -->
+  <text x="516" y="78" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E" text-anchor="middle" font-weight="bold">WITH conditioning -- path opened</text>
+
+  <ellipse cx="516" cy="120" rx="50" ry="28" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="516" y="118" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">physician</text>
+  <text x="516" y="132" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">openness</text>
+
+  <rect x="378" y="200" width="76" height="40" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="416" y="224" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">message</text>
+  <rect x="578" y="200" width="76" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="616" y="224" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">NRx</text>
+  <!-- engagement with conditioning box (red) -->
+  <rect x="478" y="288" width="76" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="470" y="280" width="92" height="56" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="516" y="306" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">dwell /</text>
+  <text x="516" y="320" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">reaction</text>
+
+  <!-- same true edges -->
+  <line x1="454" y1="216" x2="574" y2="216" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="430" y1="240" x2="480" y2="290" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="516" y1="148" x2="516" y2="284" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="544" y1="140" x2="608" y2="196" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- spurious dashed path: message -> through openness -> NRx (red), only on right -->
+  <path d="M 426 200 Q 466 150 480 132" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <path d="M 552 132 Q 580 156 606 198" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrowred)"/>
+  <rect x="434" y="170" width="78" height="15" fill="#FFFFFF"/>
+  <text x="510" y="181" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#C8102E" text-anchor="end">spurious path</text>
+
+  <!-- panel separator -->
+  <line x1="350" y1="64" x2="350" y2="344" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- legend: dashed = unobserved / induced -->
+  <g font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">
+    <ellipse cx="46" cy="360" rx="10" ry="6" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="62" y="364">dashed node = unobserved (latent)</text>
+    <line x1="330" y1="360" x2="356" y2="360" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="362" y="364">red dashed = spurious path induced by conditioning</text>
+  </g>
+
+  <!-- caption: honesty -->
+  <text x="32" y="388" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Dwell and reaction are POST-TREATMENT colliders, not confounders. Adding them to the model does not control bias -- it creates it,</text>
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">linking message to NRx through unobserved openness. Veeva field names dated mid-2026; kept out of the figure. Public + synthetic only.</text>
+</svg>

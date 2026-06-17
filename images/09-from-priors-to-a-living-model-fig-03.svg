@@ -1,0 +1,72 @@
+<!--
+  Title: Living Model architecture (SCM, engine, drift monitor)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 09-from-priors-to-a-living-model
+  Figure: 03
+  Type: Systems diagram (MC)
+  Generated: 2026-06-16
+  Source: chapters/09-from-priors-to-a-living-model.md
+-->
+<svg viewBox="0 0 700 420" role="img" aria-labelledby="fig-title-03" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-03">The Living Model: parameterized SCM, counterfactual engine, and drift monitor with feedback</title>
+  <desc>Three boxes in a row. The parameterized model feeds its equations forward to the counterfactual engine. The drift monitor on the right holds three watch-jobs as stacked bands - parameter drift, structural drift, and an opt-out-rate alarm marked in red. A return arrow loops from the monitor back to the model, showing detected drift triggers an update.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="09-from-priors-to-a-living-model" figure-number="03" figure-title="Living Model architecture (SCM, engine, drift monitor)" figure-slug="living-model-architecture" figure-type="Systems diagram" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/09-from-priors-to-a-living-model.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">The Living Model: build, infer, and watch for drift in a loop</text>
+
+  <!-- SCM box (left) -->
+  <rect x="32" y="100" width="160" height="80" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="112" y="134" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">PARAMETERIZED SCM</text>
+  <text x="112" y="152" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">DAG + equations</text>
+  <text x="112" y="168" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">+ provenance</text>
+
+  <!-- forward arrow SCM -> engine -->
+  <line x1="192" y1="140" x2="266" y2="140" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="229" y="130" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">feeds</text>
+
+  <!-- ENGINE box (center) -->
+  <rect x="270" y="100" width="140" height="80" fill="#F5F5F5" stroke="#545454" stroke-width="1.5"/>
+  <text x="340" y="134" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">ENGINE</text>
+  <text x="340" y="152" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">abduction-action-</text>
+  <text x="340" y="168" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">prediction</text>
+
+  <!-- forward arrow engine -> monitor -->
+  <line x1="410" y1="140" x2="484" y2="140" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- MONITOR box (right) with three stacked bands -->
+  <rect x="488" y="92" width="180" height="96" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="578" y="84" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">DRIFT MONITOR</text>
+  <!-- band 1: parameter drift -->
+  <rect x="496" y="100" width="164" height="24" fill="#F5F5F5" stroke="#ADADAD" stroke-width="1"/>
+  <text x="504" y="116" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">parameter drift -&gt; refit</text>
+  <!-- band 2: structural drift -->
+  <rect x="496" y="128" width="164" height="24" fill="#F5F5F5" stroke="#ADADAD" stroke-width="1"/>
+  <text x="504" y="144" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">structural -&gt; re-elicit</text>
+  <!-- band 3: opt-out alarm (red, signature) -->
+  <rect x="496" y="156" width="164" height="24" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="504" y="172" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">opt-out alarm</text>
+  <!-- alarm marker -->
+  <circle cx="648" cy="168" r="5" fill="#C8102E"/>
+
+  <!-- return / feedback arrow: monitor bottom -> down -> left -> up to SCM bottom -->
+  <line x1="578" y1="188" x2="578" y2="248" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="578" y1="248" x2="112" y2="248" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="112" y1="248" x2="112" y2="182" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="345" y="240" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">detected drift triggers a model update</text>
+
+  <!-- caption -->
+  <text x="32" y="290" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The SCM feeds the engine, which issues individual recommendations; the</text>
+  <text x="32" y="304" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">monitor watches three ways. The signature alarm (red) is a shift in the</text>
+  <text x="32" y="318" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">OPT-OUT RATE: when more physicians decline visits, selection turns the</text>
+  <text x="32" y="332" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">consent variable into a collider and biases the estimates. The return arrow</text>
+  <text x="32" y="346" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">closes the loop - the model is "living" because drift sends it back to refit</text>
+  <text x="32" y="360" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">or re-elicit, not because it self-updates blindly.</text>
+
+  <!-- source line -->
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.09 FROM PRIORS TO A LIVING MODEL</text>
+</svg>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 5.1 — Three-pathway mediation graph</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+      --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}
+  }
+  html,body{margin:0;padding:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .subtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-secondary);}
+  .node{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .leg{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-ink);}
+  .tooltip{position:absolute;pointer-events:none;background:var(--color-white);border:1px solid var(--color-border);
+    padding:4px 8px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;color:var(--color-ink);opacity:0;}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" class="tooltip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA={
+  nodes:[
+    {id:"Z",lines:["cohort","timing (Z)"],x:83,y:210,w:86,h:48,tier:"ink"},
+    {id:"D",lines:["message","variant (D)"],x:216,y:210,w:92,h:48,tier:"ink",fill:"var(--color-fill)"},
+    {id:"M1",lines:["educational","attitude (M1)"],x:392,y:101,w:124,h:46,tier:"ink"},
+    {id:"M2",lines:["samples /","co-pay (M2)"],x:392,y:210,w:124,h:46,tier:"gray"},
+    {id:"M3",lines:["reciprocity","meals (M3)"],x:392,y:319,w:124,h:46,tier:"red"},
+    {id:"Y",lines:["NRx (Y)"],x:609,y:210,w:86,h:48,tier:"ink"},
+    {id:"OP",lines:["Open Payments","(public source)"],x:230,y:350,w:120,h:44,tier:"src"}
+  ],
+  edges:[
+    {from:"Z",to:"D",tier:"ink"},
+    {from:"D",to:"M1",tier:"ink"},
+    {from:"D",to:"M2",tier:"gray"},
+    {from:"OP",to:"M3",tier:"ink"},
+    {from:"M1",to:"Y",tier:"ink"},
+    {from:"M2",to:"Y",tier:"gray"},
+    {from:"M3",to:"Y",tier:"red"}
+  ]
+};
+const stroke={ink:"var(--color-ink)",gray:"#787878",red:"var(--color-red)",src:"var(--color-ink)"};
+const W=700,H=480;
+const wrap=d3.select("#wrap");const tip=d3.select("#tip");
+function n(id){return FALLBACK_DATA.nodes.find(d=>d.id===id);}
+function draw(){
+  wrap.selectAll("svg").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Three-pathway mediation graph: message variant fans into three correlated mediators");
+  svg.append("desc").attr("id","chart-desc").text("Z to D; D fans into educational M1 and samples M2; an external Open Payments source feeds reciprocity M3; all three mediators feed NRx. Tiers shown grayscale-distinct: permissive, cautionary, high-scrutiny.");
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  defs.append("marker").attr("id","arrowgray").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","#787878");
+  defs.append("marker").attr("id","arrowred").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+  svg.append("rect").attr("x",0).attr("y",0).attr("width",W).attr("height",H).attr("fill","var(--color-white)");
+
+  svg.append("text").attr("class","title").attr("x",32).attr("y",28).text("One treatment, three correlated pathways into the same outcome");
+  svg.append("text").attr("class","subtitle").attr("x",32).attr("y",46).text("Meals enter reciprocity from public Open Payments data, not from D");
+
+  // edges (simple straight lines between node edge centers)
+  const mEnd={ink:"url(#arrow)",gray:"url(#arrowgray)",red:"url(#arrowred)"};
+  FALLBACK_DATA.edges.forEach(e=>{
+    const a=n(e.from),b=n(e.to);
+    const p=anchor(a,b);
+    svg.append("line").attr("x1",p.x1).attr("y1",p.y1).attr("x2",p.x2).attr("y2",p.y2)
+      .attr("stroke",stroke[e.tier]).attr("stroke-width",1.5).attr("marker-end",mEnd[e.tier]||mEnd.ink);
+  });
+
+  // nodes
+  const g=svg.selectAll("g.nd").data(FALLBACK_DATA.nodes).join("g").attr("class","nd")
+    .attr("tabindex",0).attr("aria-label",d=>d.lines.join(" "));
+  g.append("rect").attr("x",d=>d.x-d.w/2).attr("y",d=>d.y-d.h/2).attr("width",d=>d.w).attr("height",d=>d.h).attr("rx",0)
+    .attr("fill",d=>d.fill||"var(--color-white)").attr("stroke",d=>stroke[d.tier]).attr("stroke-width",d=>d.tier==="src"?1:1.5)
+    .attr("stroke-dasharray",d=>d.tier==="src"?"5 4":null)
+    .on("mousemove",(e,d)=>show(e,d.lines.join(" "))).on("mouseleave",hide)
+    .on("focus",function(e,d){show2(this,d.lines.join(" "))}).on("blur",hide);
+  g.each(function(d){
+    const s=d3.select(this);
+    const cls=d.tier==="src"?"caption":"node";
+    if(d.lines.length===2){
+      s.append("text").attr("class",cls).attr("x",d.x).attr("y",d.y-3).attr("text-anchor","middle").text(d.lines[0]);
+      s.append("text").attr("class",cls).attr("x",d.x).attr("y",d.y+13).attr("text-anchor","middle").text(d.lines[1]);
+    } else {
+      s.append("text").attr("class",cls).attr("x",d.x).attr("y",d.y+5).attr("text-anchor","middle").text(d.lines[0]);
+    }
+  });
+
+  // legend
+  legSwatch(svg,40,376,"var(--color-ink)","permissive (M1)");
+  legSwatch(svg,180,376,"#787878","cautionary (M2)");
+  legSwatch(svg,320,376,"var(--color-red)","high-scrutiny (M3)");
+
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",408).text("The per-pathway split is generally NOT point-identified: any defensible");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",422).text("decomposition reports interventional effects, not naive coefficient products.");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",436).text("Public + synthetic only.");
+}
+function anchor(a,b){
+  // connect from a's right/relevant edge toward b
+  let x1=a.x, y1=a.y, x2=b.x, y2=b.y;
+  const dx=x2-x1, dy=y2-y1;
+  // exit a box
+  x1 = x1 + Math.sign(dx)*(a.w/2)*Math.min(1,Math.abs(dx)/(Math.abs(dx)+Math.abs(dy)+1)) ;
+  // simpler: exit on the side facing b
+  x1=a.x+(dx>=0?a.w/2:-a.w/2);
+  y1=a.y+(Math.abs(dy)>a.h? (dy>0?a.h/2:-a.h/2): dy*0.4);
+  x2=b.x+(dx>=0?-b.w/2-6:b.w/2+6);
+  y2=b.y+(Math.abs(dy)>b.h? (dy>0?-b.h/2:b.h/2): -dy*0.0);
+  return {x1,y1,x2,y2};
+}
+function legSwatch(svg,x,y,col,txt){
+  svg.append("rect").attr("x",x).attr("y",y).attr("width",14).attr("height",12).attr("fill","var(--color-white)").attr("stroke",col).attr("stroke-width",1.5);
+  svg.append("text").attr("class","leg").attr("x",x+18).attr("y",y+10).text(txt);
+}
+function show(e,t){tip.style("opacity",1).html(t).style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px");}
+function show2(node,t){const r=node.getBoundingClientRect();tip.style("opacity",1).html(t).style("left",(window.scrollX+r.left+r.width/2)+"px").style("top",(window.scrollY+r.top-24)+"px");}
+function hide(){tip.style("opacity",0);}
+draw();
+new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

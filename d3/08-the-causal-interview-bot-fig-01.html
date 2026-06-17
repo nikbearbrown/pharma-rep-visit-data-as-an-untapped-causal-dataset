@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Knowledge sources and causal roles</title>
+<style>
+:root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+@media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+*{box-sizing:border-box;}
+html,body{margin:0;background:transparent;color:var(--color-ink);}
+#wrap{width:100%;max-width:760px;margin:0 auto;}
+svg{display:block;width:100%;height:auto;}
+.title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+.colhead{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;}
+.mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;}
+.body{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+.source{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:10px;fill:var(--color-secondary);letter-spacing:0.08em;}
+.col{cursor:pointer;}
+.col rect,.col circle,.col line{transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+#tip{position:absolute;pointer-events:none;opacity:0;background:var(--color-ink);color:var(--color-white);font-family:'Inter',-apple-system,sans-serif;font-size:11px;padding:6px 9px;border-radius:4px;max-width:220px;transition:opacity 200ms;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" role="status" aria-live="polite"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA={
+  columns:[
+    {id:"telemetry",label:"TELEMETRY",sub:"structure, no direction",cx:132,accent:false,
+     detail:"Observational data / telemetry identifies the Markov equivalence class but leaves edges undirected."},
+    {id:"elicitation",label:"REP ELICITATION",sub:"supplies orientation",cx:350,accent:true,
+     detail:"Rep elicitation / KEBN orients the edges and supplies susceptibility indices and mediator weights."},
+    {id:"experiment",label:"EXPERIMENT",sub:"total effect, no path",cx:568,accent:false,
+     detail:"An RCT or natural experiment identifies the total effect, not the internal pathway structure."}
+  ],
+  gapLabel:"the gap only elicitation fills: edge orientation",
+  caption:["Telemetry finds the skeleton but leaves edges undirected; an experiment",
+           "delivers a single total effect with no pathway. Rep knowledge is necessary",
+           "IN PRINCIPLE to orient the structure. Whether elicitation is reliable in",
+           "practice (LLM suggestibility, hallucinated edges) is the open question."]
+};
+const VW=700,VH=420;
+const wrap=d3.select("#wrap");
+const tip=d3.select("#tip");
+const svg=wrap.append("svg")
+  .attr("viewBox",`0 0 ${VW} ${VH}`)
+  .attr("role","img")
+  .attr("aria-labelledby","chart-title chart-desc");
+svg.append("title").attr("id","chart-title").text("Three knowledge sources and what each contributes to a causal model");
+svg.append("desc").attr("id","chart-desc").text("Three columns. Telemetry identifies structure but leaves edges undirected. Rep elicitation supplies the orientation as red directed arrows. An experiment gives one total-effect arrow but no pathway. A brace marks the gap only elicitation fills.");
+const defs=svg.append("defs");
+defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+  .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+defs.append("marker").attr("id","arrow-red").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+  .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+svg.append("rect").attr("x",0).attr("y",0).attr("width",VW).attr("height",VH).attr("fill","var(--color-white)");
+
+svg.append("text").attr("class","title").attr("x",32).attr("y",34)
+  .text("What each source contributes - and the gap only elicitation fills");
+
+const data=FALLBACK_DATA;
+
+function showTip(event,html){
+  const r=wrap.node().getBoundingClientRect();
+  tip.html(html).style("opacity",1)
+     .style("left",(event.clientX-r.left+12)+"px")
+     .style("top",(event.clientY-r.top+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+const cols=svg.selectAll("g.col").data(data.columns).join("g")
+  .attr("class","col")
+  .attr("tabindex",0)
+  .attr("role","button")
+  .attr("aria-label",d=>d.label+": "+d.detail)
+  .on("mousemove",(event,d)=>showTip(event,"<strong>"+d.label+"</strong><br/>"+d.detail))
+  .on("mouseleave",hideTip)
+  .on("focus",function(event,d){const e=this.getBoundingClientRect(),r=wrap.node().getBoundingClientRect();tip.html("<strong>"+d.label+"</strong><br/>"+d.detail).style("opacity",1).style("left",(e.left-r.left+12)+"px").style("top",(e.top-r.top+12)+"px");})
+  .on("blur",hideTip)
+  .on("keydown",function(event,d){if(event.key==="Enter"||event.key===" "){event.preventDefault();cols.selectAll("rect,circle,line").style("opacity",0.25);d3.select(this).selectAll("rect,circle,line").style("opacity",1);}});
+
+// COLUMN 1 telemetry
+const c0=cols.filter(d=>d.id==="telemetry");
+c0.append("rect").attr("x",48).attr("y",64).attr("width",168).attr("height",34).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1);
+c0.append("text").attr("class","colhead").attr("x",132).attr("y",86).attr("text-anchor","middle").attr("fill","var(--color-ink)").text("TELEMETRY");
+c0.append("text").attr("class","mono").attr("x",132).attr("y",120).attr("text-anchor","middle").attr("fill","var(--color-secondary)").text("structure, no direction");
+[[80,190],[184,190],[132,252]].forEach(p=>c0.append("circle").attr("cx",p[0]).attr("cy",p[1]).attr("r",14).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5));
+[[94,190,170,190],[90,200,122,242],[174,200,142,242]].forEach(l=>c0.append("line").attr("x1",l[0]).attr("y1",l[1]).attr("x2",l[2]).attr("y2",l[3]).attr("stroke","var(--color-secondary)").attr("stroke-width",1.5));
+
+// COLUMN 2 elicitation
+const c1=cols.filter(d=>d.id==="elicitation");
+c1.append("rect").attr("x",266).attr("y",64).attr("width",168).attr("height",34).attr("fill","var(--color-white)").attr("stroke","var(--color-red)").attr("stroke-width",1);
+c1.append("text").attr("class","colhead").attr("x",350).attr("y",86).attr("text-anchor","middle").attr("fill","var(--color-red)").text("REP ELICITATION");
+c1.append("text").attr("class","mono").attr("x",350).attr("y",120).attr("text-anchor","middle").attr("fill","var(--color-red)").text("supplies orientation");
+[[298,190],[402,190],[350,252]].forEach(p=>c1.append("circle").attr("cx",p[0]).attr("cy",p[1]).attr("r",14).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5));
+[[312,190,388,190],[308,200,340,242],[360,242,392,200]].forEach(l=>c1.append("line").attr("x1",l[0]).attr("y1",l[1]).attr("x2",l[2]).attr("y2",l[3]).attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("marker-end","url(#arrow-red)"));
+
+// COLUMN 3 experiment
+const c2=cols.filter(d=>d.id==="experiment");
+c2.append("rect").attr("x",484).attr("y",64).attr("width",168).attr("height",34).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1);
+c2.append("text").attr("class","colhead").attr("x",568).attr("y",86).attr("text-anchor","middle").attr("fill","var(--color-ink)").text("EXPERIMENT");
+c2.append("text").attr("class","mono").attr("x",568).attr("y",120).attr("text-anchor","middle").attr("fill","var(--color-secondary)").text("total effect, no path");
+[[516,218],[620,218]].forEach(p=>c2.append("circle").attr("cx",p[0]).attr("cy",p[1]).attr("r",14).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5));
+c2.append("line").attr("x1",530).attr("y1",218).attr("x2",606).attr("y2",218).attr("stroke","var(--color-ink)").attr("stroke-width",3).attr("marker-end","url(#arrow)");
+
+// brace
+svg.append("path").attr("d","M 80 290 L 80 300 L 568 300 L 568 290").attr("fill","none").attr("stroke","var(--color-ink)").attr("stroke-width",1).attr("aria-hidden","true");
+svg.append("line").attr("x1",324).attr("y1",300).attr("x2",324).attr("y2",310).attr("stroke","var(--color-ink)").attr("stroke-width",1).attr("aria-hidden","true");
+svg.append("text").attr("class","colhead").attr("x",324).attr("y",328).attr("text-anchor","middle").attr("fill","var(--color-red)").text(data.gapLabel);
+
+// caption
+svg.selectAll("text.cap").data(data.caption).join("text")
+  .attr("class","body").attr("x",32).attr("y",(d,i)=>350+i*14).text(d=>d);
+
+svg.append("text").attr("class","source").attr("x",32).attr("y",404).text("SOURCE: CH.08 THE CAUSAL INTERVIEW BOT");
+
+new ResizeObserver(()=>{}).observe(wrap.node());
+</script>
+</body>
+</html>

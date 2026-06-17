@@ -21,6 +21,9 @@ Judea Pearl introduced the ladder as a classification of *kinds of questions* �
 
 **The third rung is counterfactual.** Reason about a specific unit in a world contrary to fact — to ask, after the fact, about the world that was not. Pearl's example: my headache is gone; was it the aspirin? I took the aspirin, the headache resolved, but I cannot run the morning again without the aspirin to find out. The query is: *what would have happened if I had done otherwise?*
 
+![Pearl's Ladder of Causation as a three-rung vertical ladder: association (seeing) at the bottom, intervention (doing) in the middle, counterfactual (imagining) at the top, with a hatched sealing band between rung 1 and rung 2 and one pharma example beside each rung.](images/03-stuck-on-rung-1-fig-01.png)
+*Figure 3.1 — The Ladder of Causation, and the seal Rung-1 data cannot cross*
+
 <!-- → [DIAGRAM: Pearl's Ladder of Causation. Three rungs on a vertical ladder. Rung 1 (bottom): "Association — Seeing. P(Y|X). What goes with what?" Rung 2 (middle): "Intervention — Doing. P(Y|do(X)). What would happen if I made this happen?" Rung 3 (top): "Counterfactual — Imagining. What would have happened if I had done otherwise?" Arrow annotations on left: "Sealed — Rung-1 data alone cannot answer Rung-2 questions." Right side: pharma examples at each rung — email open rate (Rung 1), deliberate message assignment → NRx (Rung 2), for this physician, which message would have changed prescribing (Rung 3). Caption: "Each rung is strictly more powerful than the one below. The gap is not model capacity — it is the kind of question being asked."] -->
 
 ---
@@ -51,6 +54,9 @@ Apply this to the pharma budget decision. When physicians who received the safet
 
 That is a Rung-2 quantity. It requires severing the arrows that govern message assignment. Observational data, no matter how rich, cannot do that severance. Only a causal model — or a study design that genuinely randomizes the message, which is a physical instantiation of the $do$ — can.
 
+![Two side-by-side causal graphs. Left, observational: arrows from physician receptivity and rep strategy both point into message, which points to prescribing. Right, interventional: the two incoming arrows to message are severed with red cut marks, leaving only the message-to-prescribing arrow.](images/03-stuck-on-rung-1-fig-02.png)
+*Figure 3.2 — The do-operator severs the arrows into the treatment*
+
 <!-- → [DIAGRAM: Two causal graphs side by side. Left graph: observational — arrows from "physician receptivity" and "rep strategy" both point into "message received," which points into "NRx." The confounding paths are visible. Right graph: interventional — the arrows from "physician receptivity" and "rep strategy" into "message" are severed (crossed out). Only the message → NRx arrow remains. Label: "do(message = safety) removes the confounding. Observational conditioning does not." Caption: "The do-operator severs the arrows that contaminate the observed association. This is what randomization does physically, and what a causal model does mathematically."] -->
 
 ---
@@ -79,7 +85,13 @@ The pharma analytical apparatus has three main practices, and each one sits on R
 
 The pattern is consistent across the category. The optimization target in every public description is an engagement proxy. No major vendor publicly claims to estimate $P(\text{NRx} \mid do(\text{message}))$ with a stated identification strategy. This is a sourced inference from public self-descriptions, not a proof about proprietary internals — vendor methods are closed and the claim cannot be established from outside. But it is the externally checkable pattern, and it is the empirical basis for what follows.
 
-<!-- → [TABLE: Three Rung-1 pharma practices. Columns: practice, stated optimization target, actual query answered (Rung 1), Rung-2 question it cannot answer. Rows: Content optimization (dwell time, reaction score; P(engagement | message, physician); P(NRx | do(message))), Rep performance management (call attainment vs. quota; P(high conversion | rep territory); P(NRx | do(rep assigned))), Next-best-action engine (email open rate, click-through, visit acceptance; P(open | physician, message); P(NRx | do(message = X) vs. do(message = Y))). Caption: "All three practices answer Rung-1 questions. None publicly claims to estimate a do-expression. The budget question is Rung 2."] -->
+| Practice | Stated optimization target | Actual query answered (Rung 1) | Rung-2 question it cannot answer |
+| --- | --- | --- | --- |
+| Content optimization | dwell time, reaction score, drop-off | `P(engagement \| message, physician)` | `P(NRx \| do(message))` |
+| Rep performance management | call attainment vs. quota | `P(high conversion \| rep territory)` | `P(NRx \| do(rep assigned))` |
+| Next-best-action engine | email open rate, click-through, visit acceptance | `P(open \| physician, message)` | `P(NRx \| do(message = X)) vs. do(message = Y)` |
+
+*Table 3.1 — All three deployed practices answer Rung-1 questions; none publicly claims a do-expression, yet the budget question is Rung 2 (a sourced inference from public self-descriptions, not a proof about proprietary internals)*
 
 ---
 
@@ -110,30 +122,6 @@ One thing the reclassification does not supply: proof that the Rung-2 question i
 There is a small datum that has appeared twice in this book without resolution — the physician who lingered on the safety slide for 47 seconds. The telemetry records it precisely: 47 seconds, that slide, that physician, that visit. It does not record why. The 47 seconds are consistent with at least three incompatible causal stories: careful reading, which is a positive educational signal; skeptical scrutiny, hunting for the methodological flaw, which is a negative signal; and polite inattention while distracted by a patient call, which is noise. Identical telemetry, opposite causal inferences, no way to distinguish them in the data.
 
 This is the epistemic gap: the data captures what happened, not the mechanism behind it. The experienced rep who has called on this physician forty times has a strong intuition about which story is true. That intuition is nowhere in the database, and it evaporates when the territory changes hands. The 47-second ambiguity is the emblem of something deeper: the data records behavior, and behavior underdetermines mechanism, and mechanism is what the Rung-2 question needs. Climbing the ladder is, at bottom, the project of recovering mechanism from behavior — and it requires bringing structure to the problem that the behavior alone cannot supply.
-
-**Five-part AI exercise block**
-
-**When to use AI here.** Use an LLM to rehearse the rung classification — paste a vendor description and ask it to identify the optimization target and argue which rung it sits on. It is genuinely useful for surfacing the often-buried sentence where a tool states what it actually optimizes. Use it also as a Socratic partner on the do-operator: have it produce toothpaste-and-floss-style examples until the seeing-versus-doing distinction is automatic.
-
-**When NOT to use AI here.** Do not let an LLM assert that a vendor "does causal inference" or "estimates incremental effect" unless it can quote the source. The model will pattern-match marketing language — "AI-powered," "intelligent recommendations," "outcome optimization" — into a causal claim that the source does not make. That is the proxy-for-rigor error this chapter is about, applied to the model itself. Causal classification must trace to a quotable optimization target, not to the aura of the vocabulary.
-
-**LLM exercise (copy-paste prompt):**
-> "Here is a description of a pharmaceutical next-best-action or engagement tool: [paste a real vendor or analyst description — include the optimization metric it names].
->
-> 1. Quote the exact phrase stating what the tool optimizes or predicts.
-> 2. Classify that target on Pearl's ladder: Rung 1 (association, P(Y|X)), Rung 2 (intervention, P(Y|do(X))), or Rung 3 (counterfactual). Justify structurally — what query is it actually computing?
-> 3. Write the Rung-2 do-expression the budget needs for this decision.
-> 4. State in one sentence why the tool's target cannot answer that do-expression.
->
-> Do NOT upgrade the tool to a higher rung than its own words support. If it never mentions a deliberate intervention or incremental effect, it is Rung 1."
-
-**CLI exercise.** In Claude Code, create a `rung_classifier.md` rubric file and a `practices/` folder. For three vendor descriptions you collect, write one markdown file each containing: the quoted optimization target, the rung classification with justification, and the corresponding do-expression the budget needs. The deliverable is a small auditable corpus you can defend and update as you encounter new platforms.
-
-**AI validation.** For every "Rung 2" classification the model assigns, demand the quote that mentions a deliberate intervention or an incremental or counterfactual effect. If there is no such quote, the model over-climbed — downgrade it. Cross-check at least one classification against Pearl's own definition: does the tool's description sever incoming arrows to the action, or merely observe the action's usual occurrence? The latter is Rung 1, without exception.
-
-## AI Use Disclosure
-
-*Write two sentences naming what an AI tool did in your work for this chapter and the one judgment it could not make. For example: "I used an LLM to draft the rung classification of the vendor descriptions and to generate examples of the do-operator; I decided myself that the Aktana open-rate description is Rung 1 and not a causal estimate, because the model was willing to grant causal status to any platform that used the word 'outcome,' and that judgment requires reading what the optimization target actually is, not what the surrounding vocabulary suggests."*
 
 ## What Would Change My Mind
 
@@ -172,3 +160,169 @@ What the vendors are actually doing internally — whether the absence of do-lan
 **Challenge**
 
 9. *(Challenge — open-ended) What this tests: evaluating a potential exception to the sealing result.* Pearl says Rung-1 data can answer Rung-2 questions "if you have a sufficiently strong and accurate causal model." Design a scenario in the pharma HCP marketing context where you could, in principle, use observational engagement data to answer a Rung-2 question about message assignment — specifying the causal model you would need, the assumptions it would require, and the falsification test that would tell you whether those assumptions hold. Then state honestly whether you believe the assumptions are likely to be satisfied in a real commercial dataset.
+
+---
+
+## Prompts
+
+### Figure 3.1 — The Ladder of Causation, and the seal Rung-1 data cannot cross
+
+Build a single self-contained HTML file (inline CSS; D3 7.9.0 from the cdnjs CDN) rendering Pearl's three-rung Ladder of Causation as a vertical hierarchy. Two vertical rails frame three stacked rung boxes: Rung 1 association / seeing (bottom, broadest, light gray), Rung 2 intervention / doing (middle, dark ink), Rung 3 counterfactual / imagining (top, mid-gray), each strictly more powerful than the one below. A hatched red sealing band sits between rung 1 and rung 2 labeled so no arrow crosses it. Beside each rung, a connector to one pharma example marker box: email open rate (R1), deliberate message assignment to NRx (R2), which message would have changed Rx (R3). Hover/focus any rung for a tooltip with its query form and pharma reading. Deliverable: 700x420 viewBox, one defs arrowhead, Brutalist palette via CSS variables with dark-mode media query, EB Garamond title / Inter body. Caption must state the gap is the kind of question being asked, not model capacity, and that rep-visit telemetry sits on Rung 1 while the budget question is Rung 2; structural depiction only.
+
+### Figure 3.2 — The do-operator severs the arrows into the treatment
+
+Build a single self-contained HTML file (inline CSS; D3 7.9.0 from the cdnjs CDN) rendering two side-by-side four-node causal graphs with identical geometry. Nodes: receptivity and rep strategy (confounders, mid-gray), message (treatment, dark ink), prescribing (outcome, red). Left graph (observational): all three edges intact — receptivity to message, rep strategy to message, message to prescribing. Right graph (interventional, do(message)): the two incoming arrows to message are drawn faint and struck through with red cut marks, leaving only message to prescribing. A dashed divider separates the panels; panel labels above. Hover/focus any node for a tooltip explaining its causal role. Deliverable: 700x480 viewBox (extra height for the four-line caption), one defs arrowhead, Brutalist palette via CSS variables with dark-mode media query, EB Garamond title / Inter body. Caption must state the do-operator severance is structure — what randomization does physically and a model does mathematically — and depicts the operation, not a proof of identifiability; red is used as the data accent, never as danger. Structural only.
+
+---
+
+## Chapter 3 Exercises: Stuck on Rung 1
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** ladder-aware question stems — Rung-1, Rung-2, and Rung-3 versions of the bot's questions, written in rep-natural language so the rep climbs the ladder without ever hearing the word "rung."
+
+### Exercise 1 — When to Use AI
+
+Three drafting tasks the model is well-suited to here.
+
+First, **generating Rung-1 / Rung-2 / Rung-3 phrasings of the same underlying question.** You want a question about a converted account in three flavors — what tends to happen (R1), what would happen if you led differently (R2), what would have happened without the visit (R3) — all in rep language. *Why AI works here:* this is parallel rephrasing in a constrained register, classic option-generation. **The tell:** you can read each version and judge which rung it actually sits on.
+
+Second, **rehearsing the rung classification on vendor descriptions.** Paste a tool's stated optimization target and ask the model to surface the buried sentence naming what it optimizes. *Why AI works here:* it is fast at finding the load-bearing phrase in marketing prose. **The tell:** the quote is right there to check against the model's claim.
+
+Third, **drafting Socratic do-operator examples.** Toothpaste-and-floss-style analogues until seeing-vs-doing is automatic. *Why AI works here:* generating illustrative examples is low-stakes and self-checking. **The tell:** you can verify each example actually distinguishes observation from intervention.
+
+### Exercise 2 — When NOT to Use AI
+
+Two judgments that resist automation.
+
+First, **deciding which rung a bot question actually elicits.** *Why AI fails here:* the model will over-climb — it grants Rung-2 status to any question containing the word "would," the same suggestibility that makes it grant causal status to any vendor saying "outcome." A question can sound interventional and elicit only an association. **The tell:** if the model's rung label is your *reason* for filing an elicited claim as interventional knowledge, you have let it inflate the evidence; if you re-classify by asking "does this question sever the arrows into the action, or just observe the action's usual occurrence?", you have used it as a tool.
+
+Second, **certifying that the rep's Rung-2 answer is real interventional knowledge and not a confident story.** *Why AI fails here:* there is no ground truth, and the model cannot tell a rep's genuine intervention experience from a plausible-sounding rationalization. **The tell:** the model can format the answer; it cannot vouch for it. **Series connection:** this is a **T5 (Causal)** task — distinguishing seeing from doing is the rung-separation result itself, and the bot's whole value is eliciting Rung-2/3 knowledge the data cannot reach.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** the bot's *ladder-structured question bank* — for one elicitation target, the Rung-1, Rung-2, and Rung-3 stems in rep-natural language, each tagged (in a note to you, never to the rep) with the rung it occupies and what it extracts.
+
+**Tool:** the **Claude Project** ("Causal Interview Bot"). The Project already holds the elicitation spec (Ch 1) and the field-disambiguation questions (Ch 2); this chapter organizes the bot's questions by rung, so it must build on what the bot already knows to ask.
+
+**The Prompt:**
+
+```
+Building on the elicitation spec and field-disambiguation questions already in
+this Project, write the bot's LADDER-STRUCTURED question bank for ONE target.
+
+Pearl's three rungs, in plain terms:
+- Rung 1, association: what tends to go with what, observed passively.
+- Rung 2, intervention: what would happen if you deliberately did something
+  differently.
+- Rung 3, counterfactual: for a specific past case, what would have happened had
+  you acted otherwise.
+
+ABSOLUTE CONSTRAINT: the rep must NEVER hear the words "rung," "association,"
+"intervention," "counterfactual," "confounder," or "causal." All questions are in
+ordinary rep language.
+
+Target to elicit: the rep's knowledge about whether leading with patient-outcomes
+data versus mechanism-of-action data moves prescribing for a specific physician.
+Concrete scenario: Dr. Pham, a community oncologist, recently converted to the
+brand after a stretch of efficacy-first visits.
+
+Produce THREE question stems:
+1. A Rung-1 stem (surfaces what the rep has observed tends to happen) — extracts
+   candidate confounders (formulary, competitor detailing, a colleague's switch).
+2. A Rung-2 stem (asks what would happen if the rep led differently / what would
+   definitely move her) — extracts heterogeneous-effect / susceptibility knowledge.
+3. A Rung-3 stem (asks about the converted account: would it have converted without
+   the visits? the ones that didn't — what would you have done differently?) —
+   extracts mediator-weight knowledge (education vs relationship vs reciprocity).
+
+After EACH stem, add a bracketed note to ME naming the rung and exactly what causal
+information it is meant to surface. Do not over-climb: if a stem only asks what the
+rep has seen happen, label it Rung 1 even if it sounds forward-looking.
+```
+
+**What this produces:** three rep-natural stems for one target, ladder-tagged for you and jargon-free for the rep — the bot's first vertical slice across all three rungs.
+
+**How to adapt:** *For your dataset:* replace the patient-outcomes-vs-mechanism target and Dr. Pham with a real message contrast and a real converted account from your panel. *For ChatGPT/Gemini:* prepend your Ch 1–2 artifacts; without Project memory the model won't know the spec. *For a Claude Project:* keep the rung definitions and the jargon-ban in the system prompt (stable rules); send only the target and scenario as a message.
+
+**Connection to previous chapters:** Chapter 2 gave the bot field-anchored questions; this chapter sorts the bot's questions by the *kind* of causal knowledge they reach, so the prior DAG can later distinguish associations the rep has merely seen from interventions she has effectively run.
+
+**Preview of next chapter:** Chapter 4 adds a specific Rung-2 probe — questions that test whether the training-cohort timing was as-good-as-random for a given physician, the assumption the whole instrument rests on.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** a rung-tagged question bank file the bot loads as context, plus a small auditable corpus of vendor rung-classifications — all on public/synthetic material.
+
+**Tool:** Claude Code — because you want a versioned `question-bank.md` and a `practices/` corpus on disk, not chat output. **Skill level:** Intermediate.
+
+**Setup:**
+1. Prereq artifact: the three ladder stems from Exercise 3.
+2. Tool: Claude Code in the bot repo.
+3. CLAUDE.md rule: carry the synthetic-only rule; add "Rung labels are notes to the analyst only — they must never appear in any rep-facing question string."
+
+**The Task:**
+
+```
+Work only inside this repo. Append to spec/interview-stems.md a new section
+"## Chapter 3 — Ladder-structured (Rung 1/2/3)" and write in the three stems I
+paste, each followed by an HTML comment <!-- rung: N; extracts: ... --> so the rung
+tag is invisible to any rep-facing renderer.
+
+Then create practices/rung-classifier.md: a short rubric with the three rung
+definitions and, for THREE public vendor descriptions I will paste, one entry each
+recording the quoted optimization target, the rung classification, and the
+do-expression the budget actually needs.
+
+Do not write rep-facing strings that contain the words "rung," "association,"
+"intervention," or "counterfactual." Leave all other files alone.
+
+Verification step: grep the rep-facing question strings (not the comments) for the
+banned words and print any matches. If there are matches, that is a bug — list them
+and stop before writing anything else.
+```
+
+**Expected output:** an updated `interview-stems.md` with rung tags hidden in comments, and a `practices/rung-classifier.md` corpus — with a clean grep showing no banned jargon in any rep-facing string.
+
+**What to inspect:** run the grep yourself. Confirm the rung labels live only in comments/notes, and that each vendor entry's do-expression is a genuine Rung-2 `P(NRx | do(message))`, not a restatement of the engagement proxy.
+
+**If it goes wrong:** the common failure is the agent classifying a vendor as Rung 2 because the description says "outcome optimization." Recovery: demand the quote that mentions a *deliberate intervention or incremental effect*; if there is none, downgrade to Rung 1.
+
+**CLAUDE.md note:** keep the "rung labels are analyst-only" rule — it guarantees the bot stays in rep language as the question bank grows.
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** the ladder stems from Exercise 3 — specifically whether each stem actually sits on the rung it claims, and whether any rep-facing wording leaks jargon.
+
+**Validation type:** Reasoning · **Risk level:** High — a stem mislabeled Rung 2 will cause the bot to file a mere observation as interventional knowledge, the exact rung-confusion the chapter is about, and it will corrupt the prior's edge confidences.
+
+**Setup:** use your Exercise 3 stems. If they're clean, inject a flawed one — relabel a Rung-1 "what usually happens after a meal" stem as Rung 2 — to confirm your checklist catches over-climbing.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 3 (Ladder-Structured Stems)
+
+For each stem, mark Pass / Fail / Cannot-determine on:
+
+1. Correctness — does the stem's actual question match its claimed rung? (R2 must
+   ask about a deliberate change; R3 must ask about a specific past case otherwise.)
+2. Completeness — across the three stems, are all three rungs genuinely represented,
+   not two associations and one intervention?
+3. Scope — is every rep-facing string free of the banned jargon (rung,
+   association, intervention, counterfactual, confounder, causal)?
+4. Chapter-specific: No over-climb — is any stem that merely asks "what tends to
+   happen" wrongly tagged Rung 2 because it sounds forward-looking?
+5. Chapter-specific: Extraction match — does each stem's "extracts" note match what
+   that rung can actually surface (R1 confounders, R2 susceptibility, R3 mediator
+   weights)?
+6. Failure-mode check — correlation-asserted-as-cause: does any stem invite the rep
+   to state that something "drove" or "caused" prescribing rather than report what
+   she observed or would do? A stem can be fluent and rung-tagged and still smuggle
+   in a causal assertion. Flag it. Also flag any rung label you cannot verify from
+   the stem text alone (missing ground truth on what the rep actually meant).
+```
+
+**What to do with findings:** all pass — commit the bank. One fail — re-rung that stem and rewrite to match. Multiple uncertain — the rungs are blurred; regenerate from Exercise 3 with the no-over-climb rule emphasized.
+
+**AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 3 work and the one judgment it could not make. The judgment most specific here: whether a stem truly reaches Rung 2 — because the model over-grants interventional status to anything phrased as "would," and only you can tell whether the rep is reporting an intervention she has effectively run or just narrating an association.*
+
+**Series connection:** the failure mode is **correlation-asserted-as-cause** (and its cousin, over-climbing the ladder), which maps to **T5 (Causal)**: the rung boundary is the seal the whole book turns on, and the bot's job is to elicit knowledge from above the seal that the data below it can never supply.

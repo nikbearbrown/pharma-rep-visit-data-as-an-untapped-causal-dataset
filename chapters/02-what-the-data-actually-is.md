@@ -74,6 +74,9 @@ A precision correction worth stating: opt-out "strips NPI from the activity reco
 
 The causal consequence — flagged here, developed in Chapter 6: whether a physician's Plane-1 data exists, and whether it carries an NPI, depends on consent. Consent is plausibly correlated with both treatment-side factors (engaged reps, high-contact physicians) and outcome-side factors (prescribing propensity, industry skepticism). This makes the sampling frame itself a selection collider — the consent collider. Because the NPI is the join key for the entire panel, consent-driven NPI stripping is not only a privacy issue; it is a join-integrity issue. Whether opt-out missingness is in fact correlated with physician characteristics is highly plausible but unproven — the synthetic panel can demonstrate the mechanism with known ground truth, but the book does not assert the correlation as an established fact.
 
+![Two-plane CLM schema: a Plane 1 passive-telemetry box and a Plane 2 rep-entered box, plus a warehouse box, all routing through a mandatory consent gate and a shared NPI key into one physician-time panel.](images/02-what-the-data-actually-is-fig-01.png)
+*Figure 2.1 — Two planes converge, through consent and NPI, into one panel*
+
 <!-- → [DIAGRAM: Two-plane schema — left box: Plane 1 (Passive Telemetry) with fields Duration_vod, Reaction_vod, Display_Order_vod, CLM_Presentation_vod, Multichannel_Activity_vod; right box: Plane 2 (Rep-Entered) with fields Call2_Key_Message_vod, products detailed, free-text notes; bottom: Consent Layer governing NPI availability; center-right: Warehouse Layer (NRx/TRx/NBRx, Open Payments, cohort timing); all converging via NPI join into the Physician-Time Panel] -->
 
 ---
@@ -114,7 +117,22 @@ IQVIA Xponent is the canonical prescriber-level (NPI) projected NRx/TRx source. 
 
 Here is the field-role classification, sorted first by plane, then by causal role, for the total message-to-NRx effect. Several roles flip under a different estimand — that is the point.
 
-<!-- → [TABLE: Field-role classification — columns: Field/quantity, Plane (telemetry/rep/warehouse/consent), Causal role for total message→NRx effect (treatment/outcome/instrument/covariate/collider), Note; rows covering all major fields: CLM_Presentation_vod/Key_Message_vod as treatment, NRx at 30/60/90d as outcome, training-cohort timing as instrument, baseline NRx/specialty/geography as covariate, Duration_vod/Reaction_vod as collider/post-treatment, Display_Order_vod as post-treatment (or treatment in slide-sequencing study), consent status as selection collider] -->
+| Field / quantity | Plane | Causal role (total message to NRx) | Note |
+| --- | --- | --- | --- |
+| `CLM_Presentation_vod` / `Key_Message_vod` | telemetry | treatment | The message variant delivered; the estimand's exposure. |
+| `Call2_Key_Message_vod` | rep-entered | treatment (reconstruction) | Rep-authored record of which key messages were delivered; custom fields unsupported. |
+| NRx at 30 / 60 / 90 days | warehouse | outcome | New prescriptions, lagged so cause precedes effect. The default outcome. |
+| Training-cohort rollout timing | warehouse | instrument | Quasi-random variation in who got the new message when (Chapter 4). |
+| Baseline (pre-period) NRx | warehouse | covariate | Pre-treatment; strongest predictor of future NRx; a safe control. |
+| Specialty | warehouse | covariate | Pre-treatment physician attribute. |
+| Geography / territory | warehouse | covariate | Pre-treatment; also tied to cohort assignment. |
+| Rep tenure | warehouse | covariate | Pre-treatment characteristic of the assigned rep. |
+| `Duration_vod` (slide dwell) | telemetry | collider (post-treatment) | Produced during/after the message; conditioning on it opens a spurious path. |
+| `Reaction_vod` (per-slide reaction) | telemetry / rep | collider (post-treatment) | A rep label on an ambiguous signal, generated after exposure; forbidden control here. |
+| `Display_Order_vod` / `View_Order_vod` | telemetry | post-treatment (treatment in slide-sequencing study) | Role flips by estimand: collider for total effect, treatment for sequencing. |
+| Consent status (`CLM_OPT_OUT_BEHAVIOR_vod`) | consent | selection collider | Governs whether the row exists at all; a frame-level bias no covariate fixes. |
+
+*Table 2.1 — Field-role classification for the total message-to-NRx effect, sorted by plane then role; several roles flip under a different estimand*
 
 Two sorts, two axes. First sort by *plane* — passive telemetry, rep-entered, warehouse, or consent. Then sort by *role* — treatment, outcome, instrument, covariate, or collider. They are independent questions. A passively captured field (`Reaction_vod`) can still be a forbidden control. A rep-typed field (`Call2_Key_Message_vod`) is your treatment. Keep the axes separate, because the moment you conflate them, you have built the opening case's trap.
 
@@ -126,26 +144,10 @@ The panel you build on synthetic data is the chapter's proof of concept. Because
 
 That demonstration is the whole point of synthetic data: not to simulate reality, but to make the cost of assembly errors visible when you still have a known answer to check against.
 
+![Panel-assembly flowchart: three raw event logs feed five ordered steps — aggregate to physician-week, define treatment, join warehouse, lag outcome, quarantine post-treatment — producing a panel whose columns group into treatment, lagged outcome, instrument, covariates, and a set-apart quarantined post-treatment block, split by an explicit pre/post-treatment time divider.](images/02-what-the-data-actually-is-fig-02.png)
+*Figure 2.2 — Five-step assembly; correctness lives in the time index*
+
 <!-- → [DIAGRAM: Panel assembly flowchart — starting from three raw event logs (slide-view events, call records, payment records), five assembly steps in sequence: (1) aggregate to NPI-week, (2) define treatment from Key_Message_vod, (3) join warehouse layer by NPI, (4) lag outcome by 30/60/90 days, (5) quarantine post-treatment block; output: physician-time panel with columns grouped as treatment / lagged outcome / instrument / covariates / quarantined post-treatment; time axis shown explicitly to separate pre-treatment from post-treatment columns] -->
-
----
-
-**Five-Part AI Exercise Block**
-
-**When to use AI here.** Use an LLM to draft the data-dictionary scaffold and to propose candidate planes and roles for each field — then audit it. Use Claude Code to write the panel-assembly script: the group-by to NPI-week, the outcome lag, the warehouse join. These are mechanical tasks well-suited to code generation.
-
-**When NOT to use AI here.** Do not trust an LLM's claim that a given Veeva field "exists" or "means X." Schema velocity — the CRM-to-Vault migration — makes the model's training data stale, and it will confidently emit deprecated or invented field names. Verify field names against `crmhelp.veeva.com` and `vaultcrmhelp.veeva.com`, not against the model. Never let the model decide a causal role for you: plane is a documentation question, role is a structural-judgment question, and the role is where bias enters.
-
-**LLM exercise (copy-paste prompt):**
-> "I am assembling a physician-by-time panel from pharma rep-visit data to estimate the TOTAL effect of a message variant on new prescriptions. Here is my field list: [paste your fields]. For each field, propose: (1) which plane it belongs to — passive telemetry, rep-entered, warehouse, or consent; (2) its causal role for the total message effect — treatment, outcome, instrument, covariate, or collider; (3) whether it is pre-treatment or post-treatment in time. Flag any field where you are guessing the role. Explain the structural reason a field would be a collider rather than a covariate. Do not invent field definitions; if you are unsure what a field captures, say so."
-
-**CLI exercise.** In Claude Code, write `assemble_panel.py` against the synthetic data: a function that aggregates slide-view rows to NPI-week, defines treatment as the first-exposure week, lags NRx by a configurable horizon, joins warehouse fields, handles negative `Duration_vod`, and outputs the panel with the post-treatment block in a clearly named separate column group (prefixed `posttx_`). Read the function before running it. Verify that your treatment-timing column matches the synthetic cohort rollout calendar.
-
-**AI validation.** Re-verify two of the model's proposed field definitions against the live Veeva documentation. If either is wrong, treat the entire proposed list as suspect and re-audit from scratch. This is the field-schema version of the citation-verification discipline from the evidence chapter: one wrong field name is evidence of a model that is confabulating rather than retrieving.
-
-**AI Use Disclosure**
-
-*Write two sentences naming what an AI tool did in your work for this chapter and the one judgment it could not make. For example: "I used Claude Code to write the panel-assembly script and to scaffold the field-role dictionary; I determined myself whether `Reaction_vod` is a collider or a covariate, because the model could not reason about its temporal position relative to the treatment without understanding the CLM session lifecycle."*
 
 ---
 
@@ -197,3 +199,168 @@ The chapter claims the panel can be assembled cleanly and that all four causal i
 
 9. *(Open-ended — the consent collider)* The chapter flags consent-driven NPI stripping as a potential selection collider but does not assert that the correlation with prescribing propensity is empirically established. Design a study — using either the synthetic panel with a known consent-assignment mechanism or a public proxy — that would test whether opt-out missingness is correlated with physician prescribing characteristics. Name the identification strategy, the data required, and what finding would confirm or refute the collider concern.
    *What this tests: converting a flagged concern into a falsifiable research design, and identifying what evidence would resolve it.*
+
+---
+
+## Prompts
+
+### Figure 2.1 — Two planes converge, through consent and NPI, into one panel
+
+Build a single self-contained HTML file (inline CSS; D3 7.9.0 from the cdnjs CDN) rendering a layered block/architecture diagram. Three source boxes: Plane 1 (passive telemetry) and Plane 2 (rep-entered) stacked on the left, a warehouse box top-right, each listing example fields as blank-slot rows. Connectors run down from each source to a shared NPI key marker (rendered as a diamond on the join), then all data must pass through a single mandatory horizontal consent-gate band (red highlight) before converging into one destination box: the physician-time panel. Consent is one mandatory gate, not an optional side box. Hover/focus any box for a tooltip naming its causal role and example fields. Marks: rectangles (rx=0), straight connectors, one defs arrowhead, diamond junctions. Deliverable: 700x420 viewBox, Brutalist palette via CSS variables with dark-mode media query, EB Garamond title / Inter body / JetBrains Mono field rows. Caption must note Veeva *_vod names are dated mid-2026 examples and the structure is public/synthetic only.
+
+### Figure 2.2 — Five-step assembly; correctness lives in the time index
+
+Build a single self-contained HTML file (inline CSS; D3 7.9.0 from the cdnjs CDN) rendering a left-to-right process pipeline over an explicit time axis. Inputs: three stacked raw-log boxes (slide-view, call records, payments) merging into step 1. Five ordered process nodes in a row: aggregate to physician-week, define treatment, join warehouse, lag outcome, quarantine post-treatment, connected by arrows. Below, an output panel showing five column-groups as colored blocks — treatment (red, the active series), lagged outcome, instrument, covariates, and a dashed-border quarantined post-treatment block (set-apart, not deleted). A horizontal time axis is the spine, with a red pre/post-treatment divider. Hover/focus any step or column-group for a tooltip explaining what it protects against. Deliverable: 700x420 viewBox, plot/output region filled F5F5F5, Brutalist palette via CSS variables with dark-mode media query, EB Garamond title / Inter body / JetBrains Mono pre/post labels. Caption must state quarantine is not deletion (the block flips to treatment under the slide-sequencing estimand) and that the do-operator severance described elsewhere is structure, not a proof of identifiability; synthetic/structural only.
+
+---
+
+## Chapter 2 Exercises: What the Data Actually Is
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** the field map — which specific data fields each bot question must disambiguate, especially the collider-prone in-visit signals (`Duration_vod`, `Reaction_vod`) the bot must never let the rep recast as a cause.
+
+### Exercise 1 — When to Use AI
+
+Three places where AI earns its keep in this chapter's assembly work.
+
+First, **scaffolding the field-role data dictionary.** You have a field list; you want a draft table proposing each field's plane and causal role. *Why AI works here:* it is a summarizing-and-tabulating task over information you supply, and you audit every row. **The tell:** you can check each proposed role against the chapter's two-axis rule yourself.
+
+Second, **drafting bot questions that distinguish what two fields mean to a rep.** Ask the model to write rep-natural questions that separate "she dwelled because she was reading" from "she dwelled because the iPad froze." *Why AI works here:* option-generation in a constrained register — you cull, the rep answers. **The tell:** you can judge whether each question maps cleanly to the `Duration_vod` ambiguity.
+
+Third, **reformatting the schema notes into a bot-readable reference.** Turn the chapter's field table into a compact JSON or Markdown reference the bot can carry as context. *Why AI works here:* mechanical reformatting, fully checkable against the source table. **The tell:** the source table sits beside the output.
+
+### Exercise 2 — When NOT to Use AI
+
+Two judgments that must stay human.
+
+First, **deciding whether a field is a collider or a covariate.** *Why AI fails here:* this is the causal-identification call the whole chapter turns on — it requires reasoning about a field's *temporal position relative to the treatment*, which depends on the CLM session lifecycle the model does not understand. A model will confidently label `Reaction_vod` a "control" because it looks like one. **The tell:** if the model's role assignment is your *reason* for including the field, you have outsourced identification; if it is a first draft you re-derive from the time index, you have used it as a tool.
+
+Second, **trusting that a Veeva field name "exists" or "means X."** *Why AI fails here:* schema velocity (the CRM-to-Vault migration) makes training data stale, and the model invents plausible deprecated field names — missing ground truth it papers over with fluency. **The tell:** verify against `crmhelp.veeva.com` and `vaultcrmhelp.veeva.com`, never the model. **Series connection:** the collider/covariate call is a **T5 (Causal)** task — the irreducibly human structural judgment that, if the bot gets it wrong, will let a rep narrate a downstream signal as an upstream cause and corrupt the prior DAG.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** the bot's *field-disambiguation question set* — questions that, for each collider-prone in-visit signal, make the rep explain the signal's *meaning* without ever inviting her to assert it caused prescribing.
+
+**Tool:** the same **Claude Project** ("Causal Interview Bot") from Chapter 1. Use the Project so the elicitation spec you wrote last chapter is already in context — this chapter's questions must attach to the specific fields, and the bot needs to remember the blind-spots spec to know which fields are dangerous.
+
+**The Prompt:**
+
+```
+Building on the elicitation spec already in this Project, design the bot's
+FIELD-DISAMBIGUATION question set for the in-visit telemetry.
+
+The dataset has two structurally different planes. Plane 1 is passive machine
+telemetry: Duration_vod (seconds on a slide), Display_Order_vod / View_Order_vod
+(slide sequence, skips, backtracks), Reaction_vod (a rep-tapped
+positive/neutral/negative button). Plane 2 is rep-entered post-call data:
+Call2_Key_Message_vod (which messages were delivered), free-text notes.
+
+Critical constraint from this chapter: Duration_vod and Reaction_vod are
+POST-TREATMENT colliders for the total message effect. They happen DURING or AFTER
+the message. The bot must surface what they mean WITHOUT ever letting the rep
+recast them as a cause of prescribing.
+
+Concrete scenario: Dr. Reyes, a cardiologist, dwelled 52 seconds on the efficacy
+slide; the rep tapped "neutral"; View_Order_vod shows she backtracked to it once.
+
+Produce, in rep-natural English with NO causal jargon:
+
+1. THREE questions about Duration_vod that separate the genuine readings of a long
+   dwell (engaged / skeptical / distracted / technical glitch).
+2. TWO questions about Reaction_vod that surface whether the tapped reaction
+   reflected the physician or the room (interruption, time pressure, the rep's own
+   read), i.e. how reliable that single label is.
+3. TWO questions about the skip/backtrack pattern (Display/View order) that ask
+   what the navigation meant in the conversation.
+
+After EACH question, add a bracketed note to ME naming the exact field it
+disambiguates and a one-line warning if the question risks inviting a causal
+assertion. Do NOT write any question that asks the rep whether a dwell or reaction
+"caused" or "drove" prescribing — flag and rewrite any that drifts that way.
+```
+
+**What this produces:** seven rep-natural questions, each tagged to a specific collider-prone field with a built-in leading-the-witness warning — the field-disambiguation layer of the bot's question bank.
+
+**How to adapt:** *For your dataset:* swap the field names for your platform's equivalents (verify them live) and replace Dr. Reyes with a real in-visit pattern from your panel. *For ChatGPT/Gemini:* paste your Chapter 1 elicitation spec at the top of the prompt, since those tools won't have it in memory. *For a Claude Project:* the two-plane / collider context belongs in the Project system prompt (it's stable across chapters); send only the Dr. Reyes scenario and the three-part request as a message.
+
+**Connection to previous chapters:** Chapter 1 told the bot *that* telemetry is silent on the why; this chapter tells it *which fields* are silent and *which are traps*, turning the abstract blind-spot spec into field-anchored questions.
+
+**Preview of next chapter:** Chapter 3 sorts these questions onto Pearl's ladder, so the bot knows which questions elicit Rung-1 associations versus Rung-2 interventional knowledge — still phrased so the rep never hears a rung.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** a machine-readable field-role reference the bot carries as context, generated against the synthetic panel so no real schema or data is touched.
+
+**Tool:** Claude Code — because you want a file derived from the actual synthetic field list, with a verification pass that checks the bot never treats a collider field as a control. **Skill level:** Intermediate.
+
+**Setup:**
+1. Prereq artifact: the field-disambiguation question set from Exercise 3, plus the Chapter 1 repo scaffold.
+2. Tool: Claude Code in the bot repo.
+3. CLAUDE.md rule: the synthetic-only rule from Chapter 1, plus a new line — "Never assert a Veeva field's existence or meaning from memory; mark unverified fields `[verify]`."
+
+**The Task:**
+
+```
+Work only inside this repo. Read spec/interview-stems.md and the field list in
+data/synthetic/fields.csv (synthetic only — if it does not exist, create a small
+synthetic fields.csv with these columns: field_name, plane, role, time_position,
+and 8 example rows covering Duration_vod, Reaction_vod, Display_Order_vod,
+Call2_Key_Message_vod, baseline_NRx, specialty, cohort_timing, NRx_60d).
+
+Then produce spec/field-roles.json: for each field, an object with plane
+(telemetry/rep-entered/warehouse/consent), role (treatment/outcome/instrument/
+covariate/collider), time_position (pre/post-treatment), and a "bot_rule" string
+saying whether the bot may let a rep's answer about this field orient an edge.
+
+Leave all other files alone. Mark any field whose role you are unsure of with
+"role": "UNCERTAIN" rather than guessing.
+
+Verification step: after writing the file, print every field where role ==
+"collider" and confirm its bot_rule forbids edge orientation. If any collider
+field allows orientation, that is a bug — flag it and stop.
+```
+
+**Expected output:** a `field-roles.json` with each synthetic field classified, every collider flagged with a bot_rule that blocks edge orientation, and any genuinely ambiguous field marked UNCERTAIN.
+
+**What to inspect:** open the JSON and confirm `Duration_vod` and `Reaction_vod` are `collider`, `post-treatment`, and forbidden from orienting edges. Confirm `cohort_timing` is `instrument` and `baseline_NRx` is `covariate`.
+
+**If it goes wrong:** the typical failure is the agent labeling `Reaction_vod` a covariate because it "looks like a control." Recovery: point it at the chapter's rule that role depends on time position, not appearance, and ask it to re-derive from the `time_position` column it already wrote.
+
+**CLAUDE.md note:** add "Collider fields may never orient an edge in the prior DAG" — this rule protects every later chapter's bot output.
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** the `field-roles.json` from Exercise 4 — specifically whether any post-treatment collider has been silently miscoded as a confounder/covariate.
+
+**Validation type:** Structured-data · **Risk level:** High — a single collider miscoded as a covariate is the exact bug the chapter's opening case dramatizes, and it propagates into every model and every elicited edge downstream.
+
+**Setup:** use your Exercise 4 output. If it is clean, inject one flawed row — recode `Duration_vod` as `role: covariate, time_position: pre-treatment` — to confirm your checklist catches a collider-as-confounder error.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 2 (Field-Role Classification)
+
+For each field in field-roles.json, mark Pass / Fail / Cannot-determine on:
+
+1. Correctness — does the assigned role follow from the field's time_position
+   relative to the treatment, not from how the field "looks"?
+2. Completeness — does every field carry plane, role, time_position, and bot_rule,
+   with no silent omissions?
+3. Scope — are field names flagged [verify] rather than asserted from memory?
+4. Chapter-specific: Two-axis independence — is plane assigned separately from
+   role (a passive field can still be a forbidden control)?
+5. Chapter-specific: Collider lockout — does every collider's bot_rule forbid
+   edge orientation?
+6. Failure-mode check — collider miscoded as confounder: scan for any
+   post-treatment field (Duration_vod, Reaction_vod, slide order) assigned role
+   "covariate" or time_position "pre-treatment". This is fluent-but-wrong: the row
+   parses cleanly and is structurally fatal. Also check for any field whose meaning
+   is asserted with no [verify] flag (missing ground truth on the live schema).
+```
+
+**What to do with findings:** all pass — wire the JSON into the bot's context. One fail — recode that field's time position and role together, re-run. Multiple uncertain — the classification leaned on field appearance; re-derive the whole file from time position alone.
+
+**AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 2 work and the one judgment it could not make. The judgment most specific here: whether `Reaction_vod` is a collider or a covariate — a call the model cannot make because it cannot reason about the field's temporal position inside the CLM session lifecycle.*
+
+**Series connection:** the failure mode is **collider miscoded as confounder**, which maps to **T5 (Causal)**: the human owns the temporal-structure judgment that decides whether a field protects an estimate or poisons it — the judgment the bot must encode so a rep can never talk a downstream signal into the role of a cause.

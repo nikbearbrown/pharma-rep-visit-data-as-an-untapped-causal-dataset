@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The three-node theorem (chain / fork / collider)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+  @media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{display:block;width:100%;height:auto;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .panel-label{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;}
+  .node-label{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;}
+  .sig{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .source{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:10px;fill:var(--color-secondary);letter-spacing:0.08em;}
+  .ink{fill:var(--color-ink);}.sec{fill:var(--color-secondary);}.red{fill:var(--color-red);}
+  .node{cursor:pointer;}
+  .node:focus{outline:none;}
+  .node:focus circle{stroke-width:3;}
+  #tt{position:absolute;pointer-events:none;opacity:0;background:var(--color-ink);color:var(--color-white);
+      font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;padding:6px 8px;border-radius:4px;
+      transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);max-width:220px;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"></div>
+<div id="tt"></div>
+<script>
+const FALLBACK_DATA = {
+  panels: [
+    { id:"chain", label:"CHAIN", emphasis:false, sig:"A indep C given B",
+      tip:"Chain A→B→C: A and C are dependent, but independent once you condition on B.",
+      nodes:[{id:"A",x:64,y:180,red:false},{id:"B",x:132,y:180,red:false},{id:"C",x:200,y:180,red:false}],
+      edges:[{s:"A",t:"B",red:false},{s:"B",t:"C",red:false}] },
+    { id:"fork", label:"FORK", emphasis:false, sig:"A indep C given B",
+      tip:"Fork A←B→C: B is a common cause; conditioning on B removes the A–C correlation.",
+      nodes:[{id:"A",x:282,y:220,red:false},{id:"B",x:350,y:140,red:false},{id:"C",x:418,y:220,red:false}],
+      edges:[{s:"B",t:"A",red:false},{s:"B",t:"C",red:false}] },
+    { id:"collider", label:"COLLIDER", emphasis:true, sig:"A indep C, NOT given B",
+      tip:"Collider A→B←C: A and C are independent marginally but become dependent given B. The only structure data can orient.",
+      nodes:[{id:"A",x:500,y:220,red:false},{id:"B",x:568,y:140,red:true},{id:"C",x:636,y:220,red:false}],
+      edges:[{s:"A",t:"B",red:true},{s:"C",t:"B",red:true}] }
+  ]
+};
+const W=700,H=420,R=16;
+const tt=d3.select("#tt");
+function showTip(html,x,y){tt.html(html).style("left",(x+14)+"px").style("top",(y+14)+"px").style("opacity",1);}
+function hideTip(){tt.style("opacity",0);}
+
+function draw(data){
+  const wrap=d3.select("#wrap");wrap.selectAll("*").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("The three-node theorem: chain, fork, and collider over three nodes");
+  svg.append("desc").attr("id","chart-desc").text("Chain and fork share one independence signature and cannot be told apart by data; the collider has a distinct signature and is the one structure observational data can orient.");
+
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  defs.append("marker").attr("id","arrow-red").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+
+  svg.append("rect").attr("width",W).attr("height",H).attr("fill","var(--color-white)").attr("aria-hidden","true");
+  svg.append("text").attr("class","fig-title").attr("x",32).attr("y",34)
+    .text("The three-node theorem: one signature, two stories, one exception");
+
+  const frames=[{x:32,emp:false},{x:250,emp:false},{x:468,emp:true}];
+  svg.selectAll("rect.frame").data(frames).join("rect").attr("class","frame")
+    .attr("x",d=>d.x).attr("y",64).attr("width",200).attr("height",220)
+    .attr("fill",d=>d.emp?"var(--color-white)":"var(--color-fill)")
+    .attr("stroke",d=>d.emp?"var(--color-red)":"var(--color-border)")
+    .attr("stroke-width",d=>d.emp?1:0.75).attr("aria-hidden","true");
+
+  const cx=[132,350,568];
+  svg.selectAll("text.plabel").data(data.panels).join("text").attr("class","panel-label")
+    .attr("x",(d,i)=>cx[i]).attr("y",84).attr("text-anchor","middle")
+    .attr("fill",d=>d.emphasis?"var(--color-red)":"var(--color-ink)").text(d=>d.label);
+
+  data.panels.forEach((p,pi)=>{
+    const nmap={};p.nodes.forEach(n=>nmap[n.id]=n);
+    const g=svg.append("g");
+    g.selectAll("line.edge").data(p.edges).join("line").attr("class","edge")
+      .each(function(e){
+        const a=nmap[e.s],b=nmap[e.t];
+        const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+        d3.select(this)
+          .attr("x1",a.x+ux*(R+2)).attr("y1",a.y+uy*(R+2))
+          .attr("x2",b.x-ux*(R+2)).attr("y2",b.y-uy*(R+2))
+          .attr("stroke",e.red?"var(--color-red)":"var(--color-ink)").attr("stroke-width",1.5)
+          .attr("marker-end",e.red?"url(#arrow-red)":"url(#arrow)");
+      });
+    const ng=g.selectAll("g.node").data(p.nodes).join("g").attr("class","node")
+      .attr("tabindex",0).attr("role","img")
+      .attr("aria-label",d=>`Node ${d.id} in the ${p.label.toLowerCase()} structure. ${p.tip}`)
+      .on("mouseenter",(ev,d)=>showTip(p.tip,ev.clientX,ev.clientY))
+      .on("mousemove",(ev,d)=>showTip(p.tip,ev.clientX,ev.clientY))
+      .on("mouseleave",hideTip)
+      .on("focus",function(ev,d){const r=this.getBoundingClientRect();showTip(p.tip,r.left,r.top);})
+      .on("blur",hideTip)
+      .on("keydown",function(ev,d){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();const r=this.getBoundingClientRect();showTip(p.tip,r.left,r.top);}});
+    ng.append("circle").attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",R)
+      .attr("fill","var(--color-white)")
+      .attr("stroke",d=>d.red?"var(--color-red)":"var(--color-secondary)").attr("stroke-width",1.5);
+    ng.append("text").attr("class","node-label").attr("x",d=>d.x).attr("y",d=>d.y+5)
+      .attr("text-anchor","middle").attr("fill",d=>d.red?"var(--color-red)":"var(--color-secondary)").text(d=>d.id);
+    g.append("text").attr("class","sig").attr("x",cx[pi]).attr("y",p.emphasis?262:244)
+      .attr("text-anchor","middle").attr("fill",p.emphasis?"var(--color-red)":"var(--color-secondary)").text(p.sig);
+  });
+
+  const caps=[
+    "Chain and fork share one independence signature, so observational data cannot tell them apart - they are Markov-equivalent.",
+    "Only the collider (red) leaves a distinct fingerprint the data can read; orienting the gray pair needs outside (rep) knowledge.",
+    "Data identifies the equivalence class, not the graph (Verma-Pearl)."
+  ];
+  svg.selectAll("text.caption").data(caps).join("text").attr("class","caption")
+    .attr("x",32).attr("y",(d,i)=>318+i*18).text(d=>d);
+  svg.append("text").attr("class","source").attr("x",32).attr("y",404)
+    .text("SOURCE: CH.07 MARKOV EQUIVALENCE - WHY THE DATA CAN'T DECIDE");
+}
+draw(FALLBACK_DATA);
+new ResizeObserver(()=>draw(FALLBACK_DATA)).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

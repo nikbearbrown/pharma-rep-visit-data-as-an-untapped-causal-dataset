@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>One rep-visit trace, then six months of the same physician</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+    --color-neutral:#787878;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;--color-neutral:#9A9A9A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .fig-sub{font-size:12px;fill:var(--color-secondary);}
+  .axis-label{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .legend-label{font-size:11px;fill:var(--color-ink);}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .block{stroke:var(--color-ink);stroke-width:1.5;cursor:pointer;}
+  .block:focus{outline:none;stroke:var(--color-ochre);stroke-width:2.5;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;max-width:220px;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA = {
+  anchor: [
+    {slide:"Slide 1 - intro",      dwell:18, reaction:"neutral"},
+    {slide:"Slide 2 - efficacy",   dwell:31, reaction:"positive"},
+    {slide:"Slide 3 - dosing",     dwell:11, reaction:"negative"},
+    {slide:"Slide 4 (skipped)",    dwell:0,  reaction:"skipped"},
+    {slide:"Safety slide",         dwell:47, reaction:"positive"},
+    {slide:"Slide 6 - access",     dwell:16, reaction:"neutral"},
+    {slide:"Slide 7 - close",      dwell:24, reaction:"negative"}
+  ],
+  months: [
+    [{dwell:14,reaction:"negative"},{dwell:34,reaction:"positive"},{dwell:0,reaction:"skipped"},{dwell:20,reaction:"neutral"},{dwell:37,reaction:"positive"},{dwell:17,reaction:"negative"}],
+    [{dwell:26,reaction:"neutral"},{dwell:20,reaction:"negative"},{dwell:40,reaction:"positive"},{dwell:0,reaction:"skipped"},{dwell:23,reaction:"neutral"},{dwell:17,reaction:"negative"}],
+    [{dwell:34,reaction:"positive"},{dwell:14,reaction:"negative"},{dwell:23,reaction:"neutral"},{dwell:29,reaction:"positive"},{dwell:20,reaction:"negative"}],
+    [{dwell:17,reaction:"negative"},{dwell:0,reaction:"skipped"},{dwell:43,reaction:"positive"},{dwell:23,reaction:"neutral"},{dwell:29,reaction:"negative"}],
+    [{dwell:29,reaction:"neutral"},{dwell:37,reaction:"positive"},{dwell:14,reaction:"negative"},{dwell:26,reaction:"neutral"},{dwell:17,reaction:"positive"}]
+  ]
+};
+const COLORS = {positive:"var(--color-red)", neutral:"var(--color-neutral)", negative:"var(--color-ink)", skipped:"var(--color-border)"};
+const SEC_PER_PX = 0.31; // dwell seconds to width px
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+
+svg.append("title").attr("id","chart-title").text("One rep-visit trace, then six months of the same physician");
+svg.append("desc").attr("id","chart-desc").text("A single session as a row of slide blocks sized by dwell time and colored by reaction, then the same physician stacked across five further months as one longitudinal series.");
+
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",420).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",30).attr("class","fig-title").text("One rep-visit trace, then six months of the same physician");
+svg.append("text").attr("x",32).attr("y",54).attr("class","fig-sub").text("One session - each block a slide viewed, width = dwell seconds");
+
+function showTip(event,d){
+  tip.style("opacity",1)
+     .html(`<strong>${d.slide||"slide"}</strong><br>dwell: ${d.dwell}s<br>reaction: ${d.reaction}`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+// anchor row
+let x = 72;
+const anchorG = svg.append("g");
+anchorG.selectAll("rect").data(FALLBACK_DATA.anchor).join("rect")
+  .attr("class","block")
+  .attr("x",d=>{const w=Math.max(10,d.dwell/SEC_PER_PX); const cur=x; x+=w; d._x=cur; d._w=w; return cur;})
+  .attr("y",68).attr("height",30)
+  .attr("width",d=>d._w)
+  .attr("fill",d=>COLORS[d.reaction])
+  .attr("tabindex",0)
+  .attr("role","img")
+  .attr("aria-label",d=>`${d.slide}, ${d.dwell} seconds, reaction ${d.reaction}`)
+  .on("mouseover",showTip).on("mousemove",showTip).on("mouseout",hideTip)
+  .on("focus",(e,d)=>showTip({pageX:window.scrollX+d._x+d._w/2,pageY:window.scrollY+90},d))
+  .on("blur",hideTip)
+  .on("keydown",(e,d)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+d._x+d._w/2,pageY:window.scrollY+90},d);}});
+
+// stacked longitudinal panel
+svg.append("text").attr("x",72).attr("y",128).attr("class","fig-sub")
+   .text("Same physician, stacked month over month (one longitudinal series)");
+
+const rowY = [148,178,208,238,268];
+FALLBACK_DATA.months.forEach((month,mi)=>{
+  let mx = 72;
+  svg.append("g").selectAll("rect").data(month.map((d,i)=>({...d,slide:`Month ${mi+2}, slide ${i+1}`}))).join("rect")
+    .attr("class","block")
+    .attr("x",d=>{const w=Math.max(10,d.dwell/SEC_PER_PX); const cur=mx; mx+=w; d._x=cur; d._w=w; return cur;})
+    .attr("y",rowY[mi]).attr("height",20)
+    .attr("width",d=>d._w)
+    .attr("fill",d=>COLORS[d.reaction])
+    .attr("stroke","var(--color-border)").attr("stroke-width",1)
+    .attr("tabindex",0).attr("role","img")
+    .attr("aria-label",d=>`${d.slide}, ${d.dwell} seconds, reaction ${d.reaction}`)
+    .on("mouseover",showTip).on("mousemove",showTip).on("mouseout",hideTip)
+    .on("focus",(e,d)=>showTip({pageX:window.scrollX+d._x+d._w/2,pageY:window.scrollY+rowY[mi]+20},d))
+    .on("blur",hideTip)
+    .on("keydown",(e,d)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+d._x+d._w/2,pageY:window.scrollY+rowY[mi]+20},d);}});
+});
+
+// time arrow
+svg.append("line").attr("x1",72).attr("y1",302).attr("x2",586).attr("y2",302)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true");
+svg.append("text").attr("x",72).attr("y",320).attr("class","axis-label").text("within-call time");
+
+// legend
+const legend = [["positive","positive"],["neutral","neutral"],["negative","negative"],["skipped","skipped"]];
+let lx = 32;
+const lg = svg.append("g").attr("aria-hidden","true");
+legend.forEach(([k,lab])=>{
+  lg.append("rect").attr("x",lx).attr("y",340).attr("width",14).attr("height",12)
+    .attr("fill",COLORS[k]).attr("stroke","var(--color-ink)").attr("stroke-width",1);
+  lg.append("text").attr("x",lx+18).attr("y",350).attr("class","legend-label").text(lab);
+  lx += lab.length*7 + 40;
+});
+
+svg.append("text").attr("x",32).attr("y",380).attr("class","caption")
+   .text("Public/synthetic structure only. The reaction state is a rep-tapped reading, not a measured cognitive response.");
+svg.append("text").attr("x",32).attr("y",398).attr("class","caption")
+   .text("Hover or focus any block for its dwell time and reaction label.");
+
+const ro = new ResizeObserver(()=>{ /* viewBox-scaled SVG; no redraw needed */ });
+ro.observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

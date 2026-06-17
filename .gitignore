@@ -4,3 +4,4 @@ output/
 *.docx
 .DS_Store
 node_modules/
+_cajal-prerender-backup/

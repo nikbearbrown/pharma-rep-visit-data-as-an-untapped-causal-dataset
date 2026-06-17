@@ -1,0 +1,63 @@
+<!--
+  figure-title: IV three-node identification structure (cohort timing -> message variant -> NRx, with latent confounder)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 04-the-natural-experiment-in-training-rollouts
+  Figure: 01
+  Type: DAG (causal directed-acyclic graph)
+  Generated: 2026-06-16
+  Source: chapters/04-the-natural-experiment-in-training-rollouts.md
+-->
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
+  <title id="fig-title-01">Instrumental-variables identification: cohort timing reaches NRx only through message variant</title>
+  <desc>Three observed nodes in a left-to-right chain: training-cohort assignment (instrument), message-variant exposure (treatment), and NRx (outcome). A latent confounder above sends two dashed arrows into treatment and outcome. No arrow runs directly from the instrument to the outcome; that absent path is the exclusion restriction made visible.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="04-the-natural-experiment-in-training-rollouts" figure-number="01" figure-title="IV three-node identification structure" figure-slug="iv-three-node-identification" figure-type="DAG" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/04-the-natural-experiment-in-training-rollouts.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">The instrument reaches the outcome only by passing through treatment</text>
+  <text x="32" y="50" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Cohort timing (Z) -> message variant (D) -> NRx (Y); no direct Z to Y edge</text>
+
+  <!-- Latent confounder node (circle = unobserved) -->
+  <circle cx="364" cy="150" r="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="364" y="146" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">physician</text>
+  <text x="364" y="162" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">openness</text>
+  <text x="364" y="116" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">U (unobserved)</text>
+
+  <!-- Three observed square nodes on a horizontal spine -->
+  <!-- Z: instrument -->
+  <rect x="60" y="248" width="120" height="64" rx="0" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="120" y="276" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">training-cohort</text>
+  <text x="120" y="292" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">assignment</text>
+  <text x="120" y="332" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">Z instrument</text>
+
+  <!-- D: treatment -->
+  <rect x="304" y="248" width="120" height="64" rx="0" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="364" y="276" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">message-variant</text>
+  <text x="364" y="292" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">exposure</text>
+  <text x="364" y="332" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">D treatment</text>
+
+  <!-- Y: outcome -->
+  <rect x="548" y="248" width="120" height="64" rx="0" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="608" y="284" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">NRx</text>
+  <text x="608" y="332" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">Y outcome</text>
+
+  <!-- Identified chain: Z -> D -> Y (solid, red = the one identified series) -->
+  <line x1="180" y1="280" x2="296" y2="280" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="424" y1="280" x2="540" y2="280" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Confounder dashed arrows into D and Y -->
+  <line x1="340" y1="186" x2="350" y2="244" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+  <line x1="392" y1="183" x2="588" y2="244" stroke="#2a1a0e" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+
+  <!-- Absent Z -> Y path made visible: dashed hairline crossed out region -->
+  <path d="M 130 340 Q 364 392 600 340" fill="none" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="364" y="388" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">no direct Z to Y edge -- the exclusion restriction (left empty on purpose)</text>
+
+  <!-- caption: honesty -->
+  <text x="32" y="410" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Cohort instrument is testable, not assumed: falsify Z's independence first.</text>
+  <text x="32" y="424" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Exclusion is threatened if early training improves general selling skill.</text>
+  <text x="32" y="438" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Public/synthetic structure only.</text>
+</svg>

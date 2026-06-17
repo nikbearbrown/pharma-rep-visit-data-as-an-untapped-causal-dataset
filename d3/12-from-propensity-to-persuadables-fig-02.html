@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 12.2 — Two target lists for the same 200 physicians</title>
+<style>
+:root{
+  --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+  --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+}
+@media(prefers-color-scheme:dark){:root{
+  --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+  --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+}}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--color-white);color:var(--color-ink);
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+#wrap{max-width:760px;margin:0 auto;padding:16px;}
+h1{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:21px;line-height:1.25;margin:0 0 4px;}
+.sub{font-size:13px;color:var(--color-secondary);margin:0 0 12px;}
+svg{width:100%;height:auto;display:block;}
+.fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--color-secondary);margin:0 0 8px;}
+.panel-head{font-size:13px;font-weight:600;fill:var(--color-ink);
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.panel-sub{font-size:10px;fill:var(--color-secondary);
+  font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+.decile-label{font-size:11px;
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.decile-num{font-size:10px;fill:var(--color-secondary);
+  font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+.foot-ink{font-size:11px;fill:var(--color-ink);font-weight:600;
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.foot-red{font-size:11px;fill:var(--color-red);font-weight:600;
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.ov-label{font-size:10px;fill:var(--color-secondary);
+  font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+.caption{font-size:11.5px;line-height:1.5;color:var(--color-secondary);margin:12px 0 4px;}
+.source{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;letter-spacing:.04em;color:var(--color-secondary);margin:0;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <p class="fig-title">Figure 12.2 — Two target lists for the same 200 physicians</p>
+  <h1>Same budget, same physicians, two rankings: which decile gets the money</h1>
+  <p class="sub">The propensity list buys conversions; the persuadables list causes them</p>
+  <div id="chart"></div>
+  <p class="caption">Same 200 physicians, same budget. The NBA list ranks sure-things (waste); the Living Model ranks persuadables. That the two lists differ SYSTEMATICALLY is a TESTABLE hypothesis (held-out Qini comparison), not a settled fact (Ascarza 2018). Budget and increment shares are illustrative [inferred]; only the direction of the contrast is claimed.</p>
+  <p class="source">SOURCE: CH.12 FROM PROPENSITY TO PERSUADABLES</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const VBW = 760, VBH = 480;
+const PANEL_W = 280, PANEL_H = 280;
+const PY0 = 96;                 // top of panel rows
+const LEFT_X = 64;
+const RIGHT_X = VBW - 64 - PANEL_W;
+const ROWS = 7;
+const ROW_H = PANEL_H / ROWS;
+
+// decile rows (top row = top decile)
+const deciles = d3.range(ROWS).map(i=>({i:i, label:"decile "+(i+1)}));
+
+function fillVar(k){
+  return ({
+    secondary:"var(--color-secondary)",
+    red:"var(--color-red)",
+    white:"var(--color-white)",
+    border:"var(--color-border)",
+    fill:"var(--color-fill)"
+  })[k];
+}
+
+function draw(){
+  const container = d3.select("#chart");
+  container.selectAll("svg").remove();
+
+  const svg = container.append("svg")
+    .attr("viewBox",`0 0 ${VBW} ${VBH}`)
+    .attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title")
+    .text("Two target lists for the same 200 physicians");
+  svg.append("desc").attr("id","chart-desc")
+    .text("Two side-by-side panels, each a column of seven decile rows. The left panel is the propensity-ranked NBA list whose top decile is mostly Sure Things and gets 84 percent of budget but causes only about 3 percent of increment. The right panel is the persuadability-ranked list whose top decile is Persuadables and gets 84 percent of budget and causes about 61 percent of increment. A double-headed arrow between the two top deciles is labeled top-decile overlap low.");
+
+  const defs = svg.append("defs");
+  const marker = defs.append("marker")
+    .attr("id","arrow").attr("viewBox","0 0 10 10")
+    .attr("refX",8).attr("refY",5)
+    .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto-start-reverse");
+  marker.append("path").attr("d","M0,0 L10,5 L0,10 z").attr("fill","var(--color-ink)");
+
+  const panels = [
+    {x:LEFT_X, head:"Propensity-ranked NBA list", sub:"sorted by P(NRx | X), high to low",
+     topFill:"secondary", topLabel:"top decile: mostly Sure Things", topTextWhite:true,
+     foot1:"top decile gets 84% of budget", foot1cls:"foot-ink",
+     foot2:"but causes only ~3% of increment", foot2cls:"foot-red"},
+    {x:RIGHT_X, head:"Persuadability-ranked list", sub:"sorted by tau(x) = CATE, high to low",
+     topFill:"red", topLabel:"top decile: Persuadables", topTextWhite:true,
+     foot1:"top decile gets 84% of budget", foot1cls:"foot-ink",
+     foot2:"and causes ~61% of increment", foot2cls:"foot-ink"}
+  ];
+
+  const pg = svg.selectAll("g.panel").data(panels).join("g").attr("class","panel");
+
+  // panel headers
+  pg.append("text").attr("class","panel-head")
+    .attr("x",d=>d.x).attr("y",PY0-30).attr("text-anchor","start").text(d=>d.head);
+  pg.append("text").attr("class","panel-sub")
+    .attr("x",d=>d.x).attr("y",PY0-15).attr("text-anchor","start").text(d=>d.sub);
+
+  // panel frame
+  pg.append("rect")
+    .attr("x",d=>d.x).attr("y",PY0).attr("width",PANEL_W).attr("height",PANEL_H).attr("rx",0)
+    .attr("fill","var(--color-fill)")
+    .attr("stroke","var(--color-border)").attr("stroke-width",1);
+
+  // decile rows per panel
+  pg.each(function(p){
+    const g = d3.select(this);
+    const rg = g.selectAll("g.row").data(deciles).join("g").attr("class","row");
+    rg.append("rect")
+      .attr("x",p.x).attr("y",d=>PY0 + d.i*ROW_H)
+      .attr("width",PANEL_W).attr("height",ROW_H).attr("rx",0)
+      .attr("fill",d=> d.i===0 ? fillVar(p.topFill) : "none");
+    // hairline separators (aria-hidden grid)
+    rg.append("line").attr("aria-hidden","true")
+      .attr("x1",p.x).attr("x2",p.x+PANEL_W)
+      .attr("y1",d=>PY0 + d.i*ROW_H).attr("y2",d=>PY0 + d.i*ROW_H)
+      .attr("stroke","var(--color-border)").attr("stroke-width",1);
+    // decile numbering
+    rg.append("text").attr("class","decile-num")
+      .attr("x",p.x+8).attr("y",d=>PY0 + d.i*ROW_H + ROW_H/2).attr("dy","0.32em")
+      .attr("text-anchor","start")
+      .attr("fill",d=> d.i===0 && p.topTextWhite ? "var(--color-white)" : "var(--color-secondary)")
+      .text((d,i)=> "d"+(d.i+1));
+    // top decile label
+    g.append("text").attr("class","decile-label")
+      .attr("x",p.x+PANEL_W/2).attr("y",PY0 + ROW_H/2).attr("dy","0.32em")
+      .attr("text-anchor","middle")
+      .attr("fill", p.topTextWhite ? "var(--color-white)" : "var(--color-ink)")
+      .text(p.topLabel);
+  });
+
+  // footer lines per panel
+  pg.append("text").attr("class",d=>d.foot1cls)
+    .attr("x",d=>d.x).attr("y",PY0+PANEL_H+24).attr("text-anchor","start")
+    .text(d=>d.foot1);
+  pg.append("text").attr("class",d=>d.foot2cls)
+    .attr("x",d=>d.x).attr("y",PY0+PANEL_H+42).attr("text-anchor","start")
+    .text(d=>d.foot2);
+
+  // double-headed arrow between the two top deciles
+  const topY = PY0 + ROW_H/2;
+  const ax0 = LEFT_X + PANEL_W + 6;
+  const ax1 = RIGHT_X - 6;
+  svg.append("line").attr("aria-hidden","false")
+    .attr("x1",ax0).attr("x2",ax1).attr("y1",topY).attr("y2",topY)
+    .attr("stroke","var(--color-ink)").attr("stroke-width",1.5)
+    .attr("marker-start","url(#arrow)").attr("marker-end","url(#arrow)");
+  svg.append("text").attr("class","ov-label")
+    .attr("x",(ax0+ax1)/2).attr("y",topY-8).attr("text-anchor","middle")
+    .text("top-decile");
+  svg.append("text").attr("class","ov-label")
+    .attr("x",(ax0+ax1)/2).attr("y",topY+16).attr("text-anchor","middle")
+    .text("overlap: low");
+}
+
+draw();
+if(window.ResizeObserver){
+  const ro = new ResizeObserver(()=>draw());
+  ro.observe(document.getElementById("wrap"));
+}
+</script>
+</body>
+</html>

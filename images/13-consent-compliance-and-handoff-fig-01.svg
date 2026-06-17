@@ -1,0 +1,69 @@
+<!--
+  Figure: Consent as a selection collider (Berkson selection node)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 13-consent-compliance-and-handoff
+  Figure: 01
+  Type: Causal graph (DAG/PAG)
+  Generated: 2026-06-16
+  Source: chapters/13-consent-compliance-and-handoff.md
+-->
+<svg viewBox="0 0 700 460" role="img" aria-labelledby="fig-title-01" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-01">Consent opt-out as a Berkson selection collider</title>
+  <desc>A directed causal graph. A latent physician-characteristics node, drawn as a dashed circle at top, sends two directed arrows: one down-left to an opt-out / consent node, one down-right to a message-responsiveness node. The opt-out node points into an observed-sample node, which is enclosed in a bracket selection boundary marking conditioning on the sampling frame. The message-responsiveness node points into a prescribing-outcome node lower right. Conditioning on the observed sample opens a non-causal path between opt-out and responsiveness.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="13-consent-compliance-and-handoff" figure-number="01" figure-title="Consent as a selection collider" figure-slug="consent-selection-collider" figure-type="Causal graph (DAG/PAG)" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/13-consent-compliance-and-handoff.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="460" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Why opt-out is a structural limit, not a bug: conditioning on the sample opens a path</text>
+
+  <!-- Nodes -->
+  <!-- Latent characteristics: top center, dashed -->
+  <circle cx="350" cy="92" r="40" fill="#FFFFFF" stroke="#787878" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="350" y="88" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">latent</text>
+  <text x="350" y="103" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">characteristics</text>
+
+  <!-- Opt-out / consent: mid left (the collider / blocking selection) -->
+  <circle cx="180" cy="232" r="44" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="180" y="228" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E" text-anchor="middle">opt-out /</text>
+  <text x="180" y="243" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E" text-anchor="middle">consent</text>
+
+  <!-- Message responsiveness: mid right -->
+  <circle cx="520" cy="232" r="44" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="520" y="228" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">message</text>
+  <text x="520" y="243" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">responsiveness</text>
+
+  <!-- Observed sample: lower left, inside selection boundary -->
+  <rect x="92" y="344" width="176" height="76" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <circle cx="180" cy="382" r="34" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="180" y="379" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">observed</text>
+  <text x="180" y="394" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">sample</text>
+  <!-- Selection-boundary bracket label -->
+  <text x="284" y="338" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">selection boundary:</text>
+  <text x="284" y="352" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">condition on "physicians we have data for"</text>
+
+  <!-- Outcome: lower right -->
+  <circle cx="520" cy="382" r="40" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="520" y="379" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">prescribing</text>
+  <text x="520" y="394" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">outcome</text>
+
+  <!-- Edges -->
+  <!-- latent -> opt-out -->
+  <line x1="322" y1="120" x2="208" y2="206" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- latent -> responsiveness -->
+  <line x1="378" y1="120" x2="492" y2="206" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- opt-out -> observed sample -->
+  <line x1="180" y1="276" x2="180" y2="344" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- responsiveness -> outcome -->
+  <line x1="520" y1="276" x2="520" y2="338" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Opened non-causal path (NOT a causal arrow): dashed hairline, no arrowhead -->
+  <line x1="224" y1="232" x2="476" y2="232" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="350" y="226" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">non-causal path opened by conditioning (not a causal edge)</text>
+
+  <!-- Caption -->
+  <text x="32" y="442" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">A Berkson selection collider: the opted-out population is invisible by construction. FCI models this; PC and GES assume it away.</text>
+  <text x="32" y="455" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">FCI + a drift monitor are PARTIAL mitigations, not a fix. [inferred] PAG edge marks not specified in chapter.  SOURCE: CH.13</text>
+</svg>

@@ -1,0 +1,50 @@
+<!--
+  figure-title: One datum, three incompatible causal stories (the 47-second slide)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 01-the-experiment-nobody-knows
+  Figure: 02
+  Type: branching interpretation tree
+  Generated: 2026-06-16
+  Source: chapters/01-the-experiment-nobody-knows.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">One datum, three incompatible causal stories</title>
+  <desc>One identical observation fans into three equally consistent interpretations: careful absorption read positive, skeptical scrutiny read negative, drifted attention read as noise. Equal-weight branches: the data alone cannot choose among them.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="01-the-experiment-nobody-knows" figure-number="02" figure-title="One datum, three incompatible causal stories (the 47-second slide)" figure-slug="one-datum-three-stories" figure-type="branching interpretation tree" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/01-the-experiment-nobody-knows.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">One observation, three incompatible stories — none ruled out by the data</text>
+
+  <!-- Source node (dominant) -->
+  <rect x="48" y="170" width="150" height="80" rx="0" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="123" y="200" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">one recorded</text>
+  <text x="123" y="216" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">dwell on the</text>
+  <text x="123" y="232" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">safety slide</text>
+
+  <!-- Three equal-weight diverging branches (equal stroke weight, no probability) -->
+  <path d="M 198 195 C 320 195, 360 95, 470 95" fill="none" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 198 210 C 320 210, 360 210, 470 210" fill="none" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 198 225 C 320 225, 360 325, 470 325" fill="none" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Terminal: positive (red highlight = the ONE data series accent; NOT danger) -->
+  <rect x="474" y="62" width="190" height="64" rx="0" fill="#C8102E" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="569" y="90" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">careful absorption</text>
+  <text x="569" y="108" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">read as positive signal</text>
+
+  <!-- Terminal: negative (dark ink) -->
+  <rect x="474" y="178" width="190" height="64" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="569" y="206" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">skeptical scrutiny</text>
+  <text x="569" y="224" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">read as negative signal</text>
+
+  <!-- Terminal: neutral / noise (light gray) -->
+  <rect x="474" y="294" width="190" height="64" rx="0" fill="#D4D4D4" stroke="#2a1a0e" stroke-width="1.5"/>
+  <text x="569" y="322" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">drifted attention</text>
+  <text x="569" y="340" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="middle">read as pure noise</text>
+
+  <!-- caption: the branching happens in interpretation, not in the number -->
+  <text x="32" y="392" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The branch happens after the data, in interpretation — the recorded number is identical down all three paths.</text>
+  <text x="32" y="408" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Equal-weight branches: more of the same telemetry cannot collapse them to one answer.</text>
+</svg>

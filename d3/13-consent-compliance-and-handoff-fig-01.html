@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 13.1 - Consent as a selection collider (Berkson selection node)</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+    --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+      --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--color-white);}
+  #wrap{max-width:700px;margin:0 auto;padding:8px;}
+  svg{width:100%;height:auto;display:block;}
+  .ttl{font-family:'EB Garamond','Garamond',Georgia,serif;}
+  .bdy{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 460" role="img" aria-labelledby="chart-title chart-desc" preserveAspectRatio="xMidYMid meet">
+    <title id="chart-title">Figure 13.1 - Consent as a selection collider (Berkson selection node)</title>
+    <desc id="chart-desc">A directed causal graph. Latent characteristics cause both opt-out consent and message responsiveness. Opt-out feeds the observed sample, drawn inside a selection-boundary box. Responsiveness feeds the prescribing outcome. A dashed non-causal path between opt-out and responsiveness is opened by conditioning on the sample, a Berkson selection collider.</desc>
+  </svg>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+(function(){
+  var svg = d3.select("#chart");
+
+  function draw(){
+    svg.selectAll("*:not(title):not(desc)").remove();
+
+    var defs = svg.append("defs");
+    defs.append("marker")
+      .attr("id","arrow")
+      .attr("viewBox","0 0 10 10")
+      .attr("refX",9).attr("refY",5)
+      .attr("markerWidth",7).attr("markerHeight",7)
+      .attr("orient","auto-start-reverse")
+      .append("path")
+        .attr("d","M0,0 L10,5 L0,10 z")
+        .attr("fill","var(--color-ink)");
+
+    // Heading
+    svg.append("text").attr("class","ttl")
+      .attr("x",32).attr("y",32)
+      .attr("font-size",19).attr("font-weight",600)
+      .attr("fill","var(--color-ink)")
+      .text("Why opt-out is a structural limit, not a bug: conditioning on the sample opens a path");
+
+    // Node data
+    var nodes = [
+      {id:"latent", cx:350, cy:122, r:42, dashed:true,
+        stroke:"var(--color-secondary)", text:"var(--color-secondary)",
+        lines:["latent","characteristics"]},
+      {id:"optout", cx:180, cy:232, r:42, dashed:false,
+        stroke:"var(--color-red)", text:"var(--color-red)",
+        lines:["opt-out /","consent"]},
+      {id:"resp", cx:520, cy:232, r:42, dashed:false,
+        stroke:"var(--color-secondary)", text:"var(--color-ink)",
+        lines:["message","responsiveness"]},
+      {id:"sample", cx:180, cy:382, r:38, dashed:false,
+        stroke:"var(--color-secondary)", text:"var(--color-ink)",
+        lines:["observed","sample"]},
+      {id:"outcome", cx:520, cy:382, r:42, dashed:false,
+        stroke:"var(--color-secondary)", text:"var(--color-ink)",
+        lines:["prescribing","outcome"]}
+    ];
+    var N = {};
+    nodes.forEach(function(n){ N[n.id]=n; });
+
+    // selection boundary rect around observed sample (drawn first, behind node)
+    var sb = N.sample;
+    var sbX = sb.cx-70, sbY = sb.cy-66, sbW = 140, sbH = 130;
+    svg.append("rect")
+      .attr("x",sbX).attr("y",sbY).attr("width",sbW).attr("height",sbH)
+      .attr("rx",0)
+      .attr("fill","var(--color-fill)")
+      .attr("stroke","var(--color-border)").attr("stroke-width",1);
+    // selection boundary label (two lines, beside/below)
+    svg.append("text").attr("class","bdy")
+      .attr("x",sbX).attr("y",sbY-8)
+      .attr("font-size",9.5).attr("font-style","italic")
+      .attr("fill","var(--color-secondary)")
+      .text("selection boundary: condition on");
+    svg.append("text").attr("class","bdy")
+      .attr("x",sbX).attr("y",sbY+sbH+16)
+      .attr("font-size",9.5).attr("font-style","italic")
+      .attr("fill","var(--color-secondary)")
+      .text("'physicians we have data for'");
+
+    // edge helper: shorten line to node radii
+    function edge(a,b){
+      var A=N[a], B=N[b];
+      var dx=B.cx-A.cx, dy=B.cy-A.cy;
+      var L=Math.sqrt(dx*dx+dy*dy);
+      var ux=dx/L, uy=dy/L;
+      var pad=6;
+      return {
+        x1:A.cx+ux*(A.r+pad), y1:A.cy+uy*(A.r+pad),
+        x2:B.cx-ux*(B.r+pad+8), y2:B.cy-uy*(B.r+pad+8)
+      };
+    }
+
+    var edges = [
+      {a:"latent", b:"optout"},
+      {a:"latent", b:"resp"},
+      {a:"optout", b:"sample"},
+      {a:"resp", b:"outcome"}
+    ];
+
+    svg.selectAll("line.edge").data(edges).join("line")
+      .attr("class","edge")
+      .each(function(d){
+        var e=edge(d.a,d.b);
+        d3.select(this)
+          .attr("x1",e.x1).attr("y1",e.y1)
+          .attr("x2",e.x2).attr("y2",e.y2);
+      })
+      .attr("stroke","var(--color-ink)")
+      .attr("stroke-width",1.4)
+      .attr("marker-end","url(#arrow)");
+
+    // dashed non-causal path between opt-out and responsiveness (NO arrowhead)
+    var pe = edge("optout","resp");
+    svg.append("line")
+      .attr("x1",N.optout.cx+N.optout.r+6).attr("y1",N.optout.cy)
+      .attr("x2",N.resp.cx-N.resp.r-6).attr("y2",N.resp.cy)
+      .attr("stroke","var(--color-secondary)")
+      .attr("stroke-width",1.2)
+      .attr("stroke-dasharray","5 4");
+    // label for dashed path (above the line, not on centerline)
+    svg.append("text").attr("class","bdy")
+      .attr("x",350).attr("y",212)
+      .attr("text-anchor","middle")
+      .attr("font-size",9.5).attr("font-style","italic")
+      .attr("fill","var(--color-secondary)")
+      .text("non-causal path opened by conditioning");
+    svg.append("text").attr("class","bdy")
+      .attr("x",350).attr("y",224)
+      .attr("text-anchor","middle")
+      .attr("font-size",9.5).attr("font-style","italic")
+      .attr("fill","var(--color-secondary)")
+      .text("(not a causal edge)");
+
+    // Nodes
+    var g = svg.selectAll("g.node").data(nodes).join("g").attr("class","node");
+    g.append("circle")
+      .attr("cx",function(d){return d.cx;})
+      .attr("cy",function(d){return d.cy;})
+      .attr("r",function(d){return d.r;})
+      .attr("fill","var(--color-white)")
+      .attr("stroke",function(d){return d.stroke;})
+      .attr("stroke-width",1.5)
+      .attr("stroke-dasharray",function(d){return d.dashed?"5 4":"none";});
+
+    g.each(function(d){
+      var sel = d3.select(this);
+      var n = d.lines.length;
+      var startY = d.cy - (n-1)*6 + 4;
+      d.lines.forEach(function(t,i){
+        sel.append("text").attr("class","bdy")
+          .attr("x",d.cx).attr("y",startY + i*13)
+          .attr("text-anchor","middle")
+          .attr("font-size",10.5)
+          .attr("font-weight",600)
+          .attr("fill",d.text)
+          .text(t);
+      });
+    });
+
+    // Caption
+    var capY = 432;
+    var capLines = [
+      "A Berkson selection collider: the opted-out population is invisible by construction. FCI models this; PC and GES assume it away.",
+      "FCI + a drift monitor are PARTIAL mitigations, not a fix. [inferred] PAG edge marks not specified.  SOURCE: CH.13"
+    ];
+    svg.selectAll("text.cap").data(capLines).join("text")
+      .attr("class","cap bdy")
+      .attr("x",32)
+      .attr("y",function(d,i){return capY + i*14;})
+      .attr("font-size",10)
+      .attr("fill","var(--color-secondary)")
+      .text(function(d){return d;});
+  }
+
+  draw();
+
+  if(typeof ResizeObserver!=="undefined"){
+    var ro = new ResizeObserver(function(){ draw(); });
+    ro.observe(document.getElementById("wrap"));
+  }
+})();
+</script>
+</body>
+</html>

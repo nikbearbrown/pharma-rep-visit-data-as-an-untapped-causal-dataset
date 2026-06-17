@@ -1,0 +1,60 @@
+<!--
+  figure-title: Collider-contamination comparison (correct vs contaminated DML)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 11-meals-causal-forest-and-clickstream-dml
+  Figure: 03
+  Type: Effect-estimate comparison chart
+  Generated: 2026-06-16
+  Source: chapters/11-meals-causal-forest-and-clickstream-dml.md
+-->
+<svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-03">
+  <title id="fig-title-03">Collider-contaminated DML: a tight interval around the wrong number</title>
+  <desc>An estimate-comparison chart against a known planted ground-truth level shown as a gray horizontal reference line. The correctly specified DML, using pre-treatment controls only, sits on the truth line with an honest, moderately wide confidence whisker that overlaps it. The collider-contaminated DML is displaced clearly off the truth line and carries a deceptively narrower whisker that does not overlap the truth. The vertical effect axis is anchored at a visible zero. Magnitudes are inferred; only relative displacement and whisker width are meaningful.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="11-meals-causal-forest-and-clickstream-dml" figure-number="03" figure-title="Collider-contaminated DML: a tight interval around the wrong number" figure-slug="collider-contamination-comparison" figure-type="Effect-estimate comparison chart" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/11-meals-causal-forest-and-clickstream-dml.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="440" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Conditioning on a collider buys you precision around a lie</text>
+  <text x="32" y="46" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Point-and-whisker estimates against a planted ground truth; not a zero-baseline bar</text>
+
+  <!-- Plot area: left80 right40 top64 bottom120; zero baseline at bottom (y=320) -->
+  <rect x="80" y="64" width="580" height="256" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- zero baseline -->
+  <line x1="80" y1="320" x2="660" y2="320" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="74" y="324" text-anchor="end" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">0</text>
+  <text x="36" y="192" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" transform="rotate(-90 36 192)" text-anchor="middle">sequence effect</text>
+
+  <!-- ground-truth reference line (dominant gray) at y=160 -->
+  <line x1="80" y1="160" x2="660" y2="160" stroke="#787878" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="656" y="154" text-anchor="end" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">planted truth</text>
+
+  <!-- Correct DML: on truth, wider whisker. x=260 -->
+  <line x1="260" y1="124" x2="260" y2="196" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="248" y1="124" x2="272" y2="124" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="248" y1="196" x2="272" y2="196" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="252" y="152" width="16" height="16" fill="#2a1a0e"/>
+  <text x="260" y="232" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">correct DML</text>
+  <text x="260" y="248" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">pre-treatment Z only</text>
+  <text x="260" y="262" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">CI overlaps truth</text>
+
+  <!-- Contaminated DML: displaced off truth, narrower whisker. x=480, point ~y=248 (below truth) -->
+  <line x1="480" y1="232" x2="480" y2="264" stroke="#C8102E" stroke-width="1.5"/>
+  <line x1="468" y1="232" x2="492" y2="232" stroke="#C8102E" stroke-width="1.5"/>
+  <line x1="468" y1="264" x2="492" y2="264" stroke="#C8102E" stroke-width="1.5"/>
+  <rect x="472" y="240" width="16" height="16" fill="#C8102E"/>
+  <text x="480" y="290" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#C8102E">contaminated DML</text>
+  <text x="480" y="306" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">collider in Z</text>
+  <!-- displacement indicator from truth to contaminated point -->
+  <line x1="556" y1="160" x2="556" y2="248" stroke="#787878" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="562" y="208" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">bias</text>
+
+  <!-- Caption / honesty caveat -->
+  <text x="32" y="354" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The contaminated estimate's tighter whisker is the trap: a confident-looking interval that excludes the truth. Specify the</text>
+  <text x="32" y="369" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">SCM first so reaction and dwell (post-treatment colliders) never enter Z. Magnitudes [inferred]; synthetic "to be generated" -</text>
+  <text x="32" y="384" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">only relative displacement and relative whisker width are claimed. Project 3 needs proprietary or synthetic data (the firewall).</text>
+  <text x="32" y="408" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: ILLUSTRATIVE ESTIMATE COMPARISON AS DESCRIBED IN CHAPTER 11</text>
+</svg>

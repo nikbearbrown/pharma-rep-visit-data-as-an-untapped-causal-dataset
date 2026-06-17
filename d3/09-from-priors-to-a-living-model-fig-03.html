@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 9.3 — The Living Model architecture</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+  @media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:transparent;color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .ttl{font-family:'EB Garamond','Garamond',Georgia,serif;}
+  .lbl{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+  .box{cursor:pointer;transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+  .box:focus{outline:2px solid var(--color-ochre);outline-offset:2px;}
+  #tip{position:absolute;pointer-events:none;opacity:0;background:var(--color-white);color:var(--color-ink);border:1px solid var(--color-border);border-radius:4px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;max-width:230px;transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" role="status" aria-live="polite"></div></div>
+<script>
+const FALLBACK_DATA = {
+  scm:{title:"PARAMETERIZED SCM",sub:["DAG + equations","+ provenance"],desc:"The mechanism: DAG plus structural equations plus provenance tags. Feeds equations to the engine."},
+  engine:{title:"ENGINE",sub:["abduction-action-","prediction"],desc:"Runs abduction, action, prediction on the SCM to issue individual Rung-3 recommendations."},
+  monitor:{title:"DRIFT MONITOR",desc:"Watches three ways. The opt-out alarm (red) is a selection-collider safeguard."},
+  bands:[
+    {t:"parameter drift -> refit",color:"var(--color-secondary)",fill:"var(--color-fill)",stroke:"var(--color-border)",desc:"Magnitudes change (alpha, beta). Response: refit the structural equations from new data."},
+    {t:"structural -> re-elicit",color:"var(--color-secondary)",fill:"var(--color-fill)",stroke:"var(--color-border)",desc:"The mechanism changes - an edge flips or a pathway opens. Response: re-elicit or re-run FCI."},
+    {t:"opt-out alarm",color:"var(--color-red)",fill:"var(--color-white)",stroke:"var(--color-red)",desc:"A shift in the opt-out rate changes the consent collider's selection structure and biases every estimate."}
+  ],
+  feedback:"detected drift triggers a model update"
+};
+const VB={w:700,h:420};
+const margin={top:48,right:40,bottom:56,left:64};
+const tip=d3.select("#tip");
+
+function ar(svg,x1,y1,x2,y2){svg.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");}
+function plain(svg,x1,y1,x2,y2){svg.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2).attr("stroke","var(--color-ink)").attr("stroke-width",1.5);}
+
+function interactify(sel,desc){
+  sel.attr("class","box").attr("tabindex",0).attr("role","button").attr("aria-label",desc)
+    .on("mousemove",(e)=>showTip(e,desc)).on("mouseleave",hideTip)
+    .on("focus",function(){const r=this.getBoundingClientRect();tip.style("opacity",1).style("left",(r.left+window.scrollX)+"px").style("top",(r.bottom+window.scrollY+6)+"px").text(desc);})
+    .on("blur",hideTip)
+    .on("keydown",(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip(e,desc);}});
+}
+
+function draw(){
+  const data=FALLBACK_DATA;
+  d3.select("#wrap svg").remove();
+  const svg=d3.select("#wrap").append("svg")
+    .attr("viewBox",`0 0 ${VB.w} ${VB.h}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("The Living Model: parameterized SCM, counterfactual engine, and drift monitor with feedback");
+  svg.append("desc").attr("id","chart-desc").text("Three boxes in a row connected left to right, with a return feedback arrow looping from the drift monitor back to the SCM.");
+
+  svg.append("defs").append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+
+  svg.append("text").attr("class","ttl").attr("x",32).attr("y",34).attr("font-size",14).attr("fill","var(--color-ink)")
+    .text("The Living Model: build, infer, and watch for drift in a loop");
+
+  // SCM box
+  const scm=svg.append("g");
+  interactify(scm,data.scm.title+". "+data.scm.desc);
+  scm.append("rect").attr("x",32).attr("y",100).attr("width",160).attr("height",80).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5);
+  scm.append("text").attr("class","lbl").attr("x",112).attr("y",134).attr("text-anchor","middle").attr("font-size",12).attr("fill","var(--color-ink)").text(data.scm.title);
+  data.scm.sub.forEach((s,i)=>scm.append("text").attr("class","mono").attr("x",112).attr("y",152+i*16).attr("text-anchor","middle").attr("font-size",11).attr("fill","var(--color-secondary)").text(s));
+
+  ar(svg,192,140,266,140);
+  svg.append("text").attr("class","mono").attr("x",229).attr("y",130).attr("text-anchor","middle").attr("font-size",11).attr("fill","var(--color-secondary)").text("feeds");
+
+  // ENGINE box
+  const eng=svg.append("g");
+  interactify(eng,data.engine.title+". "+data.engine.desc);
+  eng.append("rect").attr("x",270).attr("y",100).attr("width",140).attr("height",80).attr("fill","var(--color-fill)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5);
+  eng.append("text").attr("class","lbl").attr("x",340).attr("y",134).attr("text-anchor","middle").attr("font-size",12).attr("fill","var(--color-ink)").text(data.engine.title);
+  data.engine.sub.forEach((s,i)=>eng.append("text").attr("class","mono").attr("x",340).attr("y",152+i*16).attr("text-anchor","middle").attr("font-size",11).attr("fill","var(--color-secondary)").text(s));
+
+  ar(svg,410,140,484,140);
+
+  // MONITOR box
+  const mon=svg.append("g");
+  mon.append("rect").attr("x",488).attr("y",92).attr("width",180).attr("height",96).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5);
+  mon.append("text").attr("class","lbl").attr("x",578).attr("y",84).attr("text-anchor","middle").attr("font-size",12).attr("fill","var(--color-ink)").text(data.monitor.title);
+  const bandG=mon.selectAll("g.band").data(data.bands).join("g").attr("class","band");
+  bandG.each(function(d,i){
+    const g=d3.select(this);
+    interactify(g,d.t+". "+d.desc);
+    const y=100+i*28;
+    g.append("rect").attr("x",496).attr("y",y).attr("width",164).attr("height",24).attr("fill",d.fill).attr("stroke",d.stroke).attr("stroke-width",d.color==="var(--color-red)"?1.5:1);
+    g.append("text").attr("class","mono").attr("x",504).attr("y",y+16).attr("font-size",11).attr("fill",d.color).text(d.t);
+  });
+  mon.append("circle").attr("cx",648).attr("cy",168).attr("r",5).attr("fill","var(--color-red)");
+
+  // feedback arrow monitor -> down -> left -> up to SCM
+  plain(svg,578,188,578,248);
+  plain(svg,578,248,112,248);
+  ar(svg,112,248,112,182);
+  svg.append("text").attr("class","mono").attr("x",345).attr("y",240).attr("text-anchor","middle").attr("font-size",11).attr("fill","var(--color-secondary)").text(data.feedback);
+
+  const cap=["The SCM feeds the engine, which issues individual recommendations; the monitor watches three ways. The signature alarm",
+    "(red) is a shift in the OPT-OUT RATE: when more physicians decline visits, selection turns the consent variable into a collider",
+    "and biases the estimates. The return arrow closes the loop - the model is \"living\" because drift sends it back to refit or",
+    "re-elicit, not because it self-updates blindly."];
+  cap.forEach((t,i)=>svg.append("text").attr("class","lbl").attr("x",32).attr("y",290+i*15).attr("font-size",11).attr("fill","var(--color-secondary)").text(t));
+  svg.append("text").attr("class","lbl").attr("x",32).attr("y",404).attr("font-size",10).attr("fill","var(--color-secondary)").attr("letter-spacing","0.08em").text("SOURCE: CH.09 FROM PRIORS TO A LIVING MODEL");
+}
+function showTip(e,txt){tip.style("opacity",1).style("left",(e.pageX+12)+"px").style("top",(e.pageY+12)+"px").text(txt);}
+function hideTip(){tip.style("opacity",0);}
+draw();
+if(window.ResizeObserver){new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));}
+</script>
+</body>
+</html>

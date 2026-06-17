@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 10.1 - Goodman-Bacon decomposition of TWFE into 2x2 comparisons</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+    --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+      --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--color-white);}
+  #wrap{max-width:700px;margin:0 auto;padding:8px;}
+  svg{width:100%;height:auto;display:block;}
+  .ttl{font-family:'EB Garamond','Garamond',Georgia,serif;}
+  .bdy{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 540" role="img" aria-labelledby="chart-title chart-desc" preserveAspectRatio="xMidYMid meet">
+    <title id="chart-title">Figure 10.1 - Goodman-Bacon decomposition of TWFE into 2x2 comparisons</title>
+    <desc id="chart-desc">Three stacked panels show the three families of 2x2 difference-in-differences comparisons that sum to a staggered two-way fixed effects estimate. Panels A and B are valid with positive weight. Panel C, outlined in red, is the forbidden comparison against an already-treated control whose weight may go negative. Arrows merge the three panels into a summation node and then into a combined TWFE box.</desc>
+  </svg>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+(function(){
+  var svg = d3.select("#chart");
+  var VB_W = 700, VB_H = 540;
+
+  function draw(){
+    svg.selectAll("*:not(title):not(desc)").remove();
+
+    // defs + arrow marker
+    var defs = svg.append("defs");
+    defs.append("marker")
+      .attr("id","arrow")
+      .attr("viewBox","0 0 10 10")
+      .attr("refX",9).attr("refY",5)
+      .attr("markerWidth",7).attr("markerHeight",7)
+      .attr("orient","auto-start-reverse")
+      .append("path")
+        .attr("d","M0,0 L10,5 L0,10 z")
+        .attr("fill","var(--color-ink)");
+    defs.append("marker")
+      .attr("id","arrowRed")
+      .attr("viewBox","0 0 10 10")
+      .attr("refX",9).attr("refY",5)
+      .attr("markerWidth",7).attr("markerHeight",7)
+      .attr("orient","auto-start-reverse")
+      .append("path")
+        .attr("d","M0,0 L10,5 L0,10 z")
+        .attr("fill","var(--color-red)");
+
+    // Heading
+    svg.append("text").attr("class","ttl")
+      .attr("x",32).attr("y",30)
+      .attr("font-size",21).attr("font-weight",600)
+      .attr("fill","var(--color-ink)")
+      .text("One staggered TWFE estimate is three 2x2 comparisons in a trench coat");
+    svg.append("text").attr("class","bdy")
+      .attr("x",32).attr("y",50)
+      .attr("font-size",12.5)
+      .attr("fill","var(--color-secondary)")
+      .text("Two valid families plus one forbidden family sum to the TWFE coefficient");
+
+    var PX = 32, PW = 500, PH = 82;
+
+    // Panel definitions
+    var panels = [
+      {id:"A", y:64, redBorder:false,
+        title:"A. Newly treated vs not-yet-treated",
+        subtitle:"valid comparison, positive weight", subRed:false,
+        wbox:"+w", wRed:false},
+      {id:"B", y:160, redBorder:false,
+        title:"B. Earlier vs later treated (later's pre-window)",
+        subtitle:"valid comparison, positive weight", subRed:false,
+        wbox:"+w", wRed:false},
+      {id:"C", y:256, redBorder:true,
+        title:"C. Later treated vs ALREADY-treated control",
+        subtitle:"forbidden comparison, weight may go negative", subRed:true,
+        wbox:"-w", wRed:true}
+    ];
+
+    var pg = svg.selectAll("g.panel").data(panels).join("g").attr("class","panel");
+
+    // panel background rects
+    pg.append("rect")
+      .attr("x",PX).attr("y",function(d){return d.y;})
+      .attr("width",PW).attr("height",PH)
+      .attr("rx",0)
+      .attr("fill","var(--color-white)")
+      .attr("stroke",function(d){return d.redBorder?"var(--color-red)":"var(--color-border)";})
+      .attr("stroke-width",function(d){return d.redBorder?1.6:1;});
+
+    // panel titles
+    pg.append("text").attr("class","bdy")
+      .attr("x",PX+12).attr("y",function(d){return d.y+18;})
+      .attr("font-size",12.5).attr("font-weight",600)
+      .attr("fill","var(--color-ink)")
+      .text(function(d){return d.title;});
+
+    // panel subtitles
+    pg.append("text").attr("class","bdy")
+      .attr("x",PX+12).attr("y",function(d){return d.y+33;})
+      .attr("font-size",11)
+      .attr("fill",function(d){return d.subRed?"var(--color-red)":"var(--color-secondary)";})
+      .attr("font-style","italic")
+      .text(function(d){return d.subtitle;});
+
+    // Timeline geometry inside each panel
+    var tlX = PX+24;
+    var tlW = 300;
+    var blkH = 11;
+    var rowTop = 46;   // offset from panel y for treated row
+    var rowBot = 64;   // offset from panel y for control row
+    var splitFrac = 0.5;
+
+    panels.forEach(function(d){
+      var g = svg.append("g");
+
+      // TREATED row: gray (pre) then ink (post), split at dashed onset line
+      var splitX = tlX + tlW*splitFrac;
+      // pre block (gray)
+      g.append("rect")
+        .attr("x",tlX).attr("y",d.y+rowTop)
+        .attr("width",tlW*splitFrac).attr("height",blkH)
+        .attr("rx",0)
+        .attr("fill","var(--color-fill)")
+        .attr("stroke","var(--color-border)").attr("stroke-width",0.8);
+      // post block (ink)
+      g.append("rect")
+        .attr("x",splitX).attr("y",d.y+rowTop)
+        .attr("width",tlW*(1-splitFrac)).attr("height",blkH)
+        .attr("rx",0)
+        .attr("fill","var(--color-ink)");
+
+      // dashed onset line
+      g.append("line").attr("aria-hidden","true")
+        .attr("x1",splitX).attr("y1",d.y+rowTop-5)
+        .attr("x2",splitX).attr("y2",d.y+rowBot+blkH+5)
+        .attr("stroke","var(--color-secondary)")
+        .attr("stroke-width",1)
+        .attr("stroke-dasharray","5 4");
+
+      // CONTROL row
+      if(d.id==="C"){
+        // already-treated control in RED, effect still climbing; red blocked terminator
+        var cW = tlW*0.86;
+        g.append("rect")
+          .attr("x",tlX).attr("y",d.y+rowBot)
+          .attr("width",cW).attr("height",blkH)
+          .attr("rx",0)
+          .attr("fill","none")
+          .attr("stroke","var(--color-red)").attr("stroke-width",1.4);
+        // red "climbing" diagonal hint
+        g.append("line").attr("aria-hidden","true")
+          .attr("x1",tlX).attr("y1",d.y+rowBot+blkH-1.5)
+          .attr("x2",tlX+cW).attr("y2",d.y+rowBot+1.5)
+          .attr("stroke","var(--color-red)").attr("stroke-width",1.2);
+        // red blocked terminator (perpendicular bar)
+        g.append("line")
+          .attr("x1",tlX+cW).attr("y1",d.y+rowBot-3)
+          .attr("x2",tlX+cW).attr("y2",d.y+rowBot+blkH+3)
+          .attr("stroke","var(--color-red)").attr("stroke-width",2.4);
+      } else {
+        // all-gray control
+        g.append("rect")
+          .attr("x",tlX).attr("y",d.y+rowBot)
+          .attr("width",tlW).attr("height",blkH)
+          .attr("rx",0)
+          .attr("fill","var(--color-fill)")
+          .attr("stroke","var(--color-border)").attr("stroke-width",0.8);
+      }
+
+      // control row label
+      var ctrlLabel = d.id==="A" ? "not-yet-treated control"
+                    : d.id==="B" ? "later treated (still pre)"
+                    : "already-treated control (still climbing)";
+      g.append("text").attr("class","bdy")
+        .attr("x",tlX+tlW+6).attr("y",d.y+rowBot+blkH-1)
+        .attr("font-size",9)
+        .attr("fill",d.id==="C"?"var(--color-red)":"var(--color-secondary)")
+        .text(ctrlLabel);
+
+      // treated row label
+      g.append("text").attr("class","bdy")
+        .attr("x",tlX+tlW+6).attr("y",d.y+rowTop+blkH-1)
+        .attr("font-size",9)
+        .attr("fill","var(--color-secondary)")
+        .text(d.id==="A"?"newly treated":d.id==="B"?"earlier treated":"later treated");
+
+      // weight box
+      var wx = PX+12, wy = d.y+rowTop+1, ww = 30, wh = 16;
+      g.append("rect")
+        .attr("x",PX+PW-46).attr("y",d.y+PH-24)
+        .attr("width",34).attr("height",16)
+        .attr("rx",0)
+        .attr("fill","var(--color-white)")
+        .attr("stroke",d.wRed?"var(--color-red)":"var(--color-secondary)")
+        .attr("stroke-width",1);
+      g.append("text").attr("class","bdy")
+        .attr("x",PX+PW-46+17).attr("y",d.y+PH-12)
+        .attr("text-anchor","middle")
+        .attr("font-size",11).attr("font-weight",600)
+        .attr("fill",d.wRed?"var(--color-red)":"var(--color-secondary)")
+        .text(d.wbox);
+    });
+
+    // Convergence: arrows from each panel's right side to a summation node
+    var sumCx = 600, sumCy = 200, sumR = 14;
+    panels.forEach(function(d){
+      var startX = PX+PW;
+      var startY = d.y+PH/2;
+      svg.append("path")
+        .attr("d","M"+startX+","+startY+" L"+(sumCx-sumR-4)+","+sumCy)
+        .attr("fill","none")
+        .attr("stroke",d.id==="C"?"var(--color-red)":"var(--color-ink)")
+        .attr("stroke-width",1.2)
+        .attr("stroke-dasharray",d.id==="C"?"5 4":"none")
+        .attr("marker-end",d.id==="C"?"url(#arrowRed)":"url(#arrow)");
+    });
+
+    // summation node
+    svg.append("circle")
+      .attr("cx",sumCx).attr("cy",sumCy).attr("r",sumR)
+      .attr("fill","var(--color-white)")
+      .attr("stroke","var(--color-ink)").attr("stroke-width",1.2);
+    svg.append("text").attr("class","bdy")
+      .attr("x",sumCx).attr("y",sumCy+5)
+      .attr("text-anchor","middle")
+      .attr("font-size",16).attr("font-weight",700)
+      .attr("fill","var(--color-ink)")
+      .text("+");
+
+    // arrow down to combined TWFE box
+    var boxX = sumCx-90, boxY = 300, boxW = 180, boxH = 48;
+    svg.append("path")
+      .attr("d","M"+sumCx+","+(sumCy+sumR)+" L"+sumCx+","+(boxY-4))
+      .attr("fill","none")
+      .attr("stroke","var(--color-ink)").attr("stroke-width",1.2)
+      .attr("marker-end","url(#arrow)");
+
+    svg.append("rect")
+      .attr("x",boxX).attr("y",boxY).attr("width",boxW).attr("height",boxH)
+      .attr("rx",0)
+      .attr("fill","var(--color-white)")
+      .attr("stroke","var(--color-red)").attr("stroke-width",1.6);
+    svg.append("text").attr("class","bdy")
+      .attr("x",boxX+boxW/2).attr("y",boxY+20)
+      .attr("text-anchor","middle")
+      .attr("font-size",12.5).attr("font-weight",600)
+      .attr("fill","var(--color-ink)")
+      .text("combined TWFE");
+    svg.append("text").attr("class","bdy")
+      .attr("x",boxX+boxW/2).attr("y",boxY+37)
+      .attr("text-anchor","middle")
+      .attr("font-size",11).attr("font-style","italic")
+      .attr("fill","var(--color-red)")
+      .text("contaminated mix");
+
+    // Caption
+    var capY = 390;
+    var capLines = [
+      "Naive TWFE with staggered adoption and heterogeneous effects is biased: family C can carry a",
+      "negative weight (Goodman-Bacon) because the already-treated control is still changing. Use",
+      "Callaway-Sant'Anna instead. Structure only, not weight magnitudes [inferred]."
+    ];
+    svg.selectAll("text.cap").data(capLines).join("text")
+      .attr("class","cap bdy")
+      .attr("x",32)
+      .attr("y",function(d,i){return capY + i*15;})
+      .attr("font-size",11)
+      .attr("fill","var(--color-secondary)")
+      .text(function(d){return d;});
+
+    // divider hairline above source
+    svg.append("line").attr("aria-hidden","true")
+      .attr("x1",32).attr("y1",capY+30)
+      .attr("x2",668).attr("y2",capY+30)
+      .attr("stroke","var(--color-border)").attr("stroke-width",1);
+
+    // Source line
+    svg.append("text").attr("class","bdy")
+      .attr("x",32).attr("y",capY+48)
+      .attr("font-size",10)
+      .attr("letter-spacing","0.08em")
+      .attr("fill","var(--color-secondary)")
+      .text("SOURCE: GOODMAN-BACON (2021) DECOMPOSITION, AS DESCRIBED IN CHAPTER 10");
+  }
+
+  draw();
+
+  if(typeof ResizeObserver!=="undefined"){
+    var ro = new ResizeObserver(function(){ draw(); });
+    ro.observe(document.getElementById("wrap"));
+  }
+})();
+</script>
+</body>
+</html>

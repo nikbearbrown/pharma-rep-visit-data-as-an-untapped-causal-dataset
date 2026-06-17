@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure 12.1 — Persuadables vs Sure-Things</title>
+<style>
+:root{
+  --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;
+  --color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+}
+@media(prefers-color-scheme:dark){:root{
+  --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;
+  --color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;
+}}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--color-white);color:var(--color-ink);
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+#wrap{max-width:700px;margin:0 auto;padding:16px;}
+h1{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:21px;line-height:1.25;margin:0 0 12px;}
+svg{width:100%;height:auto;display:block;}
+.fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--color-secondary);margin:0 0 8px;}
+.axis-label{font-size:12px;fill:var(--color-secondary);
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.zone-title{font-size:12px;font-weight:600;
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.zone-sub{font-size:10px;
+  font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+.tau0-label{font-size:11px;fill:var(--color-ink);font-weight:600;
+  font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+.dir-label{font-size:10.5px;fill:var(--color-ink);
+  font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+.endlabel{font-size:10px;fill:var(--color-secondary);
+  font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+.caption{font-size:11.5px;line-height:1.5;color:var(--color-secondary);margin:12px 0 4px;}
+.source{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;
+  font-size:10px;letter-spacing:.04em;color:var(--color-secondary);margin:0;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <p class="fig-title">Figure 12.1 — Persuadables vs Sure-Things (two-axis grid)</p>
+  <h1>Two orderings of the same population: baseline volume vs causal responsiveness</h1>
+  <div id="chart"></div>
+  <p class="caption">The two selection directions are orthogonal. The claim that a Living-Model list differs SYSTEMATICALLY from an NBA list is a TESTABLE hypothesis (held-out Qini comparison), not a settled fact. Conceptual partition, not data.</p>
+  <p class="source">SOURCE: CH.12 FROM PROPENSITY TO PERSUADABLES</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const VBW = 700, VBH = 480;
+const FX0 = 120, FX1 = 600, FY0 = 64, FY1 = 376;
+const MID = 360;
+// band y boundaries
+const POS_Y0 = FY0, POS_Y1 = 168;          // positive band
+const ZERO_Y0 = 168, ZERO_Y1 = 272;        // zero band
+const NEG_Y0 = 272, NEG_Y1 = FY1;          // negative band
+const TAU0 = (ZERO_Y0 + ZERO_Y1)/2;        // emphasized tau=0 line
+
+// fill keyword -> css var
+function fillVar(k){
+  return ({
+    secondary:"var(--color-secondary)",
+    red:"var(--color-red)",
+    white:"var(--color-white)",
+    border:"var(--color-border)",
+    ink:"var(--color-ink)"
+  })[k];
+}
+function textVar(k){
+  return ({
+    white:"var(--color-white)",
+    ink:"var(--color-ink)",
+    secondary:"var(--color-secondary)"
+  })[k];
+}
+
+const ZONES = [
+  {id:"hidden", x:FX0, w:MID-FX0, y:POS_Y0, h:POS_Y1-POS_Y0, fill:"secondary",
+   title:"Hidden Persuadables", txt:"would respond, low baseline", tcol:"white"},
+  {id:"persuadables", x:MID, w:FX1-MID, y:POS_Y0, h:POS_Y1-POS_Y0, fill:"red",
+   title:"Persuadables [TARGET]", txt:"detailing causes the lift", tcol:"white"},
+  {id:"lost", x:FX0, w:MID-FX0, y:ZERO_Y0, h:ZERO_Y1-ZERO_Y0, fill:"white",
+   title:"Lost Causes", txt:"low volume, no response", tcol:"ink", stroke:true},
+  {id:"sure", x:MID, w:FX1-MID, y:ZERO_Y0, h:ZERO_Y1-ZERO_Y0, fill:"border",
+   title:"Sure Things [the propensity trap]", txt:"would prescribe anyway, spend wasted", tcol:"ink"},
+  {id:"sleeping", x:FX0, w:FX1-FX0, y:NEG_Y0, h:NEG_Y1-NEG_Y0, fill:"ink",
+   title:"Sleeping Dogs", txt:"reduces prescribing (negative tau)", tcol:"white"}
+];
+
+function draw(){
+  const container = d3.select("#chart");
+  container.selectAll("svg").remove();
+
+  const svg = container.append("svg")
+    .attr("viewBox",`0 0 ${VBW} ${VBH}`)
+    .attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title")
+    .text("Persuadables versus Sure-Things two-axis conceptual grid");
+  svg.append("desc").attr("id","chart-desc")
+    .text("A two-axis grid. Horizontal axis is prescribing propensity, split low and high by a dashed mid divider. Vertical axis is persuadability, split into positive, zero, and negative bands. Five zones partition the population: Hidden Persuadables, Persuadables (the target), Lost Causes, Sure Things (the propensity trap), and a full-width Sleeping Dogs negative band.");
+
+  const defs = svg.append("defs");
+  const marker = defs.append("marker")
+    .attr("id","arrow").attr("viewBox","0 0 10 10")
+    .attr("refX",8).attr("refY",5)
+    .attr("markerWidth",6).attr("markerHeight",6).attr("orient","auto-start-reverse");
+  marker.append("path").attr("d","M0,0 L10,5 L0,10 z").attr("fill","var(--color-ink)");
+
+  // frame fill
+  svg.append("rect").attr("x",FX0).attr("y",FY0)
+    .attr("width",FX1-FX0).attr("height",FY1-FY0).attr("rx",0)
+    .attr("fill","var(--color-fill)")
+    .attr("stroke","var(--color-border)").attr("stroke-width",1);
+
+  // zone rects from data
+  const zg = svg.selectAll("g.zone").data(ZONES).join("g").attr("class","zone");
+  zg.append("rect")
+    .attr("x",d=>d.x).attr("y",d=>d.y).attr("width",d=>d.w).attr("height",d=>d.h)
+    .attr("rx",0)
+    .attr("fill",d=>fillVar(d.fill))
+    .attr("stroke",d=>d.stroke ? "var(--color-border)" : "none")
+    .attr("stroke-width",d=>d.stroke ? 1 : 0);
+  zg.append("text").attr("class","zone-title")
+    .attr("x",d=>d.x + d.w/2).attr("y",d=>d.y + d.h/2 - 5)
+    .attr("text-anchor","middle")
+    .attr("fill",d=>textVar(d.tcol))
+    .text(d=>d.title);
+  zg.append("text").attr("class","zone-sub")
+    .attr("x",d=>d.x + d.w/2).attr("y",d=>d.y + d.h/2 + 11)
+    .attr("text-anchor","middle")
+    .attr("fill",d=>textVar(d.tcol))
+    .text(d=>d.txt);
+
+  // vertical dashed mid divider
+  svg.append("line").attr("aria-hidden","true")
+    .attr("x1",MID).attr("x2",MID).attr("y1",FY0).attr("y2",FY1)
+    .attr("stroke","var(--color-secondary)").attr("stroke-width",1)
+    .attr("stroke-dasharray","5 4");
+
+  // emphasized tau=0 line
+  svg.append("line").attr("aria-hidden","true")
+    .attr("x1",FX0).attr("x2",FX1).attr("y1",TAU0).attr("y2",TAU0)
+    .attr("stroke","var(--color-ink)").attr("stroke-width",2);
+  svg.append("text").attr("class","tau0-label")
+    .attr("x",FX0-8).attr("y",TAU0).attr("dy","0.32em").attr("text-anchor","end")
+    .text("tau = 0");
+
+  // x axis label + low/high
+  svg.append("text").attr("class","axis-label")
+    .attr("x",(FX0+FX1)/2).attr("y",FY1+34).attr("text-anchor","middle")
+    .text("prescribing propensity  P(NRx | X)");
+  svg.append("text").attr("class","endlabel")
+    .attr("x",FX0+4).attr("y",FY1+18).attr("text-anchor","start").text("low");
+  svg.append("text").attr("class","endlabel")
+    .attr("x",FX1-4).attr("y",FY1+18).attr("text-anchor","end").text("high");
+
+  // y axis label (rotated)
+  svg.append("text").attr("class","axis-label")
+    .attr("transform",`translate(${36},${(FY0+FY1)/2}) rotate(-90)`)
+    .attr("text-anchor","middle")
+    .text("persuadability  tau(x)   -  to  +");
+
+  // NBA horizontal arrow (along propensity), placed above frame
+  const nbaY = FY0 - 26;
+  svg.append("line").attr("aria-hidden","false")
+    .attr("x1",FX0+10).attr("x2",FX1-10).attr("y1",nbaY).attr("y2",nbaY)
+    .attr("stroke","var(--color-ink)").attr("stroke-width",1.5)
+    .attr("marker-end","url(#arrow)");
+  svg.append("text").attr("class","dir-label")
+    .attr("x",(FX0+FX1)/2).attr("y",nbaY-6).attr("text-anchor","middle")
+    .text("NBA ranks along propensity (high-volume sure-things) -> waste");
+
+  // Living Model vertical arrow (along persuadability), at right of frame
+  const lmX = FX1 + 30;
+  svg.append("line").attr("aria-hidden","false")
+    .attr("x1",lmX).attr("x2",lmX).attr("y1",FY1-10).attr("y2",FY0+10)
+    .attr("stroke","var(--color-ink)").attr("stroke-width",1.5)
+    .attr("marker-end","url(#arrow)");
+  svg.append("text").attr("class","dir-label")
+    .attr("transform",`translate(${lmX+14},${(FY0+FY1)/2}) rotate(-90)`)
+    .attr("text-anchor","middle")
+    .text("Living Model ranks PERSUADABLES (causal responsiveness)");
+}
+
+draw();
+if(window.ResizeObserver){
+  const ro = new ResizeObserver(()=>draw());
+  ro.observe(document.getElementById("wrap"));
+}
+</script>
+</body>
+</html>

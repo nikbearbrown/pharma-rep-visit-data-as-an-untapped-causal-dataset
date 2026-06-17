@@ -1,0 +1,80 @@
+<!--
+  figure-title: The unrun experiment - cohort rollout creates a quasi-random message checkerboard
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 01-the-experiment-nobody-knows
+  Figure: 03
+  Type: checkerboard / staggered-rollout matrix
+  Generated: 2026-06-16
+  Source: chapters/01-the-experiment-nobody-knows.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-03">
+  <title id="fig-title-03">The unrun experiment - cohort rollout creates a quasi-random message checkerboard</title>
+  <desc>Training cohorts on the vertical axis and quarters across the horizontal axis form a grid. Each cell is shaded for the old efficacy-first deck or the new safety-first deck. The staggered certification dates make a checkerboard: which physician heard which message when was set by training logistics, not by physician choice.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="01-the-experiment-nobody-knows" figure-number="03" figure-title="The unrun experiment - cohort rollout creates a quasi-random message checkerboard" figure-slug="unrun-experiment-rollout-checkerboard" figure-type="checkerboard / staggered-rollout matrix" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/01-the-experiment-nobody-knows.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">The unrun experiment - training schedules created the variation, not physicians</text>
+
+  <!-- plot region -->
+  <rect x="120" y="64" width="448" height="240" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- column (quarter) header labels -->
+  <g font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">
+    <text x="176" y="58">Q1</text>
+    <text x="288" y="58">Q2</text>
+    <text x="400" y="58">Q3</text>
+    <text x="512" y="58">Q4</text>
+  </g>
+
+  <!-- row (cohort) labels -->
+  <g font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e" text-anchor="end">
+    <text x="112" y="92">Cohort A</text>
+    <text x="112" y="152">Cohort B</text>
+    <text x="112" y="212">Cohort C</text>
+    <text x="112" y="272">Cohort D</text>
+  </g>
+
+  <!-- cells: light gray = old efficacy-first deck; red = new safety-first deck.
+       The diagonal staggering is the checkerboard. Each cell 112 wide x 60 tall. -->
+  <!-- Row A (trained earliest): new deck from Q1 -->
+  <rect x="120" y="64" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="232" y="64" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="344" y="64" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="456" y="64" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <!-- Row B: new deck from Q2 -->
+  <rect x="120" y="124" width="112" height="60" fill="#D4D4D4" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="232" y="124" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="344" y="124" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="456" y="124" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <!-- Row C: new deck from Q3 -->
+  <rect x="120" y="184" width="112" height="60" fill="#D4D4D4" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="232" y="184" width="112" height="60" fill="#D4D4D4" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="344" y="184" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="456" y="184" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+  <!-- Row D (trained latest): old deck through Q3 -->
+  <rect x="120" y="244" width="112" height="60" fill="#D4D4D4" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="232" y="244" width="112" height="60" fill="#D4D4D4" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="344" y="244" width="112" height="60" fill="#D4D4D4" stroke="#FFFFFF" stroke-width="1"/>
+  <rect x="456" y="244" width="112" height="60" fill="#C8102E" stroke="#FFFFFF" stroke-width="1"/>
+
+  <!-- axis titles -->
+  <text x="344" y="332" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454" text-anchor="middle">calendar quarter (rollout time)</text>
+
+  <!-- time direction arrow under plot -->
+  <line x1="120" y1="316" x2="568" y2="316" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- legend -->
+  <g font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">
+    <rect x="120" y="346" width="14" height="12" fill="#D4D4D4" stroke="#2a1a0e" stroke-width="1"/>
+    <text x="140" y="356">old efficacy-first deck</text>
+    <rect x="300" y="346" width="14" height="12" fill="#C8102E" stroke="#2a1a0e" stroke-width="1"/>
+    <text x="320" y="356">new safety-first deck (post-certification)</text>
+  </g>
+
+  <!-- caption: instrument testable not assumed -->
+  <text x="32" y="384" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Cohort timing as instrument: as-good-as-random is a testable claim, not an assumption - Chapter 4 builds the falsification test.</text>
+  <text x="32" y="402" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Public/synthetic structure only; cohorts and dates are illustrative. The telemetry recorded which cell every physician fell in.</text>
+</svg>

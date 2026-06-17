@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 6.2 — Dwell/reaction collider: path closed vs opened</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+      --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}
+  }
+  html,body{margin:0;padding:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .subtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-secondary);}
+  .head{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .headred{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-red);font-weight:bold;}
+  .node{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .nsm{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-ink);}
+  .leg{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-ink);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .spur{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-red);}
+  .tooltip{position:absolute;pointer-events:none;background:var(--color-white);border:1px solid var(--color-border);
+    padding:4px 8px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;color:var(--color-ink);opacity:0;}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" class="tooltip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA={left:{ox:186},right:{ox:516},conditioned:"right"};
+const W=700,H=420;
+const wrap=d3.select("#wrap");const tip=d3.select("#tip");
+function draw(){
+  wrap.selectAll("svg").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Conditioning on in-visit engagement opens a spurious message-to-NRx path");
+  svg.append("desc").attr("id","chart-desc").text("Two identical four-node graphs; left keeps the dwell/reaction collider unconditioned and the path blocked; right conditions on it and a spurious path opens from message through openness to NRx.");
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  defs.append("marker").attr("id","arrowred").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+  svg.append("rect").attr("x",0).attr("y",0).attr("width",W).attr("height",H).attr("fill","var(--color-white)");
+
+  svg.append("text").attr("class","title").attr("x",32).attr("y",30).text("The path was closed before she touched it");
+  svg.append("text").attr("class","subtitle").attr("x",32).attr("y",50).text("Same four nodes. The only change is conditioning on engagement (right).");
+
+  graph(svg,186,false);
+  graph(svg,516,true);
+
+  svg.append("line").attr("x1",350).attr("y1",64).attr("x2",350).attr("y2",344).attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+
+  // legend
+  svg.append("ellipse").attr("cx",46).attr("cy",360).attr("rx",10).attr("ry",6).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  svg.append("text").attr("class","leg").attr("x",62).attr("y",364).text("dashed node = unobserved (latent)");
+  svg.append("line").attr("x1",330).attr("y1",360).attr("x2",356).attr("y2",360).attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  svg.append("text").attr("class","leg").attr("x",362).attr("y",364).text("red dashed = spurious path induced by conditioning");
+
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",388).text("Dwell and reaction are POST-TREATMENT colliders, not confounders. Adding them to the model does not control bias -- it creates it,");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",404).text("linking message to NRx through unobserved openness. Veeva field names dated mid-2026; kept out of the figure. Public + synthetic only.");
+}
+function graph(svg,ox,conditioned){
+  const head=conditioned?"WITH conditioning -- path opened":"WITHOUT conditioning -- path blocked";
+  svg.append("text").attr("class",conditioned?"headred":"head").attr("x",ox).attr("y",78).attr("text-anchor","middle").text(head);
+  // latent openness
+  svg.append("ellipse").attr("cx",ox).attr("cy",120).attr("rx",50).attr("ry",28).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  svg.append("text").attr("class","nsm").attr("x",ox).attr("y",118).attr("text-anchor","middle").text("physician");
+  svg.append("text").attr("class","nsm").attr("x",ox).attr("y",132).attr("text-anchor","middle").text("openness");
+  // message
+  svg.append("rect").attr("x",ox-138).attr("y",200).attr("width",76).attr("height",40).attr("fill","var(--color-fill)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+  svg.append("text").attr("class","node").attr("x",ox-100).attr("y",224).attr("text-anchor","middle").text("message");
+  // NRx
+  svg.append("rect").attr("x",ox+62).attr("y",200).attr("width",76).attr("height",40).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+  svg.append("text").attr("class","node").attr("x",ox+100).attr("y",224).attr("text-anchor","middle").text("NRx");
+  // engagement collider
+  svg.append("rect").attr("x",ox-38).attr("y",288).attr("width",76).attr("height",40).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5)
+    .attr("tabindex",0).attr("aria-label","dwell / reaction collider"+(conditioned?", conditioned on":""))
+    .on("mousemove",(e)=>show(e,"dwell / reaction (collider)")).on("mouseleave",hide)
+    .on("focus",function(){show2(this,"dwell / reaction (collider)")}).on("blur",hide);
+  if(conditioned){
+    svg.append("rect").attr("x",ox-46).attr("y",280).attr("width",92).attr("height",56).attr("fill","none").attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  }
+  svg.append("text").attr("class","nsm").attr("x",ox).attr("y",306).attr("text-anchor","middle").text("dwell /");
+  svg.append("text").attr("class","nsm").attr("x",ox).attr("y",320).attr("text-anchor","middle").text("reaction");
+  // true edges
+  svg.append("line").attr("x1",ox-62).attr("y1",216).attr("x2",ox+58).attr("y2",216).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  svg.append("line").attr("x1",ox-86).attr("y1",240).attr("x2",ox-36).attr("y2",290).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  svg.append("line").attr("x1",ox).attr("y1",148).attr("x2",ox).attr("y2",284).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  svg.append("line").attr("x1",ox+28).attr("y1",140).attr("x2",ox+92).attr("y2",196).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  // spurious path (right only)
+  if(conditioned){
+    svg.append("path").attr("d",`M ${ox-90} 200 Q ${ox-50} 150 ${ox-36} 132`).attr("fill","none").attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+    svg.append("path").attr("d",`M ${ox+36} 132 Q ${ox+64} 156 ${ox+90} 198`).attr("fill","none").attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4").attr("marker-end","url(#arrowred)");
+    svg.append("rect").attr("x",ox-82).attr("y",170).attr("width",78).attr("height",15).attr("fill","var(--color-white)");
+    svg.append("text").attr("class","spur").attr("x",ox-6).attr("y",181).attr("text-anchor","end").text("spurious path");
+  }
+}
+function show(e,t){tip.style("opacity",1).html(t).style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px");}
+function show2(node,t){const r=node.getBoundingClientRect();tip.style("opacity",1).html(t).style("left",(window.scrollX+r.left+r.width/2)+"px").style("top",(window.scrollY+r.top-24)+"px");}
+function hide(){tip.style("opacity",0);}
+draw();
+new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

@@ -29,6 +29,10 @@ The transfer to pharmaceutical detailing is exact. Ranking physicians by prescri
 
 Ascarza won the Paul E. Green Award for methodological contribution to marketing research. Assign it as reading. The churn context is different from detailing; the statistical structure is identical.
 
+![Two-axis grid. The horizontal axis is prescribing propensity P(NRx|X), low to high; the vertical axis is persuadability tau(x), negative through an explicit zero line to positive. Five named populations occupy the zones: Persuadables (high propensity, positive — the target), Hidden Persuadables (low propensity, positive — missed by propensity ranking), Sure Things (high propensity, near zero — the propensity trap), Lost Causes (low propensity, near zero), and Sleeping Dogs (the negative band, where detailing reduces prescribing). One arrow runs along the propensity axis for NBA selection; a second runs along the persuadability axis for Living-Model selection.](images/12-from-propensity-to-persuadables-fig-01.png)
+
+*Figure 12.1 — The propensity axis and the persuadability axis order the same physicians differently, and the two selection directions are roughly orthogonal. The NBA engine ranks sure-things (waste); the Living Model ranks persuadables. That the two lists differ systematically is a testable hypothesis — a held-out Qini comparison — not a settled fact (Ascarza 2018).*
+
 <!-- → [DIAGRAM: Two-axis scatter plot. Horizontal axis: propensity P(NRx | X), low to high. Vertical axis: persuadability τ(x), negative to positive. Four quadrants labeled: upper-right "Persuadables (treat only if messaged)" — target; upper-left "Hidden Persuadables — missed by propensity ranking"; lower-right "Sure Things — the propensity trap, high baseline, zero increment"; lower-left "Lost Causes"; below horizontal axis (negative τ): "Sleeping Dogs — detailing reduces prescribing." Annotation: "NBA engine selects along the propensity axis. Living Model selects along the persuadability axis. Overlap is low." Caption: "The propensity axis and the persuadability axis order the same physicians differently. The gap between them is where budget is wasted."] -->
 
 ---
@@ -47,7 +51,14 @@ One structural note that bridges to the previous chapter: the Sleeping Dog popul
 
 An NBA engine ranks by propensity: it preferentially loads the list with Sure Things and is structurally blind to the sign of the effect. It cannot tell a Persuadable from a Sleeping Dog. A causal-responsiveness ranking sorts by $\tau(x)$: it selects Persuadables and excludes Sleeping Dogs. The lists differ. That difference is the product.
 
-<!-- → [TABLE: Four-quadrant uplift taxonomy. Columns: quadrant, response if treated, response if untreated, τ(x), propensity, what happens if targeted, what NBA engine does. Rows: Persuadables (yes, no, >0, mid-tier, prescribing increases — this is ROI, misses them), Sure Things (yes, yes, ≈0, high, prescribing unchanged — pure waste, selects them preferentially), Lost Causes (no, no, ≈0, low, nothing, ignores), Sleeping Dogs (no, yes treated→reduced, <0, variable, prescribing decreases — backfires, cannot detect — propensity is unsigned). Caption: "The NBA engine is blind to the sign of the effect and over-selects Sure Things. Both failures have the same cause: ranking on the wrong quantity."] -->
+| Quadrant | Response if treated | Response if untreated | τ(x) | Propensity | If targeted | What the NBA engine does |
+| --- | --- | --- | --- | --- | --- | --- |
+| Persuadables | Yes | No | > 0 | Mid-tier | Prescribing increases — this is the ROI | Misses them (mid-tier propensity) |
+| Sure Things | Yes | Yes | ≈ 0 | High | Prescribing unchanged — pure waste | Selects them preferentially (the propensity trap) |
+| Lost Causes | No | No | ≈ 0 | Low | Nothing | Ignores |
+| Sleeping Dogs | No | Yes (treated → reduced) | < 0 | Variable | Prescribing decreases — backfires | Cannot detect — propensity is unsigned |
+
+*Table 12.1 — The NBA engine is blind to the sign of the effect and over-selects Sure Things. Both failures have the same cause: ranking on the wrong quantity. Detecting Sleeping Dogs requires a signed CATE estimate, not a propensity score; that the Living Model's list differs systematically from the NBA list is a testable hypothesis (held-out Qini), not a fact (Ascarza 2018).*
 
 ---
 
@@ -81,6 +92,10 @@ The first dead end an analyst hits: rank by predicted NRx and "go where the volu
 
 The second dead end is subtler: rank by CATE alone and detail the top, ignoring the pathway gate. This produces a list that looks optimal on caused prescribing and gets killed on compliance grounds when the pathway analysis reveals that several of the high-$\tau$ physicians are responsive through relationship maintenance rather than clinical education. Ranking on $\tau$ is necessary, not sufficient. The gate is part of the objective.
 
+![Two side-by-side panels for the same 200-physician population. The left panel is the propensity-ranked NBA list, sorted by P(NRx|X); its top decile is shaded as low-persuadability Sure Things and annotated as receiving 84% of budget while causing only about 3% of the increment. The right panel is the persuadability-ranked list, sorted by CATE; its top decile is shaded as Persuadables and annotated as receiving the same 84% of budget while causing about 61% of the increment. A label between them notes the low overlap of the two top deciles.](images/12-from-propensity-to-persuadables-fig-02.png)
+
+*Figure 12.2 — Same budget, same physicians, two rankings. The propensity list buys conversions; the persuadables list causes them. The budget and increment shares are illustrative — only the direction of the contrast is claimed; whether the two lists differ this sharply is the testable Qini hypothesis (Ascarza 2018), not a measured magnitude.*
+
 <!-- → [DIAGRAM: Side-by-side comparison of two target lists for 200 physicians. Left panel: propensity-ranked NBA list. Physicians sorted by P(NRx | X). Background shading by τ(x) — most of the top-ranked physicians are in the "low τ / Sure Thing" region. Budget allocation annotated on top decile: "84% of budget, 3% of caused increment." Right panel: τ(x)-ranked persuadables list. Same population, sorted by CATE. Budget allocation annotated on top decile: "84% of budget, 61% of caused increment." Overlap percentage between the two lists labeled. Caption: "Same budget. Same physicians. Two rankings. The propensity list buys conversions. The persuadables list causes them."] -->
 
 ---
@@ -104,23 +119,6 @@ Ascarza found propensity and persuadability weakly correlated in churn. Pharma d
 Persuadables tend to be mid-tier prescribers, not the top-volume Sure Things the NBA over-selects. They tend to be physicians with a specific unresolved clinical question that the right message addresses. They tend to be in markets that peer influence has not yet saturated — pre-saturation, where a message can still move a decision rather than arriving after it is locked. These are hypotheses about the structure of the persuadable population, and each is falsifiable on data.
 
 If the Qini gap turns out to be small — if propensity and persuadability are more correlated in detailing than in churn — that would itself be a publishable finding. The persuadable concept and the Ascarza result are stable; the list-divergence magnitude must be measured on current partner data, and the book's claim is not that the magnitude is large, but that the question has not been asked and deserves to be.
-
-**Five-part AI exercise block**
-
-**When to use AI here.** Use an LLM to explain the four-quadrant taxonomy in the language of your specific dataset, to draft the boilerplate around a `causalml` or `EconML` pipeline — data loading, train/control splits, Qini plotting — and to stress-test the propensity-versus-persuadability argument. Ask it to make the strongest case for propensity ranking, then rebut it. Use it to translate Ascarza's churn result into detailing language for a partner audience.
-
-**When NOT to use AI here.** Do not let an LLM choose your quadrant thresholds, decide which pathway drives a physician's effect, or set the welfare and compliance exclusions. Those are domain and ethical judgments with real-patient consequences that require clinical and regulatory judgment the model does not have. Do not trust an LLM's recollection of the Qini formula or any citation without verifying it against the source. Never let it generate the target list itself as if a recommendation were a calculation.
-
-**LLM exercise (copy-paste prompt):**
-> "You are a skeptical marketing-science reviewer. I claim that ranking physicians by predicted prescribing probability (propensity) is the wrong way to allocate a pharma rep budget, and that I should rank by causal responsiveness (CATE / uplift) instead. (1) State the strongest version of the counterargument — the case for ranking on propensity. (2) Then rebut it, using the four-quadrant uplift taxonomy and the Ascarza (2018) 'Retention Futility' result. (3) Identify one situation where propensity and persuadability would in fact be highly correlated, making my reframe less valuable. Be specific and concise."
-
-**CLI exercise.** Using Claude Code on the synthetic dataset, ask it to: load the physician table with propensity and CATE columns, solve the constrained allocation (budget = 80 visits, max 3 per physician), exclude reciprocity-pathway and negative-$\tau$ physicians, and emit a Qini curve plot and an overlap percentage. Then read the code and find the place where it silently dropped negative-$\tau$ physicians without logging the exclusion reason — and fix it. The point is to catch the agent's plausible-but-wrong allocation, not to accept its output.
-
-**AI validation.** Validate any AI-produced ranking three ways: (1) on the synthetic data with known ground truth, does the AI's top decile match the true high-$\tau$ physicians? (2) check the Qini against a hand-computed value on a small slice; (3) audit the exclusion log — every excluded physician must have a logged reason (negative $\tau$, reciprocity pathway, or capacity), with no silent dropping.
-
-## AI Use Disclosure
-
-*Write two sentences naming what an AI tool did in your work for this chapter and the one judgment it could not make. For example: "I used an LLM to scaffold the causalml pipeline and draft the Qini plotting code; I decided myself which physicians to exclude on pathway grounds, because that judgment requires knowing whether a physician's high CATE is driven by clinical education or by relationship maintenance — a structural distinction that requires the rep elicitation data from Chapter 8, not a calculation the model can perform."*
 
 ## What Would Change My Mind
 
@@ -159,3 +157,170 @@ How should a ranking honor the confidence intervals the causal forest returns? R
 **Challenge**
 
 9. *(Challenge — open-ended) What this tests: designing the Qini validation experiment.* Design the held-out experiment that would test whether the causal-responsiveness list's Qini significantly exceeds the propensity list's Qini in a real partner dataset. Specify: the randomization design (how you create a holdout), the sample size calculation (what power you need to detect a meaningful Qini gap), the outcome variable (what you measure and over what window), the confounds you would need to control for, and the result that would cause you to abandon the persuadables reframe entirely. State honestly what this experiment requires that public data cannot supply and what the firewall implies for where it can be run.
+
+---
+
+## Prompts
+
+### Figure 12.1 — Persuadables vs Sure-Things (two-axis grid)
+
+Generate a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a conceptual two-axis grid (not scattered data points). X axis: prescribing propensity P(NRx|X), low to high (split into low/high columns). Y axis: persuadability tau(x), negative through an emphasized zero line to positive (three bands: positive, zero, negative). Fill five named zones with grayscale-distinct rectangles plus the single red accent on the target: Persuadables (high propensity, positive — red, the target), Hidden Persuadables (low propensity, positive — gray), Sure Things (high propensity, zero band — mid gray, the trap), Lost Causes (low propensity, zero band — white outlined), Sleeping Dogs (full-width negative band — ink). Two selection-direction arrows: NBA along the horizontal propensity axis, Living Model along the vertical persuadability axis. Brutalist palette, full font chains via CSS variables (light+dark), rx=0 rects, no gradients, arrowhead marker, gridlines aria-hidden, reduced-motion guard. Caption: the two selection directions are orthogonal; "lists differ systematically" is a testable Qini hypothesis, not fact (Ascarza 2018). Deliverable: one HTML file.
+
+### Figure 12.2 — Two target lists for the same 200 physicians
+
+Generate a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a two-panel side-by-side comparison. Left panel "Propensity-ranked NBA list" (sorted by P(NRx|X)): a stacked column of decile rows with the top decile shaded mid-gray as "mostly Sure Things", annotated "84% of budget, ~3% of caused increment". Right panel "Persuadability-ranked list" (sorted by CATE): same column with the top decile shaded in the single red accent as "Persuadables", annotated "84% of budget, ~61% of caused increment". A double-headed arrow between the two top deciles labels "top-decile overlap: low". Brutalist: white bg, ink, one red series #C8102E, gray hairlines for decile separators, rx=0 rects, no gradients; EB Garamond title / Inter body / JetBrains Mono labels (full chains, CSS variables, light+dark); arrowhead marker, reduced-motion guard. Not a quantitative axis chart — shares are illustrative; caption: only the direction of the contrast is claimed (Ascarza 2018, testable via held-out Qini). Deliverable: one HTML file.
+
+---
+
+## Chapter 12 Exercises: From Propensity to Persuadables
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** The bot's elicited susceptibility indices — reps' structural sense of who is genuinely movable — are used to identify persuadables, because reps often know which physicians a message can shift before any CATE is estimated.
+
+### Exercise 1 — When to Use AI
+
+You have per-physician CATEs from the Chapter 11 forest and the Causal Interview Bot's elicited susceptibility indices in hand. Three sound uses of an LLM.
+
+- **Task A.** Have the model scaffold the `causalml` or `econml` Qini-curve pipeline — train/control split, uplift ranking, Qini coefficient, the random-targeting diagonal. *Why AI works here:* the plotting and ranking code is mechanical and you validate it by hand-computing the Qini on a small slice and confirming the AI's top decile matches the true high-τ physicians on synthetic data.
+- **Task B.** Ask the model to make the strongest case for propensity ranking, then rebut it using the four-quadrant taxonomy and Ascarza (2018). *Why AI works here:* steel-manning then rebutting is an exposition task; you can check both halves against the chapter and the Ascarza result.
+- **Task C.** Ask the model to translate the bot's elicited susceptibility index into a feature you can compare against the CATE ranking — e.g., "for each physician, does the rep's stated movability agree with the estimated τ?" *Why AI works here:* the index is your input; the model only joins and tabulates two columns you supplied, and the agreement table is something you read and judge.
+
+**The tell:** in each case you can independently evaluate the output — recompute a Qini, check a rebuttal against a source, read a join you specified. The model accelerates; it does not decide who is movable.
+
+### Exercise 2 — When NOT to Use AI
+
+Three judgments the model must not own.
+
+- **Task A.** Do not let the model decide which pathway drives a physician's effect, or set the welfare and compliance exclusions. *Why AI fails here:* whether a high-τ physician is movable through clinical education or through reciprocity, and whether the caused prescribing is clinically appropriate, are values judgments with real-patient consequences — they require the bot's elicited structural knowledge and clinical/regulatory judgment, not a calculation.
+- **Task B.** Do not let the model generate the target list as if a recommendation were a calculation. *Why AI fails here:* targeting a physician is a decision about whom to influence and to what end; the values/consent dimension (Sleeping Dogs who backfire, opt-out-correlated skeptics) cannot be reduced to a τ-sort. The Sleeping Dog overlaps the consent-collider population — excluding them is a welfare call, not an arithmetic one.
+- **Task C.** Do not trust the model's recollection of the Qini formula or any citation. *Why AI fails here:* there is a ground-truth definition it can misremember fluently; verify against the source.
+
+**The tell:** if the AI is the *reason* a physician is on or off the target list, you have let a tool make a value judgment. It must draft and tabulate while *you* — using the bot's elicited indices and clinical/regulatory judgment — decide who is persuadable, who is excluded, and to what end. **Series connection:** Tier **T7 (Wisdom)** — persuadable targeting is fundamentally a value judgment about whom to move and whether the resulting prescribing serves the patient, not just a question of estimator reliability. The model cannot supply the wisdom; it can only sharpen the ranking you then govern.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building:** a persuadables target list that fuses the estimated CATE ranking with the Causal Interview Bot's elicited susceptibility indices, gated to the educational pathway, with a full exclusion log.
+
+**Tool:** Claude, as a **Claude Project** — the bot's elicited susceptibility indices and the Chapter 5 pathway graph live in Project knowledge from earlier chapters, so this prompt can fuse the rep prior with the CATE ranking without re-supplying either; the same Project carries into the Chapter 13 capstone.
+
+**The Prompt:**
+
+```
+You are helping me build a persuadables target list for a pharma detailing
+budget. I have a 200-physician synthetic table with columns:
+  npi, propensity (P(NRx|X)), tau (estimated CATE), pathway
+  (educational / relationship / reciprocity), rep_susceptibility_index
+  (0-1, elicited from my Causal Interview Bot: the rep's structural sense of how
+  movable this physician is).
+
+Do five things:
+1. Assign each physician to one of the four uplift quadrants (Persuadables, Sure
+   Things, Lost Causes, Sleeping Dogs) using thresholds you state explicitly.
+2. Build the persuadables list: rank by tau, then EXCLUDE every physician with
+   negative tau (Sleeping Dog) and every physician whose pathway is reciprocity.
+   Produce an exclusion log naming each excluded physician, the reason, and the
+   tau that triggered it.
+3. Compare the rep_susceptibility_index against the estimated tau ranking: where
+   do reps and the model AGREE on who is movable, and where do they diverge?
+   Flag the divergences for my review — do NOT auto-resolve them.
+4. Solve the constrained allocation: budget = 80 visits, max 3 per physician,
+   over the gated persuadables list only.
+5. Give me causalml/econml code to produce a Qini curve plotting the
+   persuadables list and the propensity list against random.
+
+Do not choose the quadrant thresholds for me without stating them. Do not decide
+which divergences to resolve. Do not target any reciprocity-pathway or negative-
+tau physician. Flag anything uncertain as [verify].
+```
+
+**What this produces:** a quadrant-labeled table, a gated persuadables list, an exclusion log, an explicit rep-vs-model agreement table (divergences flagged, not resolved), a constrained allocation, and Qini-curve code — the Project 1-style persuadables artifact with the bot's index fused in.
+
+**How to adapt:** swap in your synthetic table; if the bot's susceptibility index is on a different scale, normalize before joining. With ChatGPT or Gemini, paste the bot's index column and the pathway definitions inline. Keep the Claude Project so the gated list and exclusion log persist into Chapter 13's handoff.
+
+**Connection to previous chapters:** the CATEs are the Chapter 11 forest's output; the susceptibility index is the Chapter 8 bot's; the pathway gate is the Chapter 5 three-pathway graph made operational; the rep-vs-model agreement check uses the bot exactly as Chapter 7 intended — structural knowledge to orient what the data leaves Markov-equivalent.
+
+**Preview of next chapter:** Chapter 13 is the capstone — you will wrap this gated persuadables list inside the handoff brief, add the consent-collider guardrails the bot must respect, and ship the working bot plus an annotated prior DAG plus the handoff brief as the book's terminal artifact.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** a constrained-allocation pipeline that ranks persuadables, excludes Sleeping Dogs and reciprocity-pathway physicians *with a logged reason for every exclusion*, and emits a Qini curve and overlap percentage.
+
+**Tool:** Claude Code — this is a repo-level loop (data, allocation solver, exclusion logger, Qini plot, test) best run by an agentic CLI. · **Skill level:** intermediate.
+
+**Setup:**
+- [ ] A repo with the synthetic physician table (synthetic only — real targeting data and CRM telemetry are partner-proprietary, behind the firewall).
+- [ ] Python with `causalml` or `econml` and a solver/plotting stack installed.
+- [ ] The synthetic ground-truth τ recorded where a test can read it.
+
+**The Task:**
+
+```
+Read data/physicians_synthetic.csv (columns: npi, propensity, tau, pathway,
+rep_susceptibility_index) and data/ground_truth.json. Do NOT touch private/ or
+*_real_* — proprietary, out of scope.
+
+1. Build two target lists: a propensity-ranked NBA list and a tau-ranked
+   persuadables list.
+2. For the persuadables list, exclude every negative-tau physician (Sleeping
+   Dog) and every reciprocity-pathway physician. EVERY exclusion must be written
+   to data/exclusion_log.csv with npi, reason, and triggering tau. Silent drops
+   are forbidden.
+3. Solve the constrained allocation (budget = 80 visits, max 3 per physician)
+   over the gated persuadables list.
+4. Emit a Qini curve plotting both lists against random, and print the
+   top-decile overlap percentage between the two lists.
+5. Write a pytest asserting (a) on synthetic ground truth the persuadables
+   top decile matches the true high-tau physicians within tolerance, and (b) the
+   exclusion log row-count equals the number of physicians dropped (no silent
+   drops).
+
+Stopping condition: tests pass, Qini plot and exclusion log written. After
+passing, print any place in the code that drops a physician without writing a log
+row, so I can confirm there are none.
+```
+
+**Expected output:** two lists, a complete exclusion log, a constrained allocation, a Qini plot, the overlap percentage, and a passing test suite.
+
+**What to inspect:** the exclusion log — every dropped physician must have a reason; and the agent's silent-drop check, because the chapter's specific trap is code that quietly removes negative-τ physicians without logging why.
+
+**If it goes wrong:** the agent commonly drops negative-τ physicians inside a filter without logging the reason. Recovery: make the no-silent-drops assertion fail loudly (log row-count must equal drop count), then have the agent route every drop through a single logged exclusion function.
+
+**CLAUDE.md note:** add — "Synthetic data only; never touch `private/` or `*_real_*`. Every physician exclusion is logged with a reason (negative τ, reciprocity pathway, or capacity); silent drops are a bug. Targeting decisions are value judgments — code ranks and gates, humans decide who ships."
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-produced target list — your Exercise 3/4 output, or a pre-generated flawed artifact that ranked physicians by propensity, called the 94%-conversion result a success, and never computed a τ-based Qini.
+
+**Validation type:** ground-truth recovery plus governance audit (exclusion log + pathway gate). **Risk level:** **high** — because a propensity-mistaken-for-persuadability list spends the entire budget on Sure Things, looks magnificent on conversion, and the better the propensity model the worse the waste.
+
+**Setup:** run the artifact against the checklist on the synthetic table where the true τ is known; audit the exclusion log and pathway gate for the governance criteria.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 12 (Persuadables)
+Mark each Pass / Fail / Cannot-determine.
+
+[ ] Correctness: on synthetic ground truth, does the list's top decile match the
+    true high-tau physicians (not the high-propensity ones)?
+[ ] Completeness: is there a Qini curve comparing the list to the propensity list
+    AND to random, with a stated Qini coefficient for each?
+[ ] Scope: are physicians excluded on pathway/welfare grounds excluded (not just
+    deprioritized), and is the analysis limited to the educationally drivable set?
+[ ] Chapter-specific 1 — exclusion log: does every excluded physician have a
+    logged reason (negative tau, reciprocity pathway, capacity), with no silent
+    drops?
+[ ] Chapter-specific 2 — sign awareness: are Sleeping Dogs (negative tau) detected
+    and excluded, using a SIGNED CATE rather than an unsigned propensity score?
+[ ] Failure-mode check (fluent-but-wrong): does the artifact rank on propensity
+    and present a high conversion rate as success — propensity mistaken for
+    persuadability? That is a FAIL even if the dashboard looks excellent.
+[ ] Ground truth: is the conclusion anchored to caused prescribing on known tau,
+    not to conversion rate?
+```
+
+**What to do with findings:** all pass — the list is shippable as a gated, governed persuadables recommendation. One fail — fix and re-run. Multiple fails, especially propensity-mistaken-for-persuadability plus a missing exclusion log, discard the list; it is the chapter's central error wearing a good dashboard.
+
+**AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your work and the one judgment it could not make — for example, that you decided which physicians to exclude on pathway grounds because that requires knowing whether a high CATE runs through clinical education or relationship maintenance, a structural distinction drawn from the Chapter 8 bot's elicitation, not a calculation the model can perform.* (Mandatory.)
+
+**Series connection:** the failure mode is **propensity mistaken for persuadability** — a list that buys conversions it did not cause. Tier **T7 (Wisdom)**: whom to move, and whether the resulting prescribing serves the patient, are value judgments the model cannot make; it can rank and gate, but the targeting decision is governed by human wisdom.

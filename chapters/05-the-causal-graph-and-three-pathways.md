@@ -38,6 +38,10 @@ A **mediator** is a variable that lies on the causal path between treatment and 
 
 Before going further, mark your own graph with one piece of honesty: **which arrows do you actually have data for?** M2 is relatively measurable from rep-entered fields — samples and co-pay cards are recorded. M3 is measurable from public Open Payments data, meals by NPI and date. M1 is the hardest: "educational attitude" lives in rep free-text call notes, in the objection resolved and the clinical question answered, not in a clean structured field. The legally important pathway is also the hardest to measure. That is not a coincidence you can wish away.
 
+![Three-pathway mediation graph: cohort timing (Z) points to message variant (D), which fans into the educational-attitude mediator (M1) and the samples/co-pay mediator (M2); a separate Open Payments public-data source feeds the reciprocity-meals mediator (M3); all three mediators point into NRx (Y). The pathways are grayscale-distinct: permissive (M1), cautionary (M2), high-scrutiny (M3).](images/05-the-causal-graph-and-three-pathways-fig-01.png)
+
+*Figure 5.1 — One treatment, three correlated pathways (the per-pathway split is generally NOT point-identified)*
+
 <!-- → [DIAGRAM: Three-pathway mediation graph — nodes: Z (cohort timing, instrument), D (message variant, treatment), M1 (educational attitude), M2 (samples/co-pay), M3 (sponsored meals/reciprocity), Y (NRx outcome); arrows: Z→D, D→M1, D→M2, M3→Y (with meals entering from Open Payments), all M's→Y; color coding: M1 green (legally drivable), M2 amber (regulated), M3 red (scrutinized); each arrow annotated with data source and measurement confidence] -->
 
 ---
@@ -80,6 +84,10 @@ Robins & Greenland (1992) proved the consequence precisely: direct and indirect 
 
 State this to a partner in plain language before showing any decomposition result: **the total message effect is far more credible than any pathway share.** Not because the decomposition is useless — the ethics and the economics demand it — but because it sits on a different and weaker evidential foundation.
 
+![Assumption hierarchy as three stacked layers. Bottom: Total Effect (IV estimate), needing assumptions 1 and 3, secured by quasi-randomization. Middle: single-mediator NDE/NIE, needing all four assumptions including the cross-world assumption, which randomization does not secure. Top: three-mediator per-pathway split, additionally needing no between-mediator confounding. Each higher layer rests on strictly more, and untested, assumptions.](images/05-the-causal-graph-and-three-pathways-fig-02.png)
+
+*Figure 5.2 — The assumption hierarchy: the total effect is far more credible than any pathway share*
+
 <!-- → [DIAGRAM: Assumption hierarchy for causal identification — three stacked layers; bottom layer labeled "Total Effect (IV estimate)": requires assumptions 1 and 3, secured by quasi-randomization; middle layer labeled "Single-Mediator NDE/NIE": requires all 4 assumptions including cross-world; top layer labeled "Three-Mediator per-pathway split": additionally requires no between-mediator confounding; each layer annotated with what quasi-randomization buys and what it does not] -->
 
 ---
@@ -110,7 +118,15 @@ Here is what the analysis actually looks like on this dataset, including the wro
 
 **The limit.** Even the interventional decomposition is assumption-heavy, and the M1 proxy is weak. The honest claim is bounded: under stated assumptions, an estimated fraction of the message's effect is attributable to non-educational channels, with a sensitivity range showing the conclusion survives confounders up to a stated strength. That is enough to drive the investment-and-ethics argument. It tells the brand whether it is buying education or obligation without pretending to a precision the data cannot deliver.
 
-<!-- → [TABLE: Mediation estimand comparison — rows: Baron-Kenny, Natural Direct/Indirect Effects, Controlled Direct Effect, Interventional Indirect Effects; columns: what it answers, key identifying assumptions, whether cross-world assumption required, whether three-correlated-mediator decomposition is exact, appropriate use case; each row with a one-line verdict on suitability for this problem] -->
+
+| Estimand | What it answers | Key identifying assumptions | Cross-world assumption required? | Exact 3-correlated-mediator decomposition? | Appropriate use case | Verdict for this problem |
+| --- | --- | --- | --- | --- | --- | --- |
+| Baron–Kenny product-of-coefficients | A coefficient product read as the "indirect effect" | No exposure–mediator interaction; linearity; no unmeasured mediator–outcome confounding | No (but its validity rests on assumptions it never states) | No — order-dependent, no causal warrant | Linear single-mediator models with no interaction and no confounding | Unsuitable: the share it reports is an artifact of mediator entry order |
+| Natural Direct / Indirect Effects (NDE / NIE) | The direct effect vs. the part flowing through one mediator, under nested counterfactuals | All four no-unmeasured-confounding assumptions, conditional on covariates | Yes — requires the untestable cross-world independence | No — not defined cleanly for correlated, mutually-causal mediators | One mediator, no post-exposure mediator–outcome confounder | Fragile: cross-world assumption untestable even under message randomization |
+| Controlled Direct Effect (CDE) | The message effect with the mediator fixed by intervention at a chosen value | No unmeasured exposure–outcome and mediator–outcome confounding | No | No — gives no indirect split at all | "What if we turned a pathway off" policy questions | Useful for a specific policy lever; does not yield the pathway split or sum to TE |
+| Interventional indirect effects (Vansteelandt & Daniel 2017) | Per-pathway shares via random draws from each mediator's message-induced distribution | No-confounding assumptions, but no cross-world independence | No — avoids cross-world entirely | Exact additive decomposition across mediators, but interventional (not natural) shares | Multiple correlated mediators where natural effects are not identified | Best defensible option; report as interventional quantities, not natural pathway shares |
+
+*Table 5.1 — Mediation estimand comparison: with correlated, mutually-causal mediators the exact educational / relationship / reciprocity split is generally NOT point-identified — interventional effects, not naive products, are the honest fallback*
 
 ---
 
@@ -123,25 +139,6 @@ A brand that cannot tell whether its lift runs through M1 or M3 cannot tell whet
 The patient-welfare dimension follows from the regulatory one. Education-driven prescribing is defensible to the extent the education is accurate and the drug is clinically warranted. Reciprocity-driven prescribing moves what patients receive without a clinical reason — the physician prescribes more not because it helps the patient but because the rep bought lunch. That is the welfare harm the regulation exists to prevent. Estimating M3 honestly is therefore a patient-welfare act, not only a compliance exercise.
 
 One practical note for the annotated graph: the public/IP firewall applies here as always. Meals are public Open Payments data and live on the Fellow's side of the wall. The M1 free-text proxy and M2 fields are built and tested on synthetic data; the partner replicates on real CRM data internally.
-
----
-
-**Five-Part AI Exercise Block**
-
-**When to use AI here.** Use an LLM to render and label the DAG, to recall the precise definitions and identifying assumptions of NDE/NIE/CDE and interventional effects, and to scaffold mediation code — the `mediation` package family, or a Vansteelandt–Daniel interventional-effects implementation. It is also useful for drafting sensitivity-analysis setups once you have stated your estimand.
-
-**When NOT to use AI here.** Do not let an LLM tell you that your three-pathway split is identified, or hand you a Baron–Kenny education share as if it were a causal quantity — both are the exact errors this chapter exists to prevent, and a model trained on a literature full of naive mediation will reproduce them confidently. Do not outsource the regulatory classification of a pathway; M1-versus-M3 status is a legal and domain judgment routed to counsel, not a model output.
-
-**LLM exercise (copy-paste prompt):**
-> "I am decomposing the effect of a sales message on prescribing into three correlated, mutually-causal mediators: educational attitude (M1), samples and co-pay cards (M2), and sponsored meals (M3). A colleague wants to use Baron–Kenny product-of-coefficients to report the share through education. Do three things: (1) explain structurally why the natural per-pathway split is generally not point-identified when mediators are correlated and affect each other; (2) name the cross-world assumption and explain why randomizing the message does not rescue the decomposition; (3) describe the interventional indirect effects approach (Vansteelandt & Daniel 2017) as the defensible alternative, stating exactly what interpretation I trade away. Do not produce a numeric education share."
-
-**CLI exercise.** In Claude Code, write a script that estimates the education share two ways on the synthetic data — naive Baron–Kenny with the mediators entered in two different orders, and a joint-indirect-versus-direct decomposition — and prints all results side by side with the known ground-truth pathway split. The purpose is to demonstrate non-identification: the two Baron–Kenny orderings should disagree, and both should miss ground truth, while the joint/direct split should be honest about what it does and does not pin down. If the AI-generated pipeline reports a stable, confident education share across orderings, treat that stability as a bug.
-
-**AI validation.** Validate any decomposition code against the synthetic dataset's known pathway structure. The correct behavior is *not* that the method recovers per-pathway shares — it should not, because they are not identified — but that the joint indirect effect is recovered and the naive per-pathway numbers visibly fail to match ground truth and disagree across orderings. This is the test of whether your implementation is honest about what the data can and cannot say.
-
-**AI Use Disclosure**
-
-*Write two sentences naming what an AI tool did in your work for this chapter and the one judgment it could not make. For example: "I used an LLM to scaffold the interventional-effects code and to draft the DAG; I determined myself that the natural three-pathway split is not point-identified in my specific dataset, because the model reproduced the Baron–Kenny calculation confidently without flagging the between-mediator confounding that makes it invalid here."*
 
 ---
 
@@ -193,3 +190,183 @@ I would soften the non-identification verdict if the three mediators turned out 
 
 9. *(Open-ended — the M1 measurement problem)* The educational pathway is the legally central quantity and the hardest to measure. The current proxy is rep free-text notes — the objection resolved, the clinical question answered. Propose a measurement strategy that would produce a stronger M1 signal: what data would you need, how would you extract it, what would validate it, and what assumption about the relationship between the proxy and the true educational attitude does your strategy require? Name the way this strategy could fail and the evidence that would reveal the failure.
    *What this tests: attacking the chapter's standing unresolved problem rather than accepting it as a fixed limitation.*
+
+---
+
+## Prompts
+
+### Figure 5.1 — One treatment, three correlated pathways
+
+Produce a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a mediation causal graph. Chart type: node-link DAG with a fan-out / fan-in topology. Data shape: cohort timing (Z) → message variant (D); D fans out to two mediators — educational attitude (M1) and samples/co-pay (M2); a separate external Open Payments public-data node feeds the reciprocity-meals mediator (M3); all three mediators fan in to NRx (Y). Note the deliberate asymmetry: there is no D→M3 edge — meals enter M3 from the public source only. Marks: rectangles for nodes (M3's external source dashed to mark a public/inferred input), directed arrows for edges, with M1 drawn in ink (permissive), M2 in gray #787878 (cautionary), M3 in red #C8102E (high-scrutiny). Channels: horizontal position = causal order; grayscale-distinct stroke color = regulatory tier; never red-green. No quantitative axes. Annotations: a three-swatch tier legend (permissive / cautionary / high-scrutiny) and a caption stating the per-pathway split is generally NOT point-identified, so any defensible decomposition reports interventional effects, not naive coefficient products. Brutalist palette, EB Garamond title / Inter body / JetBrains Mono labels. Deliverable: one HTML file.
+
+### Figure 5.2 — The assumption hierarchy
+
+Produce a single self-contained HTML file (inline CSS, D3 7.9.0 from the cdnjs CDN) rendering a layered hierarchy diagram. Chart type: three stacked horizontal layers, widest at the bottom, narrowing upward to signal decreasing credibility. Data shape: bottom layer = Total Effect (IV estimate), needs assumptions 1 and 3, secured by quasi-randomization; middle layer = single-mediator NDE/NIE, needs all 4 assumptions including the cross-world assumption, which is not secured; top layer = three-mediator per-pathway split, additionally needs no between-mediator confounding. Marks: three rectangles of decreasing width, two upward arrows between them indicating "rests on more assumptions," and right-edge labels "most credible" (bottom) and "least credible" (top). Channels: vertical stacking = dependency order; rectangle width = relative credibility; bottom ink, middle gray, top red stroke. No quantitative axes; no zero-baseline question. Annotations: caption that randomizing the message buys assumptions 1 and 3 only, so the per-pathway split is generally not point-identified and should be reported as interventional effects. Brutalist palette and font chains as above. Deliverable: one HTML file.
+
+---
+
+## Chapter 5 Exercises: The Causal Graph and the Three Pathways
+
+**Project:** The Causal Interview Bot
+**This chapter adds:** pathway-separation questions — bot stems that pull a rep's account of *why* a physician prescribed apart into education (M1), relationship-maintenance (M2), and reciprocity (M3), so the elicited prior tags each edge with its channel and regulatory color.
+
+### Exercise 1 — When to Use AI
+
+Three tasks well-matched to the model.
+
+First, **drafting rep-natural questions that separate the three channels.** You want questions that distinguish "she changed her mind about the drug" from "the samples made it easy to try" from "she felt she owed us after the lunch" — without naming any of them. *Why AI works here:* parallel rephrasing in a constrained register, option-generation you cull. **The tell:** you can judge which channel each question reaches.
+
+Second, **drafting the DAG-annotation template.** A structure for tagging each edge with its data source, measurement confidence, and regulatory color. *Why AI works here:* it is a formatting/scaffolding task over a structure you define. **The tell:** you can check the template against the chapter's three-color scheme.
+
+Third, **summarizing a transcript into candidate channel-tagged edges.** Hand it a mock rep account and ask for a first-pass list of which channel each claim implies. *Why AI works here:* first-pass structure extraction you then audit. **The tell:** the transcript sits beside the output for checking.
+
+### Exercise 2 — When NOT to Use AI
+
+Two judgments the model must not own.
+
+First, **deciding the per-pathway split — how much of the lift ran through education versus reciprocity.** *Why AI fails here:* the chapter's central result is that with correlated, mutually-causal mediators the natural per-pathway split is *generally not point-identified*. A model trained on a literature full of naive Baron–Kenny mediation will hand you a confident "60% through education" share that is an artifact of ordering. **The tell:** if the model's split is your *reason* for a budget recommendation, you have asserted a quantity that isn't identified; if you use it only to draft the questions that surface which channel a rep observed, you have used it as a tool.
+
+Second, **classifying a pathway's regulatory status (M1 green / M2 amber / M3 red).** *Why AI fails here:* this is a legal-and-values judgment routed to counsel, not a model output. **The tell:** the model can color the template; it cannot decide that reciprocity is the scrutinized channel for your brand. **Series connection:** this is a **T5 (Causal)** task — and where the regulatory/ethical line is drawn edges toward **T7 (Wisdom)**, because choosing which pathway a brand may lawfully drive is a values judgment about patient welfare, not an identification problem.
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** the bot's *pathway-separation question set* plus the *annotated-prior-DAG fragment* — questions that attribute an elicited effect to M1/M2/M3, and the DAG output format that tags each edge with channel, evidence, confidence, and regulatory color. This is the terminal artifact in draft: an annotated prior DAG fragment.
+
+**Tool:** the **Claude Project** ("Causal Interview Bot"). This is the capstone of the five-chapter arc — the Project now holds the elicitation spec, field disambiguation, ladder structure, and instrument probes, and this chapter assembles their output into the annotated prior DAG the bot exists to produce.
+
+**The Prompt:**
+
+```
+Building on everything already in this Project — the elicitation spec, the
+field-disambiguation questions, the ladder-structured bank, and the instrument
+probes — produce the bot's PATHWAY-SEPARATION layer and a sample ANNOTATED PRIOR
+DAG FRAGMENT.
+
+A message can move prescribing through three channels (do NOT use these names with
+the rep):
+- M1 EDUCATIONAL: the physician's clinical assessment changed; she learned
+  something. (Legally drivable.)
+- M2 RELATIONSHIP-MAINTENANCE: samples, co-pay cards, follow-up lowered the
+  friction of trying the drug. (Regulated, sometimes legitimate.)
+- M3 RECIPROCITY: a sense of social obligation after meals/gifts. (Heavily
+  scrutinized.)
+
+These channels are correlated and can affect each other, so the per-pathway split
+is generally NOT point-identified — the bot ELICITS which channel a rep observed; it
+does NOT compute a percentage split.
+
+Concrete scenario: Dr. Nwosu, an internist, increased prescribing after a quarter
+of visits that included a redesigned outcomes deck, sample drops, and two sponsored
+lunches.
+
+Produce:
+
+1. SIX rep-natural questions (no jargon — no "mediator," "pathway," "reciprocity,"
+   "education channel") that help separate WHY Dr. Nwosu changed: did her view of
+   the drug change, did samples make trying it easy, or did the relationship/meals
+   play a role? Two questions per channel. After each, a bracketed note to ME naming
+   the channel (M1/M2/M3) it targets.
+
+2. A sample ANNOTATED PRIOR DAG FRAGMENT for Dr. Nwosu in this format, one line per
+   edge:
+   EDGE: <from> -> <to> | channel: M1|M2|M3 | evidence: "<rep quote>" |
+   confidence: low|med|high | reg_color: green|amber|red | contradictions: <none|...>
+   Include at least one edge per channel, using plausible rep quotes consistent with
+   the scenario.
+
+Do NOT output a numeric pathway split or claim the education share. If you are
+tempted to, replace it with the joint-vs-direct framing and a note that the split is
+not identified.
+```
+
+**What this produces:** six channel-targeted rep questions and a worked annotated-prior-DAG fragment with per-edge channel, evidence, confidence, and regulatory color — a draft of the bot's terminal deliverable.
+
+**How to adapt:** *For your dataset:* replace Dr. Nwosu and the mixed-tactic quarter with a real case from your panel that plausibly spans channels. *For ChatGPT/Gemini:* prepend the Chapter 1–4 artifacts so the model has the full bot context. *For a Claude Project:* the channel definitions and the non-identification rule belong in the system prompt; send the Dr. Nwosu scenario and the two-part request as a message.
+
+**Connection to previous chapters:** Chapter 4 gave the bot probes for whether the effect is real (instrument validity); this chapter gives it questions for *which channel* the effect runs through, completing the elicitation: existence (Ch 4) plus mechanism (Ch 5), assembled into the annotated prior DAG.
+
+**Preview of next chapter:** the next chapters take this annotated prior DAG and feed it into the Living Model — the prior orients the data-derived equivalence class and seeds the parameterized causal model, which is exactly why the bot's per-edge evidence and confidence tags matter downstream.
+
+### Exercise 4 — CLI Exercise
+
+**What you're building:** a validator for the annotated-prior-DAG fragment — a script that enforces the chapter's discipline (every edge needs rep evidence; no edge claims a numeric split) — all on synthetic/mock transcripts.
+
+**Tool:** Claude Code — because the prior DAG is now a structured file the Living Model will consume, and its integrity rules (evidence-backed edges, no hallucinated channels) are best enforced by code. **Skill level:** Advanced.
+
+**Setup:**
+1. Prereq artifact: the annotated-prior-DAG fragment from Exercise 3.
+2. Tool: Claude Code in the bot repo.
+3. CLAUDE.md rule: synthetic-only; add "Every edge in the prior DAG must carry a rep-quoted evidence field; an edge with empty evidence is rejected."
+
+**The Task:**
+
+```
+Work only inside this repo, synthetic/mock data only. Two deliverables:
+
+1. Save the annotated-prior-DAG fragment I paste to priors/prior-dag.tsv with
+   columns: from, to, channel, evidence, confidence, reg_color, contradictions.
+
+2. Write checks/validate_prior_dag.py that loads priors/prior-dag.tsv and:
+   (a) FAILS (exit 1) any edge whose evidence field is empty or whitespace
+       (hallucinated edge — no rep grounding);
+   (b) FAILS any edge whose channel is not one of M1/M2/M3 or reg_color not one of
+       green/amber/red;
+   (c) FAILS the file if it finds any field anywhere containing a numeric percentage
+       attributed to a channel (e.g., "60% education") — the split is not identified
+       and must not be asserted;
+   (d) PRINTS a summary table of edges per channel and lists any rows flagged
+       "contradictions".
+
+Read/modify only these two files.
+
+Verification step: run the validator on the file as given (should pass), then on a
+copy where you blank one evidence field and add a "55% via M1" note (should exit 1
+with both reasons reported). Print both runs.
+```
+
+**Expected output:** the saved `prior-dag.tsv` and a `validate_prior_dag.py` that passes the clean fragment and exits 1 — naming both an empty-evidence edge and a forbidden numeric split — on the corrupted copy.
+
+**What to inspect:** confirm the validator actually rejects an evidence-less edge (read the check, not just the printout) and that the numeric-split guard fires on "55% via M1." Confirm contradictions are surfaced, not dropped.
+
+**If it goes wrong:** the common failure is the agent "helpfully" filling an empty evidence field with an invented quote. Recovery: re-run with "never fabricate evidence; an empty field must fail, not be filled," and confirm no quote in the file lacks a corresponding line in the source transcript.
+
+**CLAUDE.md note:** keep the "evidence-backed edges only, no numeric split" rule — it is what keeps the bot's prior honest when the Living Model consumes it.
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** the annotated-prior-DAG fragment from Exercise 3 — whether any edge is an LLM-supplied causal claim with no rep grounding, or asserts a pathway split the data can't identify.
+
+**Validation type:** Structured-data · **Risk level:** High — a hallucinated edge or an asserted education share enters the Living Model as a *prior the data is told to respect*, so a fabricated channel claim here biases every downstream estimate.
+
+**Setup:** use your Exercise 3 fragment. If clean, inject one flawed edge — a reciprocity edge with evidence "the meal clearly drove the prescribing" and confidence "high" — to confirm your checklist catches both the leading-the-witness origin and the over-claim.
+
+**The Validation Task:**
+
+```
+Validation Checklist — Chapter 5 (Annotated Prior DAG Fragment)
+
+For each edge, mark Pass / Fail / Cannot-determine on:
+
+1. Correctness — does the channel (M1/M2/M3) and reg_color match the evidence
+   quoted, rather than the model's assumption?
+2. Completeness — does every edge carry evidence, confidence, channel, reg_color,
+   and a contradictions field?
+3. Scope — does the fragment avoid any numeric per-pathway split (which is not
+   identified) and stay with channel attribution only?
+4. Chapter-specific: Evidence grounding — does every edge trace to a rep quote that
+   could plausibly come from the transcript, with NO edge invented by the model?
+5. Chapter-specific: Confidence honesty — are tacit / recognition-only claims tagged
+   low confidence rather than forced to "high"?
+6. Failure-mode check — hallucinated DAG edge AND correlation-asserted-as-cause:
+   scan for any edge whose evidence asserts a cause ("the meal drove it") rather
+   than reports an observation, and any edge with no genuine rep grounding (fluent,
+   well-formatted, and unsupported). Also flag any edge where you cannot determine
+   from the evidence whether the channel attribution is real (missing ground truth —
+   tag it Cannot-determine and low confidence, do not promote it).
+```
+
+**What to do with findings:** all pass — hand the fragment to the Living Model as a prior. One fail — strike or downgrade that edge and re-run. Multiple uncertain — the fragment is over-claiming; regenerate from Exercise 3 with the evidence-grounding and no-split rules emphasized.
+
+**AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 5 work and the one judgment it could not make. The judgment most specific here: whether the three-pathway split is identified in your data — because the model will reproduce a confident Baron–Kenny education share without flagging the between-mediator confounding that makes it invalid, and only you can refuse that number.*
+
+**Series connection:** the failure mode is **hallucinated DAG edge** (an LLM causal claim with no rep evidence) compounded by **correlation-asserted-as-cause**, which maps to **T5 (Causal)** — the human owns the structural prior — and edges into **T7 (Wisdom)** where the M1/M2/M3 regulatory line is a values judgment about whether the brand is doing medicine or buying obligation.

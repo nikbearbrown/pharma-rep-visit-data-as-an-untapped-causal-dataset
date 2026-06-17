@@ -1,0 +1,109 @@
+<!--
+  figure-title: Single rep-visit trace as a behavioral timeline, then stacked longitudinally
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 01-the-experiment-nobody-knows
+  Figure: 01
+  Type: timeline / small-multiple stack
+  Generated: 2026-06-16
+  Source: chapters/01-the-experiment-nobody-knows.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
+  <title id="fig-title-01">Single rep-visit trace as a behavioral timeline, then stacked longitudinally</title>
+  <desc>A single sales-call session shown as a row of slide-view blocks, width by dwell time, colored by reaction; one skip and one back-track. Below, the same physician stacked across six months as one longitudinal series.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="01-the-experiment-nobody-knows" figure-number="01" figure-title="Single rep-visit trace as a behavioral timeline, then stacked longitudinally" figure-slug="single-trace-then-stacked-longitudinal" figure-type="timeline / small-multiple stack" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/01-the-experiment-nobody-knows.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">One rep-visit trace, then six months of the same physician</text>
+
+  <!-- ====== TOP PANEL: single anchor trace ====== -->
+  <text x="32" y="54" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">One session — each block a slide viewed, width = dwell seconds</text>
+
+  <!-- shared left time origin -->
+  <line x1="72" y1="62" x2="72" y2="362" stroke="#2a1a0e" stroke-width="1.5"/>
+
+  <!-- anchor row: thicker / primary. blocks vary by dwell width, colored by reaction -->
+  <!-- positive #C8102E is reserved as the ONE highlighted series; reactions use ink/grays per palette (max two data colors). Positive = red highlight, negative = dark ink, neutral = mid gray, skipped = light gray -->
+  <g>
+    <rect x="72" y="68" width="64" height="30" fill="#787878" stroke="#2a1a0e" stroke-width="1.5"/>
+    <rect x="136" y="68" width="110" height="30" fill="#C8102E" stroke="#2a1a0e" stroke-width="1.5"/>
+    <rect x="246" y="68" width="40" height="30" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+    <!-- skipped slide: thin light-gray marker / gap -->
+    <rect x="286" y="68" width="10" height="30" fill="#D4D4D4" stroke="#2a1a0e" stroke-width="1"/>
+    <rect x="296" y="68" width="150" height="30" fill="#C8102E" stroke="#2a1a0e" stroke-width="1.5"/>
+    <rect x="446" y="68" width="56" height="30" fill="#787878" stroke="#2a1a0e" stroke-width="1.5"/>
+    <rect x="502" y="68" width="84" height="30" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
+  </g>
+  <!-- back-track: a single curved connector returning to an earlier block -->
+  <path d="M 544 98 C 544 128, 191 128, 191 100" fill="none" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="360" y="124" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">back-track to an earlier slide</text>
+
+  <!-- ====== STACKED PANEL: 5 months, same form, secondary weight ====== -->
+  <rect x="78" y="155" width="420" height="15" fill="#FFFFFF"/>
+  <text x="80" y="166" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Same physician, stacked month over month (one longitudinal series)</text>
+
+  <!-- month 2 -->
+  <g stroke="#D4D4D4" stroke-width="1">
+    <rect x="72" y="176" width="50" height="20" fill="#2a1a0e"/>
+    <rect x="122" y="176" width="120" height="20" fill="#C8102E"/>
+    <rect x="242" y="176" width="10" height="20" fill="#D4D4D4"/>
+    <rect x="252" y="176" width="70" height="20" fill="#787878"/>
+    <rect x="322" y="176" width="130" height="20" fill="#C8102E"/>
+    <rect x="452" y="176" width="60" height="20" fill="#2a1a0e"/>
+  </g>
+  <!-- month 3 -->
+  <g stroke="#D4D4D4" stroke-width="1">
+    <rect x="72" y="206" width="90" height="20" fill="#787878"/>
+    <rect x="162" y="206" width="70" height="20" fill="#2a1a0e"/>
+    <rect x="232" y="206" width="140" height="20" fill="#C8102E"/>
+    <rect x="372" y="206" width="10" height="20" fill="#D4D4D4"/>
+    <rect x="382" y="206" width="80" height="20" fill="#787878"/>
+    <rect x="462" y="206" width="60" height="20" fill="#2a1a0e"/>
+  </g>
+  <!-- month 4 -->
+  <g stroke="#D4D4D4" stroke-width="1">
+    <rect x="72" y="236" width="120" height="20" fill="#C8102E"/>
+    <rect x="192" y="236" width="50" height="20" fill="#2a1a0e"/>
+    <rect x="242" y="236" width="80" height="20" fill="#787878"/>
+    <rect x="322" y="236" width="100" height="20" fill="#C8102E"/>
+    <rect x="422" y="236" width="70" height="20" fill="#2a1a0e"/>
+  </g>
+  <!-- month 5 -->
+  <g stroke="#D4D4D4" stroke-width="1">
+    <rect x="72" y="266" width="60" height="20" fill="#2a1a0e"/>
+    <rect x="132" y="266" width="10" height="20" fill="#D4D4D4"/>
+    <rect x="142" y="266" width="150" height="20" fill="#C8102E"/>
+    <rect x="292" y="266" width="80" height="20" fill="#787878"/>
+    <rect x="372" y="266" width="100" height="20" fill="#2a1a0e"/>
+  </g>
+  <!-- month 6 -->
+  <g stroke="#D4D4D4" stroke-width="1">
+    <rect x="72" y="296" width="100" height="20" fill="#787878"/>
+    <rect x="172" y="296" width="130" height="20" fill="#C8102E"/>
+    <rect x="302" y="296" width="50" height="20" fill="#2a1a0e"/>
+    <rect x="352" y="296" width="90" height="20" fill="#787878"/>
+    <rect x="442" y="296" width="60" height="20" fill="#C8102E"/>
+  </g>
+
+  <!-- time arrow at the bottom of stacked region -->
+  <line x1="72" y1="332" x2="586" y2="332" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="72" y="350" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">within-call time</text>
+
+  <!-- ====== LEGEND (reaction states) ====== -->
+  <g font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">
+    <rect x="32" y="376" width="14" height="12" fill="#C8102E" stroke="#2a1a0e" stroke-width="1"/>
+    <text x="50" y="386">positive</text>
+    <rect x="120" y="376" width="14" height="12" fill="#787878" stroke="#2a1a0e" stroke-width="1"/>
+    <text x="138" y="386">neutral</text>
+    <rect x="200" y="376" width="14" height="12" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1"/>
+    <text x="218" y="386">negative</text>
+    <rect x="288" y="376" width="14" height="12" fill="#D4D4D4" stroke="#2a1a0e" stroke-width="1"/>
+    <text x="306" y="386">skipped</text>
+  </g>
+
+  <!-- caption: honesty -->
+  <text x="32" y="408" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Public/synthetic structure only. The reaction state is a rep-tapped reading, not a measured cognitive response.</text>
+</svg>

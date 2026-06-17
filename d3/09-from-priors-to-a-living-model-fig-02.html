@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 9.2 — Abduction, action, prediction</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+  @media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:transparent;color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .ttl{font-family:'EB Garamond','Garamond',Georgia,serif;}
+  .lbl{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;}
+  .panel{cursor:pointer;transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+  .panel:focus{outline:2px solid var(--color-ochre);outline-offset:2px;}
+  #tip{position:absolute;pointer-events:none;opacity:0;background:var(--color-white);color:var(--color-ink);border:1px solid var(--color-border);border-radius:4px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;max-width:230px;transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" role="status" aria-live="polite"></div></div>
+<script>
+const FALLBACK_DATA = {
+  panels:[
+    {id:"abduction",num:"1. ABDUCTION",cx:132,foot:"recover U_K, U_Rx",footColor:"var(--color-red)",
+     desc:"Recover the unit's exogenous noise U_K, U_Rx from observed evidence (message, knowledge lift, NRx)."},
+    {id:"action",num:"2. ACTION",cx:350,foot:"replace one equation",footColor:"var(--color-red)",
+     desc:"do(message = efficacy-first): surgically replace only the message equation, leaving Knowledge and NRx intact."},
+    {id:"prediction",num:"3. PREDICTION",cx:568,foot:"rank candidates",footColor:"var(--color-secondary)",
+     desc:"Run forward carrying the recovered U. Output is a ranking or bounds, not a point - often only partially identified."}
+  ]
+};
+const VB={w:700,h:440};
+const margin={top:48,right:40,bottom:56,left:64};
+const tip=d3.select("#tip");
+
+function node(g,cx,cy,r=16,stroke="var(--color-secondary)"){
+  g.append("circle").attr("cx",cx).attr("cy",cy).attr("r",r).attr("fill","var(--color-white)").attr("stroke",stroke).attr("stroke-width",1.5);
+}
+function ar(svg,x1,y1,x2,y2,color="var(--color-ink)",marker="url(#arrow)"){
+  svg.append("line").attr("x1",x1).attr("y1",y1).attr("x2",x2).attr("y2",y2).attr("stroke",color).attr("stroke-width",1.5).attr("marker-end",marker);
+}
+
+function draw(){
+  d3.select("#wrap svg").remove();
+  const svg=d3.select("#wrap").append("svg")
+    .attr("viewBox",`0 0 ${VB.w} ${VB.h}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("The counterfactual procedure: abduction, action, prediction on one model");
+  svg.append("desc").attr("id","chart-desc").text("Three panels of the same three-node graph: abduction recovers unit noise, action replaces one equation, prediction runs forward to a ranked list.");
+
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  defs.append("marker").attr("id","arrow-red").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+
+  svg.append("text").attr("class","ttl").attr("x",32).attr("y",34).attr("font-size",14).attr("fill","var(--color-ink)")
+    .text("One model, three operations: abduction, action, prediction");
+
+  const px=[32,250,468];
+  const g=svg.append("g");
+  FALLBACK_DATA.panels.forEach((d,i)=>{
+    const pg=g.append("g").attr("class","panel").attr("tabindex",0).attr("role","button").attr("aria-label",d.num+". "+d.desc);
+    pg.append("rect").attr("x",px[i]).attr("y",56).attr("width",200).attr("height",260).attr("fill","var(--color-fill)").attr("stroke","var(--color-border)").attr("stroke-width",0.75);
+    pg.append("text").attr("class","lbl").attr("x",d.cx).attr("y",76).attr("text-anchor","middle").attr("font-size",12).attr("fill","var(--color-ink)").text(d.num);
+    pg.append("text").attr("class","mono").attr("x",d.cx).attr("y",286).attr("text-anchor","middle").attr("font-size",11).attr("fill",d.footColor).text(d.foot);
+    pg.on("mousemove",(e)=>showTip(e,d.desc)).on("mouseleave",hideTip)
+      .on("focus",function(){const r=this.getBoundingClientRect();tip.style("opacity",1).style("left",(r.left+window.scrollX)+"px").style("top",(r.bottom+window.scrollY+6)+"px").text(d.desc);})
+      .on("blur",hideTip)
+      .on("keydown",(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip(e,d.desc);}});
+  });
+
+  // PANEL 1: abduction
+  node(g,132,120);node(g,92,214);node(g,172,214);
+  ar(g,124,134,100,200);ar(g,140,134,164,200);
+  g.append("circle").attr("cx",62).attr("cy",240).attr("r",7).attr("fill","var(--color-white)").attr("stroke","var(--color-red)").attr("stroke-width",1.5);
+  g.append("circle").attr("cx",202).attr("cy",240).attr("r",7).attr("fill","var(--color-white)").attr("stroke","var(--color-red)").attr("stroke-width",1.5);
+  ar(g,84,226,68,236,"var(--color-red)","url(#arrow-red)");
+  ar(g,180,226,196,236,"var(--color-red)","url(#arrow-red)");
+
+  // PANEL 2: action
+  node(g,350,120);node(g,310,214);node(g,390,214);
+  g.append("line").attr("x1",350).attr("y1",78).attr("x2",350).attr("y2",90).attr("stroke","var(--color-secondary)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  g.append("rect").attr("x",324).attr("y",92).attr("width",52).attr("height",16).attr("fill","var(--color-white)").attr("stroke","var(--color-red)").attr("stroke-width",1.5);
+  g.append("text").attr("class","mono").attr("x",350).attr("y",105).attr("text-anchor","middle").attr("font-size",11).attr("fill","var(--color-red)").text("do");
+  ar(g,342,134,318,200);ar(g,358,134,382,200);
+
+  // PANEL 3: prediction
+  node(g,540,120);node(g,540,214);
+  g.append("circle").attr("cx",510).attr("cy",120).attr("r",7).attr("fill","var(--color-white)").attr("stroke","var(--color-red)").attr("stroke-width",1.5);
+  ar(g,540,136,540,198);
+  [[588,190,64],[588,208,50],[588,226,38]].forEach(b=>g.append("rect").attr("x",b[0]).attr("y",b[1]).attr("width",b[2]).attr("height",14).attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1));
+  ar(g,556,214,584,197);
+
+  const cap=["The same model is transformed three times: recover the unit's exogenous noise, surgically replace ONE equation with the",
+    "intervention (all other mechanisms intact), then run forward carrying that noise. Output is a RANKING / bounds, not a point -",
+    "counterfactuals are only partially identified."];
+  cap.forEach((t,i)=>svg.append("text").attr("class","lbl").attr("x",32).attr("y",346+i*18).attr("font-size",11).attr("fill","var(--color-secondary)").text(t));
+  svg.append("text").attr("class","lbl").attr("x",32).attr("y",424).attr("font-size",10).attr("fill","var(--color-secondary)").attr("letter-spacing","0.08em").text("SOURCE: CH.09 FROM PRIORS TO A LIVING MODEL");
+}
+function showTip(e,txt){tip.style("opacity",1).style("left",(e.pageX+12)+"px").style("top",(e.pageY+12)+"px").text(txt);}
+function hideTip(){tip.style("opacity",0);}
+draw();
+if(window.ResizeObserver){new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));}
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The peer-influence puzzle: three equivalent stories</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+  @media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{display:block;width:100%;height:auto;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .banner{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-red);}
+  .panel-label{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .node-label{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .note{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .source{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:10px;fill:var(--color-secondary);letter-spacing:0.08em;}
+  .node{cursor:pointer;}
+  .node:focus{outline:none;}
+  .node:focus circle{stroke-width:3;}
+  #tt{position:absolute;pointer-events:none;opacity:0;background:var(--color-ink);color:var(--color-white);
+      font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;padding:6px 8px;border-radius:4px;
+      transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);max-width:220px;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"></div>
+<div id="tt"></div>
+<script>
+const FALLBACK_DATA = {
+  banner:"All three reproduce: corr(peer exposure, NRx) > 0",
+  panels:[
+    { id:"contagion", label:"CONTAGION", cx:132,
+      tip:"Contagion: peer exposure → NRx. The colleague's switch moves the physician. The story the brand wants true.",
+      nodes:[{id:"peer",x:80,y:190,dashed:false},{id:"NRx",x:184,y:190,dashed:false}],
+      edges:[{s:"peer",t:"NRx"}], note:null },
+    { id:"homophily", label:"LATENT HOMOPHILY", cx:350,
+      tip:"Latent homophily: a hidden trait drives both peer exposure and NRx. No influence at all.",
+      nodes:[{id:"trait",x:350,y:130,dashed:true},{id:"peer",x:296,y:230,dashed:false},{id:"NRx",x:404,y:230,dashed:false}],
+      edges:[{s:"trait",t:"peer"},{s:"trait",t:"NRx"}], note:"dashed = unobserved" },
+    { id:"reverse", label:"REVERSE CAUSATION", cx:568,
+      tip:"Reverse causation: NRx → peer exposure. High prescribers become visible and get labeled influencers.",
+      nodes:[{id:"peer",x:516,y:190,dashed:false},{id:"NRx",x:620,y:190,dashed:false}],
+      edges:[{s:"NRx",t:"peer"}], note:null }
+  ]
+};
+const W=700,H=420,R=18;
+const tt=d3.select("#tt");
+function showTip(html,x,y){tt.html(html).style("left",(x+14)+"px").style("top",(y+14)+"px").style("opacity",1);}
+function hideTip(){tt.style("opacity",0);}
+
+function draw(data){
+  const wrap=d3.select("#wrap");wrap.selectAll("*").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img")
+    .attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Three causal stories that fit the same peer-prescribing correlation");
+  svg.append("desc").attr("id","chart-desc").text("Contagion, latent homophily, and reverse causation each reproduce the same positive correlation between peer exposure and NRx, so observational data cannot choose among them.");
+
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+    .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+
+  svg.append("rect").attr("width",W).attr("height",H).attr("fill","var(--color-white)").attr("aria-hidden","true");
+  svg.append("text").attr("class","fig-title").attr("x",32).attr("y",34)
+    .text("One correlation, three causal stories the data cannot tell apart");
+  svg.append("text").attr("class","banner").attr("x",32).attr("y",60).text(data.banner);
+
+  const frameX=[32,250,468];
+  svg.selectAll("rect.frame").data(frameX).join("rect").attr("class","frame")
+    .attr("x",d=>d).attr("y",74).attr("width",200).attr("height",200)
+    .attr("fill","var(--color-fill)").attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("aria-hidden","true");
+
+  svg.selectAll("text.plabel").data(data.panels).join("text").attr("class","panel-label")
+    .attr("x",d=>d.cx).attr("y",94).attr("text-anchor","middle").text(d=>d.label);
+
+  data.panels.forEach(p=>{
+    const nmap={};p.nodes.forEach(n=>nmap[n.id]=n);
+    const g=svg.append("g");
+    g.selectAll("line.edge").data(p.edges).join("line").attr("class","edge")
+      .each(function(e){
+        const a=nmap[e.s],b=nmap[e.t];
+        const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+        d3.select(this)
+          .attr("x1",a.x+ux*(R+2)).attr("y1",a.y+uy*(R+2))
+          .attr("x2",b.x-ux*(R+2)).attr("y2",b.y-uy*(R+2))
+          .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+      });
+    const ng=g.selectAll("g.node").data(p.nodes).join("g").attr("class","node")
+      .attr("tabindex",0).attr("role","img")
+      .attr("aria-label",d=>`${d.id}${d.dashed?" (unobserved)":""} in the ${p.label.toLowerCase()} story. ${p.tip}`)
+      .on("mouseenter",(ev,d)=>showTip(p.tip,ev.clientX,ev.clientY))
+      .on("mousemove",(ev,d)=>showTip(p.tip,ev.clientX,ev.clientY))
+      .on("mouseleave",hideTip)
+      .on("focus",function(ev,d){const r=this.getBoundingClientRect();showTip(p.tip,r.left,r.top);})
+      .on("blur",hideTip)
+      .on("keydown",function(ev,d){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();const r=this.getBoundingClientRect();showTip(p.tip,r.left,r.top);}});
+    ng.append("circle").attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",R)
+      .attr("fill","var(--color-white)").attr("stroke","var(--color-secondary)").attr("stroke-width",1.5)
+      .attr("stroke-dasharray",d=>d.dashed?"5 4":null);
+    ng.append("text").attr("class","node-label").attr("x",d=>d.x).attr("y",d=>d.y+4)
+      .attr("text-anchor","middle").text(d=>d.id);
+    if(p.note){g.append("text").attr("class","note").attr("x",p.cx).attr("y",262).attr("text-anchor","middle").text(p.note);}
+  });
+
+  const caps=[
+    "The panels are drawn identically on purpose: each reproduces the same observed correlation, so observational data alone never resolves",
+    "which story is true. The data fixes the equivalence class, not the graph (Verma-Pearl). A rep's account is what breaks the tie -",
+    "temporal order or domain knowledge orients the edge the correlation leaves ambiguous."
+  ];
+  svg.selectAll("text.caption").data(caps).join("text").attr("class","caption")
+    .attr("x",32).attr("y",(d,i)=>308+i*18).text(d=>d);
+  svg.append("text").attr("class","source").attr("x",32).attr("y",404)
+    .text("SOURCE: CH.07 MARKOV EQUIVALENCE - WHY THE DATA CAN'T DECIDE");
+}
+draw(FALLBACK_DATA);
+new ResizeObserver(()=>draw(FALLBACK_DATA)).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

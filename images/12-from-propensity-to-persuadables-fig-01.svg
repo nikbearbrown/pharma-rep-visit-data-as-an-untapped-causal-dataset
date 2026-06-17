@@ -1,0 +1,83 @@
+<!--
+  Figure: Persuadables vs Sure-Things 2x2
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 12-from-propensity-to-persuadables
+  Figure: 01
+  Type: Conceptual grid (2x2)
+  Generated: 2026-06-16
+  Source: chapters/12-from-propensity-to-persuadables.md
+-->
+<svg viewBox="0 0 700 480" role="img" aria-labelledby="fig-title-01" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-01">Persuadables versus Sure-Things: propensity and persuadability order the same population differently</title>
+  <desc>A two-axis grid. The horizontal axis is prescribing propensity, low to high. The vertical axis is persuadability, negative through zero to positive, with an explicit zero line. The plane is split into a positive band, a zero band, and a negative band, and into low and high propensity columns. Five named populations occupy the zones: Persuadables (high propensity, positive), Hidden Persuadables (low propensity, positive), Sure Things (high propensity, zero), Lost Causes (low propensity, zero), and Sleeping Dogs (the negative band). One arrow runs along the propensity axis for Next-Best-Action selection; a second runs along the persuadability axis for Living-Model selection.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="12-from-propensity-to-persuadables" figure-number="01" figure-title="Persuadables vs Sure-Things 2x2" figure-slug="persuadables-vs-sure-things-2x2" figure-type="Conceptual grid (2x2)" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/12-from-propensity-to-persuadables.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Two orderings of the same population: baseline volume vs causal responsiveness</text>
+
+  <!-- Plot frame: x in [120, 600], y in [64, 376] -->
+  <rect x="120" y="64" width="480" height="312" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- Horizontal mid column divider (propensity split) -->
+  <line x1="360" y1="64" x2="360" y2="376" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+
+  <!-- Band boundaries: positive band 64-168, zero band 168-272, negative band 272-376 -->
+  <!-- Positive / zero boundary -->
+  <line x1="120" y1="168" x2="600" y2="168" stroke="#D4D4D4" stroke-width="0.75"/>
+  <!-- Zero gridline (emphasised) -->
+  <line x1="120" y1="220" x2="600" y2="220" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="124" y="216" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">tau = 0</text>
+  <!-- Zero / negative boundary -->
+  <line x1="120" y1="272" x2="600" y2="272" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- Zone fills -->
+  <!-- Hidden Persuadables: low propensity, positive band -->
+  <rect x="124" y="68" width="232" height="96" fill="#787878"/>
+  <!-- Persuadables (target): high propensity, positive band -->
+  <rect x="364" y="68" width="232" height="96" fill="#C8102E"/>
+  <!-- Lost Causes: low propensity, zero band -->
+  <rect x="124" y="172" width="232" height="96" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <!-- Sure Things (the trap, waste): high propensity, zero band -->
+  <rect x="364" y="172" width="232" height="96" fill="#ADADAD"/>
+  <!-- Sleeping Dogs: negative band spanning full width -->
+  <rect x="124" y="276" width="472" height="96" fill="#2a1a0e"/>
+
+  <!-- Zone labels -->
+  <text x="240" y="112" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">Hidden Persuadables</text>
+  <text x="240" y="128" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#D4D4D4" text-anchor="middle">positive, missed by propensity rank</text>
+
+  <text x="480" y="112" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">Persuadables [TARGET]</text>
+  <text x="480" y="128" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">detailing causes the lift</text>
+
+  <text x="240" y="200" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">Lost Causes</text>
+
+  <text x="480" y="218" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">Sure Things [the propensity trap]</text>
+  <text x="480" y="234" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">would prescribe anyway, spend wasted</text>
+
+  <text x="232" y="320" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle">Sleeping Dogs</text>
+  <text x="232" y="336" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#D4D4D4" text-anchor="middle">reduces prescribing (negative tau)</text>
+
+  <!-- Axis labels -->
+  <text x="360" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">prescribing propensity  P(NRx | X)</text>
+  <text x="118" y="56" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="start">low                                                              high</text>
+  <text x="36" y="220" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" transform="rotate(-90 36 220)" text-anchor="middle">persuadability  tau(x)   -  to  +</text>
+
+  <!-- Selection-direction arrows -->
+  <!-- NBA: along propensity axis (horizontal) -->
+  <line x1="124" y1="392" x2="356" y2="392" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="124" y="424" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">NBA ranks along propensity (high-volume sure-things) -&gt; waste</text>
+  <!-- Living Model: along persuadability axis (vertical), placed at right -->
+  <line x1="620" y1="372" x2="620" y2="80" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="640" y="220" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" transform="rotate(-90 640 220)" text-anchor="middle">Living Model ranks PERSUADABLES (causal responsiveness)</text>
+
+  <!-- Caption -->
+  <text x="32" y="448" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The two selection directions are orthogonal. The claim that a Living-Model list differs SYSTEMATICALLY from</text>
+  <text x="32" y="463" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">an NBA list is a TESTABLE hypothesis (held-out Qini comparison), not a settled fact. Conceptual partition, not data.</text>
+
+  <!-- Source line -->
+  <text x="32" y="476" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.12 FROM PROPENSITY TO PERSUADABLES</text>
+</svg>

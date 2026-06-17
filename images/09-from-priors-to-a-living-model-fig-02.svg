@@ -1,0 +1,82 @@
+<!--
+  Title: Abduction -> Action -> Prediction
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 09-from-priors-to-a-living-model
+  Figure: 02
+  Type: Mechanism cross-section (MC)
+  Generated: 2026-06-16
+  Source: chapters/09-from-priors-to-a-living-model.md
+-->
+<svg viewBox="0 0 700 440" role="img" aria-labelledby="fig-title-02" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-02">The counterfactual procedure: abduction, action, prediction on one model</title>
+  <desc>Three panels showing the same three-node graph in three states. Abduction recovers the unit's noise terms from observed evidence, shown by a back-inference arrow to two noise symbols in red. Action replaces the top node's incoming mechanism with an intervention box, severing only its upstream edge while others stay intact. Prediction runs the model forward carrying the recovered noise to a ranked list of candidate outputs, not a single point.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="09-from-priors-to-a-living-model" figure-number="02" figure-title="Abduction to Action to Prediction" figure-slug="abduction-action-prediction" figure-type="Mechanism cross-section" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/09-from-priors-to-a-living-model.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#C8102E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="440" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">One model, three operations: abduction, action, prediction</text>
+
+  <!-- panel frames -->
+  <rect x="32" y="56" width="200" height="260" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="250" y="56" width="200" height="260" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="468" y="56" width="200" height="260" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- panel labels -->
+  <text x="132" y="76" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">1. ABDUCTION</text>
+  <text x="350" y="76" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">2. ACTION</text>
+  <text x="568" y="76" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">3. PREDICTION</text>
+
+  <!-- ===== PANEL 1: ABDUCTION ===== nodes: top(132,120) mid(96,210) out(168,210) -->
+  <circle cx="132" cy="120" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="92" cy="214" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="172" cy="214" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <line x1="124" y1="134" x2="100" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="140" y1="134" x2="164" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- recovered noise symbols (red) on two nodes -->
+  <circle cx="62" cy="240" r="7" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <circle cx="202" cy="240" r="7" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <!-- back-inference arrows from nodes to noise (red) -->
+  <line x1="84" y1="226" x2="68" y2="236" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <line x1="180" y1="226" x2="196" y2="236" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <text x="132" y="286" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">recover unit noise</text>
+
+  <!-- ===== PANEL 2: ACTION ===== same graph, intervention box on top node severs its upstream -->
+  <circle cx="350" cy="120" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="310" cy="214" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="390" cy="214" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <!-- severed upstream edge stub (gray dashed) above the intervention box -->
+  <line x1="350" y1="78" x2="350" y2="90" stroke="#999999" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- intervention box sitting on top node (red) -->
+  <rect x="324" y="92" width="52" height="16" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <rect x="343" y="95" width="14" height="11" fill="#FFFFFF"/>
+  <text x="350" y="105" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">do</text>
+  <!-- other edges intact -->
+  <line x1="342" y1="134" x2="318" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="358" y1="134" x2="382" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="350" y="286" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">replace one equation</text>
+
+  <!-- ===== PANEL 3: PREDICTION ===== forward run carrying noise, ranked output -->
+  <circle cx="540" cy="120" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="540" cy="214" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <!-- carried noise symbol (red) -->
+  <circle cx="510" cy="120" r="7" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <line x1="540" y1="136" x2="540" y2="198" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- ranked list shape beside output -->
+  <rect x="588" y="190" width="64" height="14" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <rect x="588" y="208" width="50" height="14" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <rect x="588" y="226" width="38" height="14" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <line x1="556" y1="214" x2="584" y2="197" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="568" y="286" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">rank candidates</text>
+
+  <!-- caption -->
+  <text x="32" y="346" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The same model is transformed three times: recover the unit's exogenous noise, surgically replace ONE equation with the intervention</text>
+  <text x="32" y="364" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">(all other mechanisms intact), then run forward carrying that noise. Output is a RANKING / bounds, not a point - counterfactuals are only</text>
+  <text x="32" y="382" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">partially identified. This abduction-action-prediction loop is what makes the model causal rather than predictive.</text>
+
+  <!-- source line -->
+  <text x="32" y="424" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.09 FROM PRIORS TO A LIVING MODEL</text>
+</svg>

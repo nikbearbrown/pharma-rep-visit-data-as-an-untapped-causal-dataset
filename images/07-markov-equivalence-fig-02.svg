@@ -1,0 +1,71 @@
+<!--
+  Title: The CPDAG two-color map (compelled vs reversible edges)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 07-markov-equivalence
+  Figure: 02
+  Type: Systems diagram (VG)
+  Generated: 2026-06-16
+  Source: chapters/07-markov-equivalence.md
+-->
+<svg viewBox="0 0 700 420" role="img" aria-labelledby="fig-title-02" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-02">A CPDAG: directed compelled edges in black, undirected reversible edges in red</title>
+  <desc>A six-node completed partially directed acyclic graph. Some edges are directed with black arrowheads - these are compelled, pointing the same way in every member of the equivalence class. Others are plain red line segments with no arrowhead - these are reversible, edges the data leaves open for an expert to orient.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="07-markov-equivalence" figure-number="02" figure-title="The CPDAG two-color map (compelled vs reversible edges)" figure-slug="cpdag-two-color-map" figure-type="Systems diagram" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/07-markov-equivalence.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">The CPDAG: what the data has settled, and what it leaves open</text>
+
+  <!-- plot area -->
+  <rect x="32" y="56" width="420" height="280" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- layered layout: 3 layers, 2 nodes each. Layer x = 110, 240, 374 ; rows y = 130, 250 -->
+  <!-- EDGES first (drawn under nodes) -->
+  <!-- Compelled (directed, black): n1->n3, n2->n3, n3->n5 -->
+  <line x1="128" y1="138" x2="216" y2="234" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="124" y1="256" x2="216" y2="252" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="258" y1="244" x2="350" y2="148" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- Reversible (undirected, red plain segments, no arrowhead): n3-n4(=n5? ) define: n4 upper-right, n6 lower-right -->
+  <line x1="258" y1="130" x2="350" y2="130" stroke="#C8102E" stroke-width="1.5"/>
+  <line x1="258" y1="256" x2="350" y2="256" stroke="#C8102E" stroke-width="1.5"/>
+  <line x1="368" y1="148" x2="368" y2="234" stroke="#C8102E" stroke-width="1.5"/>
+
+  <!-- NODES (uniform gray circles) -->
+  <!-- layer 1 -->
+  <circle cx="110" cy="130" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="110" cy="250" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <!-- layer 2 -->
+  <circle cx="240" cy="130" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="240" cy="250" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <!-- layer 3 -->
+  <circle cx="368" cy="130" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="368" cy="250" r="16" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+
+  <!-- LEGEND box -->
+  <rect x="476" y="80" width="192" height="120" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="488" y="100" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">EDGE TYPES</text>
+  <!-- compelled sample -->
+  <line x1="488" y1="126" x2="528" y2="126" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="540" y="123" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">compelled</text>
+  <text x="540" y="137" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">(data settled)</text>
+  <!-- reversible sample -->
+  <line x1="488" y1="166" x2="528" y2="166" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="540" y="163" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#C8102E">reversible</text>
+  <text x="540" y="177" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">(data silent)</text>
+
+  <!-- count annotation -->
+  <text x="476" y="232" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">3 reversible edges</text>
+  <text x="476" y="250" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">await orientation</text>
+
+  <!-- caption -->
+  <text x="32" y="356" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Black edges are compelled - identical across every graph in the Markov-</text>
+  <text x="32" y="370" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">equivalence class. Red segments are reversible: the data is silent on their</text>
+  <text x="32" y="384" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">direction. The CPDAG names the whole class at once (Verma-Pearl); rep</text>
+  <text x="32" y="398" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">knowledge is what orients the red edges.</text>
+
+  <!-- source line -->
+  <text x="32" y="410" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.07 MARKOV EQUIVALENCE - WHY THE DATA CAN'T DECIDE</text>
+</svg>

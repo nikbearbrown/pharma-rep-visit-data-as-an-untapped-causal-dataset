@@ -1,0 +1,83 @@
+<!--
+  figure-title: DML three-box residual-on-residual flow
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 11-meals-causal-forest-and-clickstream-dml
+  Figure: 02
+  Type: Process flow
+  Generated: 2026-06-16
+  Source: chapters/11-meals-causal-forest-and-clickstream-dml.md
+-->
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">Double machine learning: residual-on-residual flow</title>
+  <desc>A horizontal three-box flow. Box one regresses outcome Y on controls Z with machine learning, emitting an outcome residual. Box two regresses treatment D on the same controls Z, emitting a treatment residual. The two residuals converge into box three, which regresses outcome residual on treatment residual to produce the causal parameter. A discipline band beneath splits two jobs: the diagram chooses Z, the machine learning adjusts for Z. A blocked terminator on the Z input warns that a post-treatment variable in Z creates structural bias that cross-fitting cannot repair.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="11-meals-causal-forest-and-clickstream-dml" figure-number="02" figure-title="Double machine learning: residual-on-residual flow" figure-slug="dml-three-box-residual-flow" figure-type="Process flow" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/11-meals-causal-forest-and-clickstream-dml.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Double ML: partial out the controls twice, then regress the leftovers</text>
+  <text x="32" y="46" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">The estimate is only as honest as the choice of what goes into Z</text>
+
+  <!-- Controls input Z -->
+  <rect x="32" y="120" width="92" height="44" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="78" y="140" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">controls Z</text>
+  <text x="78" y="155" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">(pre-treatment)</text>
+  <!-- blocked terminator warning on Z -->
+  <line x1="78" y1="120" x2="78" y2="104" stroke="#C8102E" stroke-width="1.5"/>
+  <line x1="68" y1="104" x2="88" y2="104" stroke="#C8102E" stroke-width="2.5"/>
+  <text x="98" y="100" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#C8102E">no post-treatment vars</text>
+
+  <!-- Z feeds box 1 and box 2 -->
+  <line x1="124" y1="132" x2="184" y2="100" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <line x1="124" y1="150" x2="184" y2="196" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Box 1: Y ~ Z -->
+  <rect x="188" y="76" width="160" height="48" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="268" y="96" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">1. regress Y on Z (ML)</text>
+  <text x="268" y="112" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">emits outcome residual</text>
+
+  <!-- Box 2: D ~ Z -->
+  <rect x="188" y="172" width="160" height="48" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="268" y="192" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">2. regress D on Z (ML)</text>
+  <text x="268" y="208" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">emits treatment residual</text>
+
+  <!-- residuals converge into box 3 -->
+  <line x1="348" y1="100" x2="408" y2="100" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="348" y1="196" x2="408" y2="196" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="408" y1="100" x2="408" y2="196" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="408" y1="148" x2="436" y2="148" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="356" y="92" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">resid Y</text>
+  <text x="356" y="212" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">resid D</text>
+
+  <!-- Box 3: residual on residual -->
+  <rect x="440" y="124" width="160" height="48" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="520" y="144" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">3. resid Y on resid D</text>
+  <text x="520" y="160" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">recovers causal slope</text>
+  <line x1="600" y1="148" x2="628" y2="148" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- theta terminal -->
+  <rect x="600" y="196" width="68" height="44" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="634" y="218" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E">theta</text>
+  <text x="634" y="232" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">estimate</text>
+  <line x1="628" y1="148" x2="634" y2="148" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="634" y1="148" x2="634" y2="196" stroke="#2a1a0e" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- discipline band: two roles -->
+  <rect x="32" y="268" width="636" height="56" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <line x1="350" y1="268" x2="350" y2="324" stroke="#D4D4D4" stroke-width="1"/>
+  <text x="44" y="288" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">The diagram chooses Z</text>
+  <text x="44" y="306" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">specify the SCM first; pick legitimate controls</text>
+  <rect x="44" y="312" width="20" height="6" fill="#2a1a0e"/>
+  <text x="362" y="288" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">The ML adjusts for Z</text>
+  <text x="362" y="306" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">flexibly fit nuisance; cross-fit out overfit bias</text>
+  <rect x="362" y="312" width="20" height="6" fill="#787878"/>
+
+  <!-- Caption / honesty caveat -->
+  <text x="32" y="358" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Double ML on clickstream must specify the SCM FIRST. Reaction and dwell are post-treatment</text>
+  <text x="32" y="373" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">colliders; if one enters Z, the estimate is structurally biased and cross-fitting cannot save you.</text>
+  <text x="32" y="388" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">This is Project 3: needs proprietary or SYNTHETIC data (the firewall). Veeva CRM clickstream</text>
+  <text x="32" y="403" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">fields [inferred, dated mid-2026].</text>
+  <text x="32" y="432" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: DML RESIDUAL-ON-RESIDUAL MECHANICS AS DESCRIBED IN CHAPTER 11</text>
+</svg>

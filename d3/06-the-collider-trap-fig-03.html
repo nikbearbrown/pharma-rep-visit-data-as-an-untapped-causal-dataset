@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 6.3 — The consent collider</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+      --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}
+  }
+  html,body{margin:0;padding:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .subtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-secondary);}
+  .node{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-ink);}
+  .nbig{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .spur{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-red);}
+  .tooltip{position:absolute;pointer-events:none;background:var(--color-white);border:1px solid var(--color-border);
+    padding:4px 8px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;color:var(--color-ink);opacity:0;}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" class="tooltip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA={
+  nodes:[
+    {id:"T",lines:["rep engagement /","visit frequency"],tag:"treatment-side",x:130,y:138,w:180,h:56},
+    {id:"O",lines:["industry-skepticism /","prescribing propensity"],tag:"outcome-side",x:570,y:138,w:180,h:56},
+    {id:"S",lines:["consent","(S = 1)"],tag:"selection node",x:350,y:228,w:120,h:56,conditioned:true}
+  ]
+};
+const W=700,H=420;
+const wrap=d3.select("#wrap");const tip=d3.select("#tip");
+function draw(){
+  wrap.selectAll("svg").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Consent is a selection collider: analyzing the consenting subsample conditions on S");
+  svg.append("desc").attr("id","chart-desc").text("A treatment-side cause and an outcome-side cause both point into a central consent node S=1; analyzing the consenting subsample conditions on S and opens a spurious message-to-NRx path.");
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  defs.append("marker").attr("id","arrowred").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+  svg.append("rect").attr("x",0).attr("y",0).attr("width",W).attr("height",H).attr("fill","var(--color-white)");
+
+  svg.append("text").attr("class","title").attr("x",32).attr("y",30).text("The selection collider is invisible in the data -- it lives in who is absent");
+  svg.append("text").attr("class","subtitle").attr("x",32).attr("y",50).text("Consent is a common effect of treatment-side and outcome-side causes");
+
+  // node tags
+  svg.append("text").attr("class","mono").attr("x",130).attr("y",102).attr("text-anchor","middle").text("treatment-side");
+  svg.append("text").attr("class","mono").attr("x",570).attr("y",102).attr("text-anchor","middle").text("outcome-side");
+
+  const g=svg.selectAll("g.nd").data(FALLBACK_DATA.nodes).join("g").attr("class","nd")
+    .attr("tabindex",0).attr("aria-label",d=>d.lines.join(" ")+" ("+d.tag+")");
+  g.append("rect").attr("x",d=>d.x-d.w/2).attr("y",d=>d.y-d.h/2).attr("width",d=>d.w).attr("height",d=>d.h).attr("rx",0)
+    .attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5)
+    .on("mousemove",(e,d)=>show(e,d.lines.join(" "))).on("mouseleave",hide)
+    .on("focus",function(e,d){show2(this,d.lines.join(" "))}).on("blur",hide);
+  // red dashed conditioning box around S
+  const S=FALLBACK_DATA.nodes.find(n=>n.id==="S");
+  svg.append("rect").attr("x",S.x-S.w/2-8).attr("y",S.y-S.h/2-8).attr("width",S.w+16).attr("height",S.h+16).attr("fill","none").attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  g.each(function(d){
+    const s=d3.select(this);const cls=d.id==="S"?"nbig":"node";
+    s.append("text").attr("class",cls).attr("x",d.x).attr("y",d.y-3).attr("text-anchor","middle").text(d.lines[0]);
+    s.append("text").attr("class",cls).attr("x",d.x).attr("y",d.y+13).attr("text-anchor","middle").text(d.lines[1]);
+  });
+
+  // arrows into S
+  svg.append("line").attr("x1",200).attr("y1",160).attr("x2",294).attr("y2",206).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+  svg.append("line").attr("x1",500).attr("y1",160).attr("x2",406).attr("y2",206).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)");
+
+  // observed sample label
+  svg.append("text").attr("class","caption").attr("x",350).attr("y",294).attr("text-anchor","middle").text("observed sample = only S = 1 physicians (opt-ins)");
+
+  // spurious induced path
+  svg.append("path").attr("d","M 220 138 Q 350 176 480 138").attr("fill","none").attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4").attr("marker-end","url(#arrowred)");
+  svg.append("rect").attr("x",300).attr("y",160).attr("width",100).attr("height",15).attr("fill","var(--color-white)");
+  svg.append("text").attr("class","spur").attr("x",350).attr("y",171).attr("text-anchor","middle").text("spurious path");
+
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",332).text("Analyzing the consenting subsample conditions on S, opening a spurious message-to-NRx path -- a");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",348).text("Berkson / selection collider. No diagnostic on the observed data reveals it, so causal discovery must use");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",364).text("FCI (latent + selection), not PC or GES. Inferred relationship; Veeva field names dated mid-2026.");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",388).attr("font-size","10").attr("letter-spacing","0.08em").text("PUBLIC / SYNTHETIC ONLY");
+}
+function show(e,t){tip.style("opacity",1).html(t).style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px");}
+function show2(node,t){const r=node.getBoundingClientRect();tip.style("opacity",1).html(t).style("left",(window.scrollX+r.left+r.width/2)+"px").style("top",(window.scrollY+r.top-24)+"px");}
+function hide(){tip.style("opacity",0);}
+draw();
+new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

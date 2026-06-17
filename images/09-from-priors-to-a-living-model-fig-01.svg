@@ -1,0 +1,67 @@
+<!--
+  Title: Three-ingredient assembly into the SCM
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 09-from-priors-to-a-living-model
+  Figure: 01
+  Type: Systems diagram (MC)
+  Generated: 2026-06-16
+  Source: chapters/09-from-priors-to-a-living-model.md
+-->
+<svg viewBox="0 0 700 420" role="img" aria-labelledby="fig-title-01" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-01">Three ingredients converge into a structural causal model, which feeds two outputs</title>
+  <desc>Three input boxes on the left - elicited structure, identified magnitudes, and physician history - each send an arrow into a larger central box, the structural causal model, drawn in red as the assembled object. The central box fans two arrows out to an upper output, the counterfactual engine, and a lower output, the drift monitor.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="09-from-priors-to-a-living-model" figure-number="01" figure-title="Three-ingredient assembly into the SCM" figure-slug="three-ingredient-assembly" figure-type="Systems diagram" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/09-from-priors-to-a-living-model.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Three ingredients assemble into one structural causal model</text>
+
+  <!-- INPUT BOXES (left) -->
+  <rect x="32" y="84" width="150" height="44" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="107" y="103" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">STRUCTURE</text>
+  <text x="107" y="120" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">oriented prior DAG</text>
+
+  <rect x="32" y="168" width="150" height="44" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="107" y="187" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">MAGNITUDE</text>
+  <text x="107" y="204" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">IV / DiD estimates</text>
+
+  <rect x="32" y="252" width="150" height="44" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
+  <text x="107" y="271" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">HISTORY</text>
+  <text x="107" y="288" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">physician panel</text>
+
+  <!-- arrows into central SCM -->
+  <line x1="182" y1="106" x2="300" y2="180" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="182" y1="190" x2="298" y2="190" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="182" y1="274" x2="300" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- CENTRAL SCM BOX (enlarged, red emphasis) -->
+  <rect x="304" y="142" width="112" height="96" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="360" y="184" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E">SCM</text>
+  <text x="360" y="202" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">DAG + equations</text>
+  <text x="360" y="218" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">+ provenance</text>
+
+  <!-- fan-out arrows -->
+  <line x1="416" y1="166" x2="520" y2="128" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="416" y1="214" x2="520" y2="252" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- OUTPUT BOXES (right) -->
+  <rect x="524" y="100" width="144" height="44" fill="#F5F5F5" stroke="#545454" stroke-width="1"/>
+  <text x="596" y="119" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">COUNTERFACTUAL</text>
+  <text x="596" y="136" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">engine</text>
+
+  <rect x="524" y="236" width="144" height="44" fill="#F5F5F5" stroke="#545454" stroke-width="1"/>
+  <text x="596" y="255" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">DRIFT MONITOR</text>
+  <text x="596" y="272" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">watches the model</text>
+
+  <!-- caption -->
+  <text x="32" y="330" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Structure orients the edges, magnitude scales them, history supplies the</text>
+  <text x="32" y="344" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">unit-level record. Together they parameterize one SCM, which drives both</text>
+  <text x="32" y="358" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">the counterfactual engine and the drift monitor. The SCM stays auditable</text>
+  <text x="32" y="372" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">through provenance tags on every edge [inferred labels].</text>
+
+  <!-- source line -->
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.09 FROM PRIORS TO A LIVING MODEL</text>
+</svg>

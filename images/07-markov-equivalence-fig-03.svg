@@ -1,0 +1,67 @@
+<!--
+  Title: The peer-influence puzzle: three equivalent stories
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 07-markov-equivalence
+  Figure: 03
+  Type: Comparison panels (VG)
+  Generated: 2026-06-16
+  Source: chapters/07-markov-equivalence.md
+-->
+<svg viewBox="0 0 700 420" role="img" aria-labelledby="fig-title-03" xmlns="http://www.w3.org/2000/svg">
+  <title id="fig-title-03">Three causal stories that fit the same peer-prescribing correlation</title>
+  <desc>Three side-by-side panels styled identically. Panel one, contagion: peer exposure points to NRx. Panel two, latent homophily: a hidden trait (dashed circle) points to both peer exposure and NRx. Panel three, reverse causation: NRx points back to peer exposure. All three fit the same positive correlation, so the data cannot choose among them.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="07-markov-equivalence" figure-number="03" figure-title="The peer-influence puzzle: three equivalent stories" figure-slug="peer-influence-three-stories" figure-type="Comparison panels" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/07-markov-equivalence.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- title -->
+  <text x="32" y="34" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">One correlation, three causal stories the data cannot tell apart</text>
+
+  <!-- shared-correlation banner -->
+  <text x="32" y="60" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#C8102E">All three reproduce: corr(peer exposure, NRx) > 0</text>
+
+  <!-- panel frames -->
+  <rect x="32" y="74" width="200" height="200" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="250" y="74" width="200" height="200" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+  <rect x="468" y="74" width="200" height="200" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- panel labels -->
+  <text x="132" y="94" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">CONTAGION</text>
+  <text x="350" y="94" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">LATENT HOMOPHILY</text>
+  <text x="568" y="94" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">REVERSE CAUSATION</text>
+
+  <!-- PANEL 1: CONTAGION  peer -> NRx -->
+  <circle cx="80" cy="190" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="184" cy="190" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="80" y="194" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">peer</text>
+  <text x="184" y="194" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">NRx</text>
+  <line x1="100" y1="190" x2="164" y2="190" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- PANEL 2: LATENT HOMOPHILY  trait(dashed) -> peer ; trait -> NRx -->
+  <circle cx="350" cy="130" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="350" y="134" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">trait</text>
+  <circle cx="296" cy="230" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="404" cy="230" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="296" y="234" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">peer</text>
+  <text x="404" y="234" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">NRx</text>
+  <line x1="338" y1="144" x2="308" y2="214" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="362" y1="144" x2="392" y2="214" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="350" y="262" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">dashed = unobserved</text>
+
+  <!-- PANEL 3: REVERSE  NRx -> peer (arrow opposite way) -->
+  <circle cx="516" cy="190" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <circle cx="620" cy="190" r="18" fill="#FFFFFF" stroke="#545454" stroke-width="1.5"/>
+  <text x="516" y="194" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">peer</text>
+  <text x="620" y="194" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">NRx</text>
+  <line x1="602" y1="190" x2="538" y2="190" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- caption -->
+  <text x="32" y="308" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The panels are drawn identically on purpose: each reproduces the same observed correlation, so observational data alone never resolves</text>
+  <text x="32" y="326" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">which story is true. The data fixes the equivalence class, not the graph (Verma-Pearl). A rep's account is what breaks the tie -</text>
+  <text x="32" y="344" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">temporal order or domain knowledge orients the edge the correlation leaves ambiguous.</text>
+
+  <!-- source line -->
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: CH.07 MARKOV EQUIVALENCE - WHY THE DATA CAN'T DECIDE</text>
+</svg>

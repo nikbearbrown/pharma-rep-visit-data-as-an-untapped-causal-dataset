@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Pearl's Ladder of Causation, three sealed rungs</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;--color-mid:#787878;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+    --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;--color-mid:#9A9A9A;
+  }}
+  html,body{margin:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  .fig-title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .rung-label{font-size:12px;}
+  .rung-sub{font-size:11px;}
+  .example{font-size:11px;fill:var(--color-ink);}
+  .seal-label{font-size:11px;fill:var(--color-red);}
+  .caption{font-size:11px;fill:var(--color-secondary);}
+  .rung{cursor:pointer;}
+  .rung:focus{outline:none;}
+  #tooltip{position:absolute;pointer-events:none;background:var(--color-white);color:var(--color-ink);
+    border:1px solid var(--color-border);padding:6px 8px;font-size:11px;opacity:0;max-width:260px;
+    font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;}
+  svg{width:100%;height:auto;display:block;}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <svg id="chart" viewBox="0 0 700 420" role="img" aria-labelledby="chart-title chart-desc"></svg>
+  <div id="tooltip" role="status" aria-live="polite"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const RUNGS = [
+  {n:3,label:"RUNG 3 - counterfactual",sub:"imagining (most powerful)",y:70,h:48,fill:"var(--color-mid)",txt:"var(--color-white)",
+   ex:"which message would have changed Rx",ey:78,
+   note:"Counterfactual: reason about a specific unit in a world contrary to fact. For this physician, which message would have changed prescribing?"},
+  {n:2,label:"RUNG 2 - intervention",sub:"doing (more powerful)",y:176,h:48,fill:"var(--color-ink)",txt:"var(--color-white)",
+   ex:"deliberate message assignment to NRx",ey:184,
+   note:"Intervention: P(Y | do(X)). What happens if the brand deliberately assigns the message? The budget question lives here."},
+  {n:1,label:"RUNG 1 - association",sub:"seeing (foundation)",y:300,h:54,fill:"var(--color-border)",txt:"var(--color-ink)",
+   ex:"email open rate (engagement proxy)",ey:311,
+   note:"Association: P(Y | X). What goes with what when I look? Deployed pharma analytics - and all rep-visit telemetry - sit here."}
+];
+const svg = d3.select("#chart");
+const tip = d3.select("#tooltip");
+svg.append("title").attr("id","chart-title").text("Pearl's Ladder of Causation, three sealed rungs");
+svg.append("desc").attr("id","chart-desc").text("A three-rung ladder: association at the bottom, intervention in the middle, counterfactual at the top, each strictly more powerful. A sealing band between rung 1 and rung 2 marks that Rung-1 data alone cannot reach the rung above.");
+
+svg.append("defs").html('<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--color-ink)"/></marker>');
+svg.append("rect").attr("x",0).attr("y",0).attr("width",700).attr("height",420).attr("fill","var(--color-white)");
+svg.append("text").attr("x",32).attr("y",30).attr("class","fig-title").text("The Ladder of Causation - and the seal Rung-1 data cannot cross");
+
+// rails
+[150,330].forEach(x=>svg.append("line").attr("x1",x).attr("y1",56).attr("x2",x).attr("y2",372)
+   .attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true"));
+
+function showTip(event,d){
+  tip.style("opacity",1).html(`<strong>${d.label}</strong><br>${d.note}`)
+     .style("left",(event.pageX+12)+"px").style("top",(event.pageY+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+const g = svg.selectAll("g.rung").data(RUNGS).join("g").attr("class","rung")
+  .attr("tabindex",0).attr("role","img").attr("aria-label",d=>`${d.label}, ${d.sub}. ${d.note}`)
+  .on("mouseover",(e,d)=>showTip(e,d)).on("mousemove",(e,d)=>showTip(e,d)).on("mouseout",hideTip)
+  .on("focus",(e,d)=>showTip({pageX:window.scrollX+330,pageY:window.scrollY+d.y+24},d)).on("blur",hideTip)
+  .on("keydown",(e,d)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showTip({pageX:window.scrollX+330,pageY:window.scrollY+d.y+24},d);}});
+g.append("rect").attr("x",150).attr("y",d=>d.y).attr("width",180).attr("height",d=>d.h)
+  .attr("fill",d=>d.fill).attr("stroke","var(--color-ink)").attr("stroke-width",1.5);
+g.append("text").attr("x",240).attr("y",d=>d.y+22).attr("text-anchor","middle").attr("class","rung-label").attr("fill",d=>d.txt).text(d=>d.label);
+g.append("text").attr("x",240).attr("y",d=>d.y+38).attr("text-anchor","middle").attr("class","rung-sub").attr("fill",d=>d.txt).text(d=>d.sub);
+// example markers
+g.append("line").attr("x1",330).attr("y1",d=>d.y+24).attr("x2",378).attr("y2",d=>d.y+24).attr("stroke","var(--color-ink)").attr("stroke-width",1).attr("aria-hidden","true");
+g.append("rect").attr("x",378).attr("y",d=>d.ey).attr("width",d=>d.n===3?216:200).attr("height",32)
+  .attr("fill","var(--color-fill)").attr("stroke","var(--color-border)").attr("stroke-width",1).attr("aria-hidden","true");
+g.append("text").attr("x",386).attr("y",d=>d.ey+20).attr("class","example").text(d=>d.ex);
+
+// sealing band between R1 and R2
+svg.append("rect").attr("x",120).attr("y",248).attr("width",240).attr("height",26)
+   .attr("fill","var(--color-red)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("aria-hidden","true");
+for(let x=130;x<=330;x+=25){
+  svg.append("line").attr("x1",x).attr("y1",274).attr("x2",x+20).attr("y2",248)
+     .attr("stroke","var(--color-white)").attr("stroke-width",1).attr("aria-hidden","true");
+}
+svg.append("text").attr("x",378).attr("y",265).attr("class","seal-label").text("SEAL - Rung-1 data alone cannot cross");
+
+svg.append("text").attr("x",32).attr("y",392).attr("class","caption")
+   .text("Each rung is strictly more powerful than the one below. No arrow crosses the seal: more Rung-1 data does not climb it.");
+svg.append("text").attr("x",32).attr("y",408).attr("class","caption")
+   .text("Rep-visit telemetry sits on Rung 1; the budget question lives on Rung 2.");
+
+new ResizeObserver(()=>{}).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

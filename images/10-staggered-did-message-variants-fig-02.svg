@@ -1,0 +1,81 @@
+<!--
+  figure-title: Two-estimator event-study overlay (TWFE vs Callaway-Sant'Anna)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 10-staggered-did-message-variants
+  Figure: 02
+  Type: Event-study plot
+  Generated: 2026-06-16
+  Source: chapters/10-staggered-did-message-variants.md
+-->
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">Two-estimator event-study overlay: naive TWFE vs Callaway-Sant'Anna</title>
+  <desc>An event-study coefficient plot over relative event time with a visible zero line. The naive TWFE path (dashed gray) shows spurious sloping pre-trend leads and artificially negative early lags. The Callaway-Sant'Anna path (solid red) shows flat leads near zero and a positive growing staircase of lags that recovers the planted synthetic ground truth shown as a gray reference line. Shapes are illustrative; magnitudes are inferred.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="10-staggered-did-message-variants" figure-number="02" figure-title="Two-estimator event-study overlay: naive TWFE vs Callaway-Sant'Anna" figure-slug="two-estimator-event-study-overlay" figure-type="Event-study plot" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/10-staggered-did-message-variants.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="460" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Same data, two estimators: only the clean one recovers the truth</text>
+  <text x="32" y="46" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Not a zero-baseline bar chart; coefficients are signed around a visible zero line</text>
+
+  <!-- Plot area: margins top64 right40 bottom120 left80; x in [80,660], y in [64,320] -->
+  <rect x="80" y="64" width="580" height="256" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- y axis label region; zero line at y=192 (center) -->
+  <line x1="80" y1="192" x2="660" y2="192" stroke="#2a1a0e" stroke-width="1"/>
+  <text x="74" y="196" text-anchor="end" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">0</text>
+  <text x="36" y="196" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" transform="rotate(-90 36 196)" text-anchor="middle">ATT coefficient</text>
+
+  <!-- ground-truth reference line (gray) at y=144 -->
+  <line x1="368" y1="144" x2="660" y2="144" stroke="#787878" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="656" y="138" text-anchor="end" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">planted truth</text>
+
+  <!-- vertical onset line at relative time 0 (x=368) -->
+  <line x1="368" y1="64" x2="368" y2="320" stroke="#787878" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <text x="368" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">0</text>
+
+  <!-- x ticks (relative event time) -->
+  <text x="128" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">-4</text>
+  <text x="208" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">-3</text>
+  <text x="288" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">-1</text>
+  <text x="448" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">1</text>
+  <text x="528" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">3</text>
+  <text x="608" y="338" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">5</text>
+  <text x="370" y="356" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">relative event time (pre to post)</text>
+
+  <!-- TWFE path: dashed gray. Leads slope spuriously, early lags artificially negative then recover -->
+  <polyline points="128,178 208,184 288,180 448,224 528,208 608,168" fill="none" stroke="#787878" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- TWFE markers + whiskers -->
+  <g stroke="#787878" stroke-width="1">
+    <line x1="128" y1="170" x2="128" y2="186"/><line x1="208" y1="176" x2="208" y2="192"/><line x1="288" y1="172" x2="288" y2="188"/>
+    <line x1="448" y1="216" x2="448" y2="232"/><line x1="528" y1="200" x2="528" y2="216"/><line x1="608" y1="160" x2="608" y2="176"/>
+  </g>
+  <g fill="#787878">
+    <rect x="124" y="174" width="8" height="8"/><rect x="204" y="180" width="8" height="8"/><rect x="284" y="176" width="8" height="8"/>
+    <rect x="444" y="220" width="8" height="8"/><rect x="524" y="204" width="8" height="8"/><rect x="604" y="164" width="8" height="8"/>
+  </g>
+
+  <!-- CS path: solid red. Flat leads near zero, positive growing staircase recovering truth -->
+  <polyline points="128,192 208,194 288,191 448,176 528,156 608,146" fill="none" stroke="#C8102E" stroke-width="1.5"/>
+  <g stroke="#C8102E" stroke-width="1">
+    <line x1="128" y1="184" x2="128" y2="200"/><line x1="208" y1="186" x2="208" y2="202"/><line x1="288" y1="183" x2="288" y2="199"/>
+    <line x1="448" y1="168" x2="448" y2="184"/><line x1="528" y1="148" x2="528" y2="164"/><line x1="608" y1="138" x2="608" y2="154"/>
+  </g>
+  <g fill="#C8102E">
+    <rect x="124" y="188" width="8" height="8"/><rect x="204" y="190" width="8" height="8"/><rect x="284" y="187" width="8" height="8"/>
+    <rect x="444" y="172" width="8" height="8"/><rect x="524" y="152" width="8" height="8"/><rect x="604" y="142" width="8" height="8"/>
+  </g>
+
+  <!-- Legend -->
+  <line x1="80" y1="378" x2="112" y2="378" stroke="#787878" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="118" y="382" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">naive TWFE (biased)</text>
+  <line x1="320" y1="378" x2="352" y2="378" stroke="#C8102E" stroke-width="1.5"/>
+  <text x="358" y="382" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Callaway-Sant'Anna (clean)</text>
+
+  <!-- Caption / honesty caveat -->
+  <text x="32" y="406" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">TWFE invents pre-trends and pushes early lags below zero; Callaway-Sant'Anna keeps leads flat and recovers the planted</text>
+  <text x="32" y="421" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">effect. Shapes illustrative; magnitudes [inferred] (effects "to be generated on synthetic data"). Believe nothing before the falsification test.</text>
+  <text x="32" y="438" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454" letter-spacing="0.08em">SOURCE: ILLUSTRATIVE EVENT-STUDY SHAPES AS DESCRIBED IN CHAPTER 10</text>
+</svg>

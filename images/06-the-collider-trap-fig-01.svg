@@ -1,0 +1,74 @@
+<!--
+  figure-title: The one inversion - fork vs chain vs collider under conditioning
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 06-the-collider-trap
+  Figure: 01
+  Type: three-panel structural comparison
+  Generated: 2026-06-16
+  Source: chapters/06-the-collider-trap.md
+-->
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
+  <title id="fig-title-01">Conditioning on the middle node helps in a fork, blocks in a chain, and hurts at a collider</title>
+  <desc>Three side-by-side three-node causal graphs. Left: a fork with one node sending arrows down to two others -- conditioning on it removes a spurious association (helps). Middle: a chain of three nodes -- conditioning on the middle blocks the path (context-dependent). Right: a collider where two nodes send arrows into a shared effect -- conditioning on it opens a spurious path (hurts). A dashed box marks the conditioned node in each panel.</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="06-the-collider-trap" figure-number="01" figure-title="The one inversion: fork vs chain vs collider" figure-slug="fork-chain-collider" figure-type="three-panel structural comparison" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/06-the-collider-trap.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">One operation, three different consequences</text>
+  <text x="32" y="50" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Dashed box = the node you condition on. Same action; opposite effects.</text>
+
+  <!-- ===== PANEL 1: FORK (helps) x in [40,236] ===== -->
+  <text x="138" y="84" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">FORK</text>
+  <!-- top center node C (conditioned) -->
+  <rect x="108" y="100" width="60" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="100" y="92" width="76" height="56" fill="none" stroke="#787878" stroke-width="1" stroke-dasharray="5 4"/>
+  <!-- lower-left A and lower-right B -->
+  <rect x="48" y="220" width="60" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="168" y="220" width="60" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <!-- arrows out from C, down to A and B -->
+  <line x1="124" y1="148" x2="90" y2="216" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="152" y1="148" x2="186" y2="216" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="138" y="296" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">conditioning HELPS</text>
+  <text x="138" y="314" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">removes a spurious</text>
+  <text x="138" y="328" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">A-B association</text>
+
+  <!-- ===== PANEL 2: CHAIN (context) x in [252,448] ===== -->
+  <text x="350" y="84" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">CHAIN</text>
+  <!-- three nodes in a row at mid height -->
+  <rect x="262" y="180" width="56" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="322" y="180" width="56" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="314" y="172" width="72" height="56" fill="none" stroke="#787878" stroke-width="1" stroke-dasharray="5 4"/>
+  <rect x="382" y="180" width="56" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <!-- arrows through the chain: A -> C and C -> B (boxes nearly touch, so short connectors with arrowheads sit in the gaps; widen gaps by nudging center box) -->
+  <line x1="318" y1="200" x2="321" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="378" y1="200" x2="381" y2="200" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="350" y="296" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">conditioning BLOCKS</text>
+  <text x="350" y="314" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">fine if C is a mediator</text>
+  <text x="350" y="328" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">you mean to block</text>
+
+  <!-- ===== PANEL 3: COLLIDER (hurts) x in [464,660] ===== -->
+  <text x="562" y="84" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">COLLIDER</text>
+  <!-- top center common effect C (conditioned, red box to flag harm) -->
+  <rect x="532" y="100" width="60" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="524" y="92" width="76" height="56" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- lower-left A and lower-right B -->
+  <rect x="472" y="220" width="60" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <rect x="592" y="220" width="60" height="40" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
+  <!-- arrows IN: A and B up into C -->
+  <line x1="510" y1="216" x2="544" y2="148" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="614" y1="216" x2="580" y2="148" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="562" y="296" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#C8102E" text-anchor="middle" font-weight="bold">conditioning HURTS</text>
+  <text x="562" y="314" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">opens a spurious path</text>
+  <text x="562" y="328" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">between A and B</text>
+
+  <!-- panel separators (hairline) -->
+  <line x1="248" y1="74" x2="248" y2="336" stroke="#D4D4D4" stroke-width="0.75"/>
+  <line x1="460" y1="74" x2="460" y2="336" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- caption: honesty -->
+  <text x="32" y="388" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">In this book the collider is a POST-TREATMENT variable (dwell, reaction), not a confounder: position downstream of treatment decides</text>
+  <text x="32" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">the harm, predictive power does not. Conditioning on it manufactures the very association you are trying to measure. Public + synthetic.</text>
+</svg>

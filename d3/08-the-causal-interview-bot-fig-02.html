@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The three-rung interview ladder</title>
+<style>
+:root{--color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;--color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;}
+@media(prefers-color-scheme:dark){:root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;--color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}}
+*{box-sizing:border-box;}
+html,body{margin:0;background:transparent;color:var(--color-ink);}
+#wrap{width:100%;max-width:760px;margin:0 auto;position:relative;}
+svg{display:block;width:100%;height:auto;}
+.title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+.colhead{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+.rungtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+.mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+.body{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+.side{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;}
+.source{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:10px;fill:var(--color-secondary);letter-spacing:0.08em;}
+.rung{cursor:pointer;}
+.rung rect{transition:opacity 200ms cubic-bezier(0.2,0.8,0.2,1);}
+#tip{position:absolute;pointer-events:none;opacity:0;background:var(--color-ink);color:var(--color-white);font-family:'Inter',-apple-system,sans-serif;font-size:11px;padding:6px 9px;border-radius:4px;max-width:240px;transition:opacity 200ms;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" role="status" aria-live="polite"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA={
+  headers:["QUESTION TYPE","SYSTEM EXTRACTS","CAUSAL ROLE"],
+  rungs:[
+    {id:3,y:84,stroke:"var(--color-ink)",sw:1.5,title:"RUNG 3 - COUNTERFACTUAL",qtype:"the road not taken",extracts:"mediator weights",role:"pathway M1/M2/M3",
+     detail:"The rep reasons about the road not taken; the system extracts mediator weights apportioning effect across M1/M2/M3."},
+    {id:2,y:158,stroke:"var(--color-secondary)",sw:1,title:"RUNG 2 - INTERVENTION",qtype:"mental experiment",extracts:"susceptibility indices",role:"effect heterogeneity",
+     detail:"The rep runs a mental experiment; the system extracts susceptibility indices, i.e. heterogeneous treatment effects."},
+    {id:1,y:232,stroke:"var(--color-border)",sw:1,title:"RUNG 1 - ASSOCIATION",qtype:"open narration",extracts:"candidate confounders",role:"what to adjust for",
+     detail:"The rep narrates openly with no hypothesis; the system extracts candidate confounders to adjust for."}
+  ],
+  sideClimb:"deepening causal commitment",
+  sideFeed:"output frames the rung above",
+  caption:["The bot never names the rungs to the rep. Rung-1 narration surfaces confounders, which frame the Rung-2 intervention question, whose",
+           "answer frames the Rung-3 counterfactual. The ladder is necessary in principle; elicitation QUALITY - resisting leading questions and",
+           "hallucinated structure - remains the open empirical question, which the downstream evidence gate is built to guard."]
+};
+const VW=700,VH=420;
+const wrap=d3.select("#wrap");
+const tip=d3.select("#tip");
+const svg=wrap.append("svg")
+  .attr("viewBox",`0 0 ${VW} ${VH}`)
+  .attr("role","img")
+  .attr("aria-labelledby","chart-title chart-desc");
+svg.append("title").attr("id","chart-title").text("The three-rung interview ladder: association, intervention, counterfactual");
+svg.append("desc").attr("id","chart-desc").text("A vertical ladder of three rungs ascending bottom to top: association, intervention, counterfactual. Each rung has three slots: question type, what the system extracts, and the causal role. A red arrow shows deepening causal commitment; feed-forward arrows show each rung framing the one above.");
+const defs=svg.append("defs");
+defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+  .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+defs.append("marker").attr("id","arrow-red").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto")
+  .append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+svg.append("rect").attr("x",0).attr("y",0).attr("width",VW).attr("height",VH).attr("fill","var(--color-white)");
+
+const data=FALLBACK_DATA;
+
+svg.append("text").attr("class","title").attr("x",32).attr("y",34)
+  .text("The interview climbs Pearl's ladder: each rung frames the next");
+
+const hx=[200,370,552];
+svg.selectAll("text.colh").data(data.headers).join("text")
+  .attr("class","colhead").attr("x",(d,i)=>hx[i]).attr("y",60).attr("text-anchor","middle").text(d=>d);
+
+// climb arrow left
+svg.append("line").attr("x1",48).attr("y1",280).attr("x2",48).attr("y2",76).attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("marker-end","url(#arrow-red)").attr("aria-hidden","true");
+svg.append("text").attr("class","side").attr("x",40).attr("y",180).attr("text-anchor","middle").attr("fill","var(--color-red)").attr("transform","rotate(-90 40 180)").text(data.sideClimb);
+
+function showTip(event,d){
+  const r=wrap.node().getBoundingClientRect();
+  tip.html("<strong>"+d.title+"</strong><br/>"+d.detail).style("opacity",1)
+     .style("left",(event.clientX-r.left+12)+"px").style("top",(event.clientY-r.top+12)+"px");
+}
+function hideTip(){tip.style("opacity",0);}
+
+const colx=[116,286,468];
+const rungs=svg.selectAll("g.rung").data(data.rungs).join("g")
+  .attr("class","rung")
+  .attr("tabindex",0)
+  .attr("role","button")
+  .attr("aria-label",d=>d.title+": "+d.detail)
+  .on("mousemove",(event,d)=>showTip(event,d))
+  .on("mouseleave",hideTip)
+  .on("focus",function(event,d){const e=this.getBoundingClientRect(),r=wrap.node().getBoundingClientRect();tip.html("<strong>"+d.title+"</strong><br/>"+d.detail).style("opacity",1).style("left",(e.left-r.left+12)+"px").style("top",(e.top-r.top+12)+"px");})
+  .on("blur",hideTip)
+  .on("keydown",function(event,d){if(event.key==="Enter"||event.key===" "){event.preventDefault();rungs.selectAll("rect").style("opacity",0.3);d3.select(this).selectAll("rect").style("opacity",1);}});
+
+rungs.each(function(d){
+  const g=d3.select(this);
+  colx.forEach(x=>g.append("rect").attr("x",x).attr("y",d.y).attr("width",168).attr("height",48).attr("fill","var(--color-fill)").attr("stroke",d.stroke).attr("stroke-width",d.sw));
+  g.append("text").attr("class","rungtitle").attr("x",200).attr("y",d.y+20).attr("text-anchor","middle").text(d.title);
+  g.append("text").attr("class","mono").attr("x",200).attr("y",d.y+38).attr("text-anchor","middle").text(d.qtype);
+  g.append("text").attr("class","mono").attr("x",370).attr("y",d.y+29).attr("text-anchor","middle").text(d.extracts);
+  g.append("text").attr("class","mono").attr("x",552).attr("y",d.y+29).attr("text-anchor","middle").text(d.role);
+});
+
+// feed-forward arrows right
+svg.append("line").attr("x1",648).attr("y1",232).attr("x2",648).attr("y2",210).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+svg.append("line").attr("x1",648).attr("y1",158).attr("x2",648).attr("y2",136).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("marker-end","url(#arrow)").attr("aria-hidden","true");
+svg.append("text").attr("class","side").attr("x",668).attr("y",186).attr("text-anchor","middle").attr("fill","var(--color-secondary)").attr("transform","rotate(-90 668 186)").text(data.sideFeed);
+
+// caption
+svg.selectAll("text.cap").data(data.caption).join("text")
+  .attr("class","body").attr("x",32).attr("y",(d,i)=>312+i*18).text(d=>d);
+
+svg.append("text").attr("class","source").attr("x",32).attr("y",404).text("SOURCE: CH.08 THE CAUSAL INTERVIEW BOT");
+
+new ResizeObserver(()=>{}).observe(wrap.node());
+</script>
+</body>
+</html>

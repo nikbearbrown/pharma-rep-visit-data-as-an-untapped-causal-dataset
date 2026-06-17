@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 4.2 — IV three-node identification structure</title>
+<style>
+  :root{
+    --color-white:#FFFFFF;--color-ink:#2a1a0e;--color-red:#C8102E;--color-secondary:#545454;
+    --color-border:#D4D4D4;--color-ochre:#C8860E;--color-fill:#F5F5F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--color-white:#111111;--color-ink:#F0EBE3;--color-red:#E8243A;--color-secondary:#A0978C;
+      --color-border:#2E2E2E;--color-ochre:#D49A30;--color-fill:#1A1A1A;}
+  }
+  html,body{margin:0;padding:0;background:var(--color-white);color:var(--color-ink);}
+  #wrap{width:100%;max-width:760px;margin:0 auto;}
+  svg{width:100%;height:auto;display:block;}
+  .title{font-family:'EB Garamond','Garamond',Georgia,serif;font-size:14px;fill:var(--color-ink);}
+  .subtitle{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-secondary);}
+  .node{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:12px;fill:var(--color-ink);}
+  .mono{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:11px;fill:var(--color-secondary);}
+  .caption{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;fill:var(--color-secondary);}
+  .tooltip{position:absolute;pointer-events:none;background:var(--color-white);border:1px solid var(--color-border);
+    padding:4px 8px;font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif;font-size:11px;color:var(--color-ink);opacity:0;}
+  @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tip" class="tooltip"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const FALLBACK_DATA={
+  nodes:[
+    {id:"Z",label:["training-cohort","assignment"],tag:"Z instrument",x:120,y:280,latent:false},
+    {id:"D",label:["message-variant","exposure"],tag:"D treatment",x:364,y:280,latent:false,fill:"var(--color-fill)"},
+    {id:"Y",label:["NRx"],tag:"Y outcome",x:608,y:280,latent:false},
+    {id:"U",label:["physician","openness"],tag:"U (unobserved)",x:364,y:150,latent:true}
+  ],
+  edges:[
+    {from:"Z",to:"D",kind:"identified"},
+    {from:"D",to:"Y",kind:"identified"},
+    {from:"U",to:"D",kind:"confounder"},
+    {from:"U",to:"Y",kind:"confounder"}
+  ]
+};
+const W=700,H=480;
+const wrap=d3.select("#wrap");const tip=d3.select("#tip");
+function draw(){
+  wrap.selectAll("svg").remove();
+  const svg=wrap.append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("role","img").attr("aria-labelledby","chart-title chart-desc");
+  svg.append("title").attr("id","chart-title").text("Instrumental-variables identification: cohort timing reaches NRx only through message variant");
+  svg.append("desc").attr("id","chart-desc").text("Three observed nodes Z, D, Y in a chain; a latent confounder above sends dashed arrows into D and Y; no direct Z to Y edge — that absent path is the exclusion restriction.");
+  const defs=svg.append("defs");
+  defs.append("marker").attr("id","arrow").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-ink)");
+  defs.append("marker").attr("id","arrowred").attr("markerWidth",8).attr("markerHeight",6).attr("refX",7).attr("refY",3).attr("orient","auto").append("polygon").attr("points","0 0, 8 3, 0 6").attr("fill","var(--color-red)");
+  svg.append("rect").attr("x",0).attr("y",0).attr("width",W).attr("height",H).attr("fill","var(--color-white)");
+
+  svg.append("text").attr("class","title").attr("x",32).attr("y",30).text("The instrument reaches the outcome only by passing through treatment");
+  svg.append("text").attr("class","subtitle").attr("x",32).attr("y",50).text("Cohort timing (Z) -> message variant (D) -> NRx (Y); no direct Z to Y edge");
+
+  // latent confounder
+  const U=FALLBACK_DATA.nodes.find(n=>n.id==="U");
+  svg.append("circle").attr("cx",U.x).attr("cy",U.y).attr("r",40).attr("fill","var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4");
+  svg.append("text").attr("class","node").attr("x",U.x).attr("y",U.y-4).attr("text-anchor","middle").text(U.label[0]);
+  svg.append("text").attr("class","node").attr("x",U.x).attr("y",U.y+12).attr("text-anchor","middle").text(U.label[1]);
+  svg.append("text").attr("class","mono").attr("x",U.x).attr("y",U.y-34).attr("text-anchor","middle").text(U.tag);
+
+  // observed rect nodes
+  const obs=FALLBACK_DATA.nodes.filter(n=>!n.latent);
+  const g=svg.selectAll("g.node").data(obs).join("g").attr("class","node")
+    .attr("tabindex",0).attr("aria-label",d=>d.tag);
+  g.append("rect").attr("x",d=>d.x-60).attr("y",d=>d.y-32).attr("width",120).attr("height",64).attr("rx",0)
+    .attr("fill",d=>d.fill||"var(--color-white)").attr("stroke","var(--color-ink)").attr("stroke-width",1.5)
+    .on("mousemove",(e,d)=>show(e,d.tag)).on("mouseleave",hide)
+    .on("focus",function(e,d){show2(this,d.tag)}).on("blur",hide);
+  g.each(function(d){
+    const s=d3.select(this);
+    if(d.label.length===2){
+      s.append("text").attr("class","node").attr("x",d.x).attr("y",d.y-4).attr("text-anchor","middle").text(d.label[0]);
+      s.append("text").attr("class","node").attr("x",d.x).attr("y",d.y+12).attr("text-anchor","middle").text(d.label[1]);
+    } else {
+      s.append("text").attr("class","node").attr("x",d.x).attr("y",d.y+4).attr("text-anchor","middle").text(d.label[0]);
+    }
+    s.append("text").attr("class","mono").attr("x",d.x).attr("y",d.y+52).attr("text-anchor","middle").text(d.tag);
+  });
+
+  // identified chain (red)
+  svg.append("line").attr("x1",180).attr("y1",280).attr("x2",296).attr("y2",280).attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("marker-end","url(#arrowred)");
+  svg.append("line").attr("x1",424).attr("y1",280).attr("x2",540).attr("y2",280).attr("stroke","var(--color-red)").attr("stroke-width",1.5).attr("marker-end","url(#arrowred)");
+  // confounder dashed arrows
+  svg.append("line").attr("x1",340).attr("y1",186).attr("x2",350).attr("y2",244).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4").attr("marker-end","url(#arrow)");
+  svg.append("line").attr("x1",392).attr("y1",183).attr("x2",588).attr("y2",244).attr("stroke","var(--color-ink)").attr("stroke-width",1.5).attr("stroke-dasharray","5 4").attr("marker-end","url(#arrow)");
+  // absent path guide
+  svg.append("path").attr("d","M 130 340 Q 364 392 600 340").attr("fill","none").attr("stroke","var(--color-border)").attr("stroke-width",0.75).attr("stroke-dasharray","5 4").attr("aria-hidden","true");
+  svg.append("text").attr("class","caption").attr("x",364).attr("y",388).attr("text-anchor","middle").text("no direct Z to Y edge -- the exclusion restriction (left empty on purpose)");
+
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",410).text("Cohort instrument is testable, not assumed: falsify Z's independence first.");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",424).text("Exclusion is threatened if early training improves general selling skill.");
+  svg.append("text").attr("class","caption").attr("x",32).attr("y",438).text("Public/synthetic structure only.");
+}
+function show(e,t){tip.style("opacity",1).html(t).style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px");}
+function show2(node,t){const r=node.getBoundingClientRect();tip.style("opacity",1).html(t).style("left",(window.scrollX+r.left+r.width/2)+"px").style("top",(window.scrollY+r.top-24)+"px");}
+function hide(){tip.style("opacity",0);}
+draw();
+new ResizeObserver(()=>draw()).observe(document.getElementById("wrap"));
+</script>
+</body>
+</html>

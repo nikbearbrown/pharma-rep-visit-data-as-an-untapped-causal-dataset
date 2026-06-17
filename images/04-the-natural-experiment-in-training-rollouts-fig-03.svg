@@ -1,0 +1,68 @@
+<!--
+  figure-title: First-stage F vs actual test size of a nominal 5% t-test (the F>10 myth)
+  Book: Pharma Rep Visit Data as an Untapped Causal Dataset
+  Chapter: 04-the-natural-experiment-in-training-rollouts
+  Figure: 02
+  Type: line chart
+  Generated: 2026-06-16
+  Source: chapters/04-the-natural-experiment-in-training-rollouts.md
+-->
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-02">
+  <title id="fig-title-02">First-stage F versus actual size of a nominal five-percent t-test</title>
+  <desc>A descending curve relating first-stage F (1 to 200) to the true size of a nominal 5% t-test. The curve sits well above 5% at the legacy F=10 threshold and only meets the 5% reference line near F=104.7. Two vertical guides mark F=10 (the wrong threshold) and F=104.7 (the real one).</desc>
+  <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="04-the-natural-experiment-in-training-rollouts" figure-number="02" figure-title="First-stage F vs actual test size (the F>10 myth)" figure-slug="first-stage-f-vs-test-size" figure-type="line chart" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/04-the-natural-experiment-in-training-rollouts.md"/></metadata>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="32" y="30" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">F greater than 10 does not buy a valid 5% test</text>
+  <text x="32" y="50" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454">Actual test size only falls to 5% near F = 104.7, not at the legacy F = 10 rule</text>
+
+  <!-- Plot area: margins top48 right40 bottom56 left64 -> x[64,660] y[48,364] -->
+  <rect x="64" y="48" width="596" height="316" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="0.75"/>
+
+  <!-- Axes -->
+  <line x1="64" y1="364" x2="660" y2="364" stroke="#2a1a0e" stroke-width="1.5"/>
+  <line x1="64" y1="364" x2="64" y2="48" stroke="#2a1a0e" stroke-width="1.5"/>
+
+  <!-- Y axis ticks (size; 0 at bottom mandatory). 0% at y=364, 30% at y=64. scale: y = 364 - (size/30)*316 -->
+  <!-- gridline + tick at 5% : 364 - (5/30)*316 = 311.3 -->
+  <text x="58" y="368" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="end">0%</text>
+  <text x="58" y="315" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="end">5%</text>
+  <text x="58" y="231" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="end">15%</text>
+  <text x="58" y="68" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="end">30%</text>
+
+  <!-- X axis ticks. x from 1..200 mapped to [64,660]: x = 64 + (F-1)/199*596 -->
+  <!-- F=10 -> 64 + 9/199*596 = 90.96 ; F=105 -> 64 + 104/199*596 = 375.5 ; F=200 -> 660 -->
+  <text x="64" y="382" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">1</text>
+  <text x="91" y="382" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">10</text>
+  <text x="376" y="382" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">105</text>
+  <text x="660" y="382" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454" text-anchor="middle">200</text>
+  <text x="362" y="404" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#545454" text-anchor="middle">first-stage F statistic</text>
+
+  <!-- 5% horizontal reference guide (secondary, hairline) -->
+  <line x1="64" y1="311" x2="660" y2="311" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+
+  <!-- Vertical guides at F=10 (x=91) and F=104.7 (x=376) (secondary hairlines) -->
+  <line x1="91" y1="364" x2="91" y2="48" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+  <line x1="376" y1="364" x2="376" y2="311" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
+
+  <!-- Data curve (the ONE red series): monotone descent, high at left, meets 5% line at x=376 -->
+  <!-- anchors: F=1 ~ size 30% (y=48); steep fall; at F=10 (x=91) size ~ 23% (y=122); flattening; at F=105 (x=376) size=5% (y=311); then asymptotic to 5% out to F=200 -->
+  <path d="M 64 52 C 75 95, 84 118, 91 122 C 130 175, 200 255, 280 295 C 320 306, 355 310, 376 311 C 470 312, 560 311, 660 311" fill="none" stroke="#C8102E" stroke-width="1.5"/>
+
+  <!-- emphasis dots where curve crosses each vertical guide -->
+  <circle cx="91" cy="122" r="3.5" fill="#C8102E"/>
+  <circle cx="376" cy="311" r="3.5" fill="#C8102E"/>
+
+  <!-- annotation labels off the curve, not on centerline -->
+  <text x="98" y="100" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">F = 10: true size well above 5%</text>
+  <text x="386" y="300" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">F = 104.7: size finally hits 5%</text>
+
+  <!-- caption: honesty -->
+  <text x="32" y="416" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">The F &gt; 10 rule is legacy; the modern bar is F = 104.7 (Lee, McCrary,</text>
+  <text x="32" y="430" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Moreira &amp; Porter 2022). One curve shown; intermediate curvature</text>
+  <text x="32" y="444" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">illustrative. Public/synthetic.</text>
+</svg>
