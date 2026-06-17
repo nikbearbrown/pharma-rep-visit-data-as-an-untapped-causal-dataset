@@ -40,9 +40,10 @@
   <circle cx="180" cy="382" r="34" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
   <text x="180" y="379" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">observed</text>
   <text x="180" y="394" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" text-anchor="middle">sample</text>
-  <!-- Selection-boundary bracket label -->
-  <text x="284" y="338" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">selection boundary:</text>
-  <text x="284" y="352" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">condition on "physicians we have data for"</text>
+  <!-- Selection-boundary bracket label: wrapped to clear the prescribing-outcome circle (left edge x=480) -->
+  <text x="284" y="360" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">selection boundary: condition</text>
+  <text x="284" y="374" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">on "physicians we have</text>
+  <text x="284" y="388" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">data for"</text>
 
   <!-- Outcome: lower right -->
   <circle cx="520" cy="382" r="40" fill="#FFFFFF" stroke="#545454" stroke-width="1"/>
@@ -61,7 +62,10 @@
 
   <!-- Opened non-causal path (NOT a causal arrow): dashed hairline, no arrowhead -->
   <line x1="224" y1="232" x2="476" y2="232" stroke="#D4D4D4" stroke-width="0.75" stroke-dasharray="5 4"/>
-  <text x="350" y="226" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">non-causal path opened by conditioning (not a causal edge)</text>
+  <!-- annotation moved into the clear gap below the dashed connector, between the two mediator circles -->
+  <rect x="246" y="290" width="208" height="14" fill="#FFFFFF"/>
+  <text x="350" y="301" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">non-causal path opened by conditioning</text>
+  <text x="350" y="315" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454" text-anchor="middle">(not a causal edge)</text>
 
   <!-- Caption -->
   <text x="32" y="442" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">A Berkson selection collider: the opted-out population is invisible by construction. FCI models this; PC and GES assume it away.</text>

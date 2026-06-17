@@ -7,14 +7,14 @@
   Generated: 2026-06-16
   Source: chapters/02-what-the-data-actually-is.md
 -->
-<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig-title-01">
   <title id="fig-title-01">Two-plane CLM schema converging via NPI into the physician-time panel</title>
   <desc>Two source planes (passive telemetry, rep-entered) plus a warehouse box route through a mandatory consent gate and a shared NPI key into one physician-time panel. Consent is a single mandatory gate, not an optional side box.</desc>
   <metadata><cajal:figure xmlns:cajal="https://bearbrown.ai/cajal/1.0" book="Pharma Rep Visit Data as an Untapped Causal Dataset" book-slug="pharma-rep-visit-data-as-an-untapped-causal-dataset" chapter="02-what-the-data-actually-is" figure-number="01" figure-title="Two-plane CLM schema converging via NPI into the physician-time panel" figure-slug="two-plane-schema-npi-panel" figure-type="layered block/architecture diagram" priority="Critical" author="Nik Bear Brown" date-generated="2026-06-16" source-file="chapters/02-what-the-data-actually-is.md"/></metadata>
   <defs>
     <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a1a0e"/></marker>
   </defs>
-  <rect x="0" y="0" width="700" height="420" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="700" height="480" fill="#FFFFFF"/>
 
   <text x="32" y="28" font-family="'EB Garamond','Garamond',Georgia,serif" font-size="14" fill="#2a1a0e">Two source planes converge — through consent and an NPI key — into one panel</text>
 
@@ -79,9 +79,7 @@
   <rect x="252" y="364" width="416" height="40" rx="0" fill="#2a1a0e" stroke="#2a1a0e" stroke-width="1.5"/>
   <text x="460" y="389" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="13" fill="#FFFFFF" text-anchor="middle">PHYSICIAN-TIME PANEL (convergence point)</text>
 
-  <!-- caption: caveats -->
-  <text x="32" y="360" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Field rows shown</text>
-  <text x="32" y="374" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">as blank slots.</text>
-  <text x="32" y="396" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Public/synthetic</text>
-  <text x="32" y="410" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">structure; Veeva *_vod names are dated mid-2026 examples.</text>
+  <!-- caption: caveats moved into the clear band BELOW the dark panel (panel bottom at y 404) -->
+  <text x="32" y="428" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Field rows shown as blank slots.</text>
+  <text x="32" y="446" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">Public/synthetic structure; Veeva *_vod names are dated mid-2026 examples.</text>
 </svg>

@@ -37,7 +37,7 @@
   <text x="240" y="214" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#FFFFFF" text-anchor="middle">doing (more powerful)</text>
   <!-- example marker R2 -->
   <line x1="330" y1="200" x2="378" y2="200" stroke="#2a1a0e" stroke-width="1"/>
-  <rect x="378" y="184" width="200" height="32" rx="0" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="1"/>
+  <rect x="378" y="184" width="220" height="32" rx="0" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="1"/>
   <text x="386" y="204" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#2a1a0e">deliberate message assignment to NRx</text>
 
   <!-- ===== SEALING BAND between R1 and R2 (most salient) ===== -->
