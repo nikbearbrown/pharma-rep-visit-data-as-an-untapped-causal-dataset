@@ -326,3 +326,21 @@ For each stem, mark Pass / Fail / Cannot-determine on:
 **AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 3 work and the one judgment it could not make. The judgment most specific here: whether a stem truly reaches Rung 2 — because the model over-grants interventional status to anything phrased as "would," and only you can tell whether the rep is reporting an intervention she has effectively run or just narrating an association.*
 
 **Series connection:** the failure mode is **correlation-asserted-as-cause** (and its cousin, over-climbing the ladder), which maps to **T5 (Causal)**: the rung boundary is the seal the whole book turns on, and the bot's job is to elicit knowledge from above the seal that the data below it can never supply.
+
+---
+
+## References (fact-check pass)
+
+1. Pearl, J. & Mackenzie, D., *The Book of Why* (2018) — Ladder of Causation (association/intervention/counterfactual), the sealing result, the do-operator, the "owl" and rain/umbrella illustrations, and the quoted passages. [CONFIRMED.]
+2. Lewis, R. A. & Rao, J. M., "The Unfavorable Economics of Measuring the Returns to Advertising," *Quarterly Journal of Economics* 130(4):1941–1973 (2015) — 25 large field experiments; median ROI confidence interval >100 percentage points wide. [CONFIRMED verbatim.]
+3. Gordon, B. R., Zettelmeyer, F., Bhargava, N. & Chapsky, D., "A Comparison of Approaches to Advertising Measurement: Evidence from Big Field Experiments at Facebook," *Marketing Science* 38(2):193–225 (2019) — observational estimates diverge from / overstate vs. experimental ground truth. [CONFIRMED.]
+4. Bottou, L. et al., "Counterfactual Reasoning and Learning Systems: The Example of Computational Advertising," *Journal of Machine Learning Research* 14:3207–3260 (2013) — Bing ad placement; engagement optimization ≠ causal effect of system actions. [CONFIRMED.]
+
+*Unverified (correctly hedged in-text): specific vendor magnitudes ("100M+ field suggestions," "+25% engagement") — already `[verify — unconfirmed]`; the argument rests on the checkable qualitative claim, not these numbers. See factchecks/03-stuck-on-rung-1.md.*
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Pearl & Mackenzie, The Book of Why
+- Bottou et al. 2013 JMLR/arXiv
+- Lewis & Rao 2015 QJE
+- Gordon et al. 2019 Marketing Science
+-->

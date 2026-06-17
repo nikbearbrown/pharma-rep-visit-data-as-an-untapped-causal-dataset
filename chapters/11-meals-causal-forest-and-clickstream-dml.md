@@ -446,3 +446,26 @@ Mark each Pass / Fail / Cannot-determine.
 **AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your work and the one judgment it could not make — for example, that you classified every variable pre/post-treatment yourself because the model offered `reaction_score` as a useful control based on predictiveness and could not apply the SCM to reject it.* (Mandatory.)
 
 **Series connection:** the failure mode is **collider-contaminated DML that looks tight but is wrong** — precision masquerading as correctness, with no ground-truth anchor. Tier **T4 (Bounded Reliability)**: the algorithm is reliable to run and verify on synthetic ground truth, but the conditioning set that makes it valid is a human, SCM-driven judgment.
+
+---
+
+## References (fact-check pass)
+
+All external method and citation claims in this chapter were verified CONFIRMED against primary sources; no corrections required. The empirical meals–prescribing studies are correctly framed as association, not causation. See `factchecks/11-meals-causal-forest-and-clickstream-dml-assertions.md`.
+
+1. Wager, Stefan, and Susan Athey. "Estimation and Inference of Heterogeneous Treatment Effects using Random Forests." *Journal of the American Statistical Association* 113, no. 523 (2018): 1228–1242. [CONFIRMED]
+2. Athey, Susan, Julie Tibshirani, and Stefan Wager. "Generalized Random Forests." *Annals of Statistics* 47, no. 2 (2019): 1148–1178. [CONFIRMED]
+3. Chernozhukov, Victor, et al. "Double/Debiased Machine Learning for Treatment and Structural Parameters." *The Econometrics Journal* 21, no. 1 (2018): C1–C68. [CONFIRMED]
+4. Montgomery, Jacob M., Brendan Nyhan, and Michelle Torres. "How Conditioning on Posttreatment Variables Can Ruin Your Experiment and What to Do about It." *American Journal of Political Science* 62, no. 3 (2018): 760–775. [CONFIRMED]
+5. Rosenbaum, Paul R. "The Consequences of Adjustment for a Concomitant Variable that Has Been Affected by the Treatment." *Journal of the Royal Statistical Society, Series A* 147, no. 5 (1984): 656–666. [CONFIRMED]
+6. DeJong, C., et al. "Pharmaceutical Industry–Sponsored Meals and Physician Prescribing Patterns for Medicare Beneficiaries." *JAMA Internal Medicine* 176, no. 8 (2016): 1114–1122. [CONFIRMED]
+7. Yeh, James S., et al. "Association of Industry Payments to Physicians With the Prescribing of Brand-name Statins in Massachusetts." *JAMA Internal Medicine* (2016). [CONFIRMED]
+8. Mitchell, Aaron P., Niti U. Trivedi, Renee L. Gennarelli, et al. "Are Financial Payments From the Pharmaceutical Industry Associated With Physician Prescribing? A Systematic Review." *Annals of Internal Medicine* 174, no. 3 (2021): 353–361. [CONFIRMED]
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Wager & Athey 2018 JASA
+- Athey, Tibshirani & Wager 2019 Annals of Statistics
+- Chernozhukov et al. 2018 Econometrics Journal
+- CMS Open Payments
+- CMS Medicare Part D Prescribers
+-->

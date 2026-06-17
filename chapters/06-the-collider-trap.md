@@ -337,3 +337,19 @@ Artifact:
 **AI Use Disclosure prompt (mandatory):** *Write two sentences naming what an AI tool did in this exercise and the one judgment it could not make. For example: "I used Claude to classify candidate features and render the collider graph; I decided myself that dwell time is a post-treatment collider rather than a pre-visit engagement proxy, because that turns on the temporal order of CLM measurement relative to message delivery — a domain fact the model does not have."*
 
 **Series connection:** The signature failure mode is a **collider conditioned-on for fit reasons** — fluent, well-fit, and wrong with no ground-truth check. This is a **T5 (Causal)** validation task: only structural knowledge, not data or model fit, can catch it.
+
+## References (fact-check pass)
+
+1. Montgomery, J.M., Nyhan, B., & Torres, M. (2018). How Conditioning on Posttreatment Variables Can Ruin Your Experiment and What to Do about It. *American Journal of Political Science* 62(3):760–775. DOI 10.1111/ajps.12357.
+2. Hernán, M.A., Hernández-Díaz, S., & Robins, J.M. (2004). A Structural Approach to Selection Bias. *Epidemiology* 15(5):615–625.
+3. Griffith, G.J., et al. (2020). Collider bias undermines our understanding of COVID-19 disease risk and severity. *Nature Communications* 11:5749.
+4. Berkson, J. (1946). Limitations of the Application of Fourfold Table Analysis to Hospital Data. *Biometrics Bulletin* 2(3):47–53.
+5. Zhang, J. (2008). On the completeness of orientation rules for causal discovery in the presence of latent confounders and selection bias. *Artificial Intelligence* 172(16–17):1873–1896.
+6. Spirtes, P., Glymour, C., & Scheines, R. (2000). *Causation, Prediction, and Search* (2nd ed.). MIT Press.
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Montgomery, Nyhan & Torres 2018 AJPS
+- Hernan, Hernandez-Diaz & Robins 2004 Epidemiology
+- Zhang 2008 Artificial Intelligence
+- Veeva CRM/Vault Help for consent fields
+-->

@@ -316,3 +316,18 @@ For each interview stem, mark Pass / Fail / Cannot-determine on:
 **AI Use Disclosure prompt:** *Write two sentences naming exactly what an AI tool did in your Chapter 1 work and the one judgment it could not make. The judgment most specific to this chapter: whether a stem leads the witness — because the model that drafted the stems is the same kind of system that will cheerfully phrase a leading question, and only you can decide whether a real rep's answer would be free or steered.*
 
 **Series connection:** the failure mode is **leading-the-witness** — the interviewer importing assumptions instead of eliciting them — which maps to **T5 (Causal)**: the human owns the structural claim, and the first place that ownership is won or lost is the wording of the very first question.
+
+---
+
+## References (fact-check pass)
+
+1. Veeva Systems analyst share summaries / Veeva investor materials — Veeva ~80%+ of global pharma-rep CRM market by 2022, ~⅓ in 2013, serves 19 of the top 20 life-sciences companies. [CONFIRMED — figure correctly labeled as industry-analyst estimate.]
+2. Pearl, J. & Mackenzie, D., *The Book of Why* (2018) — Ladder of Causation / Rung-1 framing previewed here, formalized in Chapter 3. [CONFIRMED.]
+
+*Note: the "fifteen years" telemetry-logging duration is an author-acknowledged approximate anchor (self-hedged in this chapter and in "Still puzzling"), not an independently sourcable figure — see factchecks/01-the-experiment-nobody-knows.md.*
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Veeva CRM Suite public page
+- Analyst report needed for Veeva market-share estimates
+- Apple 2010 iPad launch history
+-->

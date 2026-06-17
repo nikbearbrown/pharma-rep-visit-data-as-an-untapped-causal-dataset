@@ -324,3 +324,17 @@ Mark each Pass / Fail / Cannot-determine.
 **AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your work and the one judgment it could not make — for example, that you decided which physicians to exclude on pathway grounds because that requires knowing whether a high CATE runs through clinical education or relationship maintenance, a structural distinction drawn from the Chapter 8 bot's elicitation, not a calculation the model can perform.* (Mandatory.)
 
 **Series connection:** the failure mode is **propensity mistaken for persuadability** — a list that buys conversions it did not cause. Tier **T7 (Wisdom)**: whom to move, and whether the resulting prescribing serves the patient, are value judgments the model cannot make; it can rank and gate, but the targeting decision is governed by human wisdom.
+
+---
+
+## References (fact-check pass)
+
+The chapter's single load-bearing external citation was verified CONFIRMED; the propensity-vs-persuadability list-divergence magnitude is correctly labeled a testable Qini hypothesis, not a measured fact. See `factchecks/12-from-propensity-to-persuadables-assertions.md`.
+
+1. Ascarza, Eva. "Retention Futility: Targeting High-Risk Customers Might Be Ineffective." *Journal of Marketing Research* 55, no. 1 (2018): 80–98. Winner, 2018 Paul E. Green Award. [CONFIRMED]
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Ascarza 2018 Journal of Marketing Research
+- Uplift/Qini modeling references
+- Chapter 13 regulatory sources for pathway gate
+-->

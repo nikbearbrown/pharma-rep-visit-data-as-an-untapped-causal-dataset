@@ -142,3 +142,16 @@ A working reference for the principal terms this book uses. One line each; see t
 ---
 
 *End of back matter.*
+
+---
+
+## References (fact-check pass)
+
+References-list entries resolve to real, correctly-cited sources; no fabricated entries; the previously-removed bad arXiv ID was not reintroduced. Author/organization bios are AI-ONLY and not fact-checked. One formatting recommendation: the DeJong 2016 entry is in a loose placeholder form and gives an expanded first name unconfirmed against the source — tighten to the standard citation below. See `factchecks/99-back-matter-assertions.md`.
+
+1. DeJong C, Aguilar T, Tseng C-W, Lin GA, Boscardin WJ, Dudley RA. "Pharmaceutical Industry–Sponsored Meals and Physician Prescribing Patterns for Medicare Beneficiaries." *JAMA Internal Medicine* 176, no. 8 (2016): 1114–1122. [CONFIRMED — recommend replacing the loose References entry with this full form]
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Verify all bibliography DOI/URL entries during packaging
+- Add exact PhRMA Code and SIUU URLs if cited as inline primary sources
+-->

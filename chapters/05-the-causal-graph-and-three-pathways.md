@@ -370,3 +370,23 @@ For each edge, mark Pass / Fail / Cannot-determine on:
 **AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 5 work and the one judgment it could not make. The judgment most specific here: whether the three-pathway split is identified in your data — because the model will reproduce a confident Baron–Kenny education share without flagging the between-mediator confounding that makes it invalid, and only you can refuse that number.*
 
 **Series connection:** the failure mode is **hallucinated DAG edge** (an LLM causal claim with no rep evidence) compounded by **correlation-asserted-as-cause**, which maps to **T5 (Causal)** — the human owns the structural prior — and edges into **T7 (Wisdom)** where the M1/M2/M3 regulatory line is a values judgment about whether the brand is doing medicine or buying obligation.
+
+---
+
+## References (fact-check pass)
+
+1. Schwartz, L. M. & Woloshin, S., "Medical Marketing in the United States, 1997-2016," *JAMA* 321(1):80–96 (2019) — total US medical marketing $17.7B→$29.9B; marketing to health professionals $15.6B→$20.3B. [CONFIRMED verbatim against full text.]
+2. Baron, R. M. & Kenny, D. A., *Journal of Personality and Social Psychology* 51(6):1173–1182 (1986) — product-of-coefficients mediation method. [CONFIRMED.]
+3. Robins, J. M. & Greenland, S., *Epidemiology* 3(2):143–155 (1992); Pearl, J., Mediation Formula, *Proc. UAI 17*:411–420 (2001); VanderWeele, T. J., *Explanation in Causal Inference* (Oxford UP, 2015) and *Annual Review of Public Health* 37:17–32 (2016) — NDE/NIE/CDE, four no-confounding assumptions, cross-world untestability. [CONFIRMED.]
+4. VanderWeele, Vansteelandt & Robins, *Epidemiology* 25(2):300–306 (2014); Vansteelandt, S. & Daniel, R. M., "Interventional Effects for Mediation Analysis with Multiple Mediators," *Epidemiology* 28(2):258–265 (2017) — interventional indirect effects; exact additive multi-mediator decomposition avoiding cross-world assumption. [CONFIRMED.]
+5. DeJong, C. et al., "Pharmaceutical Industry-Sponsored Meals and Physician Prescribing Patterns for Medicare Beneficiaries," *JAMA Internal Medicine* 176(8):1114–1122 (2016) — meal <$20 associated with higher promoted-brand prescribing (~279,669 physicians); association, not causation, per authors. [CONFIRMED.]
+6. Physician Payments Sunshine Act (ACA §6002); CMS Open Payments — M3/reciprocity regulatory framing. [CONFIRMED; legal adjudication correctly routed to counsel.]
+
+*All flagged assertions in this chapter resolved to CONFIRMED. The per-pathway non-identification stance is a correct honest position supported by refs 3–4. See factchecks/05-the-causal-graph-and-three-pathways.md.*
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Schwartz & Woloshin 2019 JAMA
+- Robins & Greenland 1992 Epidemiology
+- VanderWeele 2016 Annual Review of Public Health
+- DeJong et al. 2016 JAMA Internal Medicine
+-->

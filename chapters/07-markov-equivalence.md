@@ -343,3 +343,17 @@ Graph:
 **AI Use Disclosure prompt (mandatory):** *Write two sentences naming what an AI tool did in this exercise and the one judgment it could not make. For example: "I used Claude to enumerate the Markov-equivalent stories and draft non-leading questions; I decided myself which edges in my CPDAG require rep knowledge to orient and what specific rep observation would supply each — a determination the data cannot make and the model cannot guess."*
 
 **Series connection:** The signature failure mode is **wrong edge orientation / equivalence-class confusion** — a reversible edge shown as directed with no outside source. This is a **T5 (Causal)** validation task, with a **T6 (Collective)** dimension whenever reps contradict each other on a contested edge.
+
+## References (fact-check pass)
+
+1. Verma, T. & Pearl, J. (1990). Equivalence and synthesis of causal models. *Proc. 6th Conf. on Uncertainty in Artificial Intelligence (UAI 1990)*, 255–270.
+2. Meek, C. (1995). Causal inference and causal explanation with background knowledge. *Proc. 11th Conf. on Uncertainty in Artificial Intelligence (UAI 1995)*, 403–410.
+3. Shalizi, C.R. & Thomas, A.C. (2011). Homophily and Contagion Are Generically Confounded in Observational Social Network Studies. *Sociological Methods & Research* 40(2):211–239. arXiv:1004.4704.
+4. Cartwright, N. (1989). *Nature's Capacities and Their Measurement*. Oxford: Clarendon Press.
+5. Spirtes, P., Glymour, C., & Scheines, R. (2000). *Causation, Prediction, and Search* (2nd ed.). MIT Press.
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Verma & Pearl 1990 UAI
+- Meek 1995 UAI
+- Shalizi & Thomas 2011 Sociological Methods & Research
+-->

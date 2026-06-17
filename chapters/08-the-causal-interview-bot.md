@@ -348,3 +348,17 @@ TRANSCRIPT:
 **AI Use Disclosure prompt (mandatory):** *Write two sentences naming what an AI tool did in this exercise and the one judgment it could not make. For example: "I used Claude to transcribe the interview and extract candidate edges and surface contradictions across three reps; I determined myself which proposed edges had genuine volunteered rep support versus which were the model's training prior about meals and formulary access, because the model cannot distinguish a quote it found from a quote it expected to find."*
 
 **Series connection:** The signature failure mode is **leading-the-witness or a hallucinated edge in the elicited prior** — an interviewer's prior laundered as rep knowledge, with no unprompted quote behind it. This is a **T5 (Causal)** and **T6 (Collective)** validation task: only a human who knows the transcript and the experts can certify the structural knowledge is genuinely the reps'.
+
+## References (fact-check pass)
+
+1. Korb, K.B. & Nicholson, A.E. (2004; 2nd ed. 2011). *Bayesian Artificial Intelligence*. Chapman & Hall/CRC.
+2. Feigenbaum, E.A. (1977). The Art of Artificial Intelligence: Themes and Case Studies of Knowledge Engineering. *Proc. IJCAI-77*, 1014–1029.
+3. Polanyi, M. (1966). *The Tacit Dimension*. University of Chicago Press.
+4. Shaposhnyk, O., Zahorska, D., & Yanushkevich, S. (2025). Can LLMs Assist Expert Elicitation for Probabilistic Causal Modeling? arXiv:2504.10397.
+5. Pearl, J. & Mackenzie, D. (2018). *The Book of Why*. Basic Books.
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Korb & Nicholson, Bayesian Artificial Intelligence
+- Feigenbaum knowledge engineering sources
+- Shaposhnyk et al. 2025 arXiv
+-->

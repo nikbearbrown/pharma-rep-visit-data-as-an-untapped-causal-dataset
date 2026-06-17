@@ -28,7 +28,8 @@ A useful way to hold this: raw logs are ingredients; the panel is recipe-ready m
 
 ---
 
-A standing caveat, stated once and meant throughout the book. Every `*_vod` field name below is a dated mid-2026 example. Veeva is migrating from its Salesforce-based CRM to a proprietary Vault CRM — end-of-support for legacy Veeva CRM is December 2029; Vault CRM is generally available and had 125+ live customers in early 2026. The data model is being restructured and API names may be renamed or relocated. Learn the *roles*; verify the *names* against both `crmhelp.veeva.com` and `vaultcrmhelp.veeva.com` before you trust any of them.
+A standing caveat, stated once and meant throughout the book. Every `*_vod` field name below is a dated mid-2026 example. Veeva is migrating from its Salesforce-based CRM to a proprietary Vault CRM — end-of-support for legacy Veeva CRM is December 2029; Vault CRM is generally available and had 125+ live customers in early 2026.
+<!-- FACT-CHECK FLAG: UNVERIFIED — see factchecks/02-what-the-data-actually-is.md (Vault GA April 2024 and legacy EOS Dec 2029 CONFIRMED; the "125+ live customers in early 2026" point-in-time vendor count not independently confirmable) --> The data model is being restructured and API names may be renamed or relocated. Learn the *roles*; verify the *names* against both `crmhelp.veeva.com` and `vaultcrmhelp.veeva.com` before you trust any of them.
 
 ---
 
@@ -364,3 +365,19 @@ For each field in field-roles.json, mark Pass / Fail / Cannot-determine on:
 **AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 2 work and the one judgment it could not make. The judgment most specific here: whether `Reaction_vod` is a collider or a covariate — a call the model cannot make because it cannot reason about the field's temporal position inside the CLM session lifecycle.*
 
 **Series connection:** the failure mode is **collider miscoded as confounder**, which maps to **T5 (Causal)**: the human owns the temporal-structure judgment that decides whether a field protects an estimate or poisons it — the judgment the bot must encode so a rep can never talk a downstream signal into the role of a cause.
+
+---
+
+## References (fact-check pass)
+
+1. Veeva, "Vault CRM April 2024 Availability" (2023); Veeva CRM Help, End of Support (crmhelp.veeva.com) — Vault CRM GA April 2024; legacy EOS December 2029. [CONFIRMED.]
+2. Veeva CRM Help (crmhelp.veeva.com), CLM / Multichannel topics — `Duration_vod`, `Reaction_vod` picklist (positive/neutral/negative/none), `CLM_Opt_Type_vod` values, `CLM_OPT_OUT_BEHAVIOR_vod` behaviors, `Call2_Key_Message_vod` custom-field limitation, negative-Duration artifact, `Display_Order_vod`. [CONFIRMED — dated mid-2026 vendor examples, subject to the Vault migration.]
+3. IQVIA Xponent (prescriber-level projected NRx/TRx); Symphony Health / ICON (claims-based alternative) — data-source identities. [CONFIRMED.]
+
+*Unverified (correctly hedged in-text): "125+ live customers in early 2026" (point-in-time vendor count); the `Display_Order_vod` vs `View_Order_vod` split; `Multichannel_Line_vod` alias status; exact `Call_Detail_vod` and free-text-note API names — see factchecks/02-what-the-data-actually-is.md.*
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Veeva CRM Help
+- Vault CRM Help
+- IQVIA/Symphony prescribing-measure glossary
+-->

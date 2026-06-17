@@ -61,3 +61,13 @@ That gap — between a *cool* dataset and a *causal* dataset — is the whole su
 What it does is teach one capable data scientist to take a dataset everyone has and nobody has questioned correctly, and to build — honestly, with every assumption named and every dead end shown — a living causal model of how a message actually lands on the physician it was aimed at.
 
 — *Humanitarians AI and Nik Bear Brown*
+
+## References (fact-check pass)
+
+1. Veeva Systems, "Veeva Announces First Customer Win and April 2024 Availability for Vault CRM" (2023); Veeva CRM Help, End of Support (crmhelp.veeva.com) — Vault CRM GA April 2024; legacy Veeva CRM end-of-support December 2029. [CONFIRMED — supports "platform mid-migration."]
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- CMS Open Payments overview
+- CMS Medicare Part D Prescribers
+- Pearl, Imbens, Angrist core causal-inference texts
+-->

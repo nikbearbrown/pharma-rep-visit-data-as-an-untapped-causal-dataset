@@ -377,3 +377,26 @@ Mark each Pass / Fail / Cannot-determine.
 **AI Use Disclosure prompt:** *Write two sentences naming exactly what an AI tool did in your DiD work and the one judgment you supplied that it could not — specifically whether the falsification test passed on your rollout, a determination about whether cohort timing was driven by logistics rather than physician characteristics that the model cannot assess and you must defend from how this rollout actually happened.* (Mandatory.)
 
 **Series connection:** the failure mode here is **naive-TWFE / failed pre-trends** — a fluent estimate with the wrong sign and no ground-truth anchor. Tier **T4 (Bounded Reliability)**: the estimator is reliable to run and verify, but the identifying judgment behind it is not the model's to make.
+
+---
+
+## References (fact-check pass)
+
+All load-bearing method and citation claims in this chapter were verified CONFIRMED against primary sources; no corrections required. See `factchecks/10-staggered-did-message-variants-assertions.md`.
+
+1. Goodman-Bacon, Andrew. "Difference-in-Differences with Variation in Treatment Timing." *Journal of Econometrics* 225, no. 2 (2021): 254–277. [CONFIRMED]
+2. de Chaisemartin, Clément, and Xavier D'Haultfœuille. "Two-Way Fixed Effects Estimators with Heterogeneous Treatment Effects." *American Economic Review* 110, no. 9 (2020): 2964–2996. [CONFIRMED]
+3. Sun, Liyang, and Sarah Abraham. "Estimating Dynamic Treatment Effects in Event Studies with Heterogeneous Treatment Effects." *Journal of Econometrics* 225, no. 2 (2021): 175–199. [CONFIRMED]
+4. Callaway, Brantly, and Pedro H. C. Sant'Anna. "Difference-in-Differences with Multiple Time Periods." *Journal of Econometrics* 225, no. 2 (2021): 200–230. [CONFIRMED]
+5. Roth, Jonathan, and Pedro H. C. Sant'Anna. "When Is Parallel Trends Sensitive to Functional Form?" *Econometrica* 91, no. 2 (2023): 737–747. [CONFIRMED]
+6. Roth, Jonathan. "Pretest with Caution: Event-Study Estimates after Testing for Parallel Trends." *American Economic Review: Insights* 4, no. 3 (2022): 305–322. [CONFIRMED]
+7. Rambachan, Ashesh, and Jonathan Roth. "A More Credible Approach to Parallel Trends." *Review of Economic Studies* 90, no. 5 (2023): 2555–2591. [CONFIRMED]
+8. Roth, Jonathan, Pedro H. C. Sant'Anna, Alyssa Bilinski, and John Poe. "What's Trending in Difference-in-Differences? A Synthesis of the Recent Econometrics Literature." *Journal of Econometrics* 235, no. 2 (2023): 2218–2244. [CONFIRMED]
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Goodman-Bacon 2021
+- Callaway & Sant'Anna 2021
+- Sun & Abraham 2021
+- Rambachan & Roth 2023
+- Roth et al. 2023 synthesis
+-->

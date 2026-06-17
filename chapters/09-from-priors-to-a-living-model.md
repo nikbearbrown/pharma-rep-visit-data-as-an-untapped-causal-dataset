@@ -359,3 +359,14 @@ SCM + recommendation:
 **AI Use Disclosure prompt (mandatory):** *Write two sentences naming what an AI tool did in this exercise and the one judgment it could not make. For example: "I used Claude to scaffold the abduction-action-prediction code and draft the drift-monitor spec; I decided myself what coefficient each structural equation receives, because those come from the identified quasi-experimental effects, and a model that supplies its own estimates is hallucinating the causal content this chapter is built to protect."*
 
 **Series connection:** The signature failure mode is a **counterfactual over-claimed beyond partial identification** (a point estimate where only bounds exist) plus **missing ground truth** (no synthetic recovery check). This is a **T5 (Causal)** validation task with a **T7 (Compliance/Values)** edge for the action-space constraint that keeps recommendations on the defensible educational pathway.
+
+## References (fact-check pass)
+
+1. Pearl, J. (2009). *Causality: Models, Reasoning, and Inference* (2nd ed.). Cambridge University Press. (abduction–action–prediction; structural counterfactuals; partial identification)
+2. Wager, S. & Athey, S. (2018). Estimation and Inference of Heterogeneous Treatment Effects using Random Forests. *Journal of the American Statistical Association* 113(523):1228–1242.
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Pearl, Causality, 2nd ed.
+- Pearl & Mackenzie, The Book of Why
+- Vendor NBA materials if making commercial-system claims
+-->

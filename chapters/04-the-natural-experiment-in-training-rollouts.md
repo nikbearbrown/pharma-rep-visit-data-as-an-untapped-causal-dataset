@@ -350,3 +350,25 @@ For each probe, mark Pass / Fail / Cannot-determine on:
 **AI Use Disclosure prompt:** *Write two sentences naming what an AI tool did in your Chapter 4 work and the one judgment it could not make. The judgment most specific here: whether the cohort timing was as-good-as-random on this brand's rollout — a domain fact about who got trained first and why that the model does not have and cannot verify, and that only the falsification test plus the rep's honest answers can settle.*
 
 **Series connection:** the failure mode is **leading-the-witness** into a false all-clear on the instrument, which maps to **T5 (Causal)**: independence and exclusion are the identification claim, and the bot's job is to surface the scheduling history a human uses to defend or abandon the natural experiment — never to bless it.
+
+---
+
+## References (fact-check pass)
+
+1. Angrist, J. D. & Krueger, A. B., "Does Compulsory School Attendance Affect Schooling and Earnings?", *Quarterly Journal of Economics* 106(4):979–1014 (1991) — quarter-of-birth instrument. [CONFIRMED.]
+2. Angrist, J. D., "Lifetime Earnings and the Vietnam Era Draft Lottery," *American Economic Review* 80(3):313–336 (1990) — draft-lottery instrument. [CONFIRMED.]
+3. Imbens, G. W. & Angrist, J. D., "Identification and Estimation of Local Average Treatment Effects," *Econometrica* 62(2):467–475 (1994); Angrist, Imbens & Rubin, "Identification of Causal Effects Using Instrumental Variables," *JASA* 91(434):444–455 (1996) — LATE / compliers. [CONFIRMED.]
+4. Staiger, D. & Stock, J. H., "Instrumental Variables Regression with Weak Instruments," *Econometrica* 65(3):557–586 (1997); Stock & Yogo (2005) — F>10 relative-bias criterion (legacy). [CONFIRMED.]
+5. Lee, D. S., McCrary, J., Moreira, M. J. & Porter, J., "Valid t-Ratio Inference for IV," *American Economic Review* 112(10):3260–3290 (2022) — tF procedure; F≈104.7 for valid 5% t-test (just-identified single IV); ≥49% SE inflation in one-quarter of 61 AER specifications. [CONFIRMED.]
+6. Montiel Olea, J. L. & Pflueger, C., *Journal of Business & Economic Statistics* 31(3):358–369 (2013) — effective F; Andrews, Stock & Sun, *Annual Review of Economics* 11:727–753 (2019) — practitioner review (AR sets + robust F). [CONFIRMED.]
+7. Goodman-Bacon, A., "Difference-in-differences with variation in treatment timing," *Journal of Econometrics* 225(2):254–277 (2021) — TWFE negative weights / forbidden comparisons. [CONFIRMED.]
+8. Callaway, B. & Sant'Anna, P. H. C., *Journal of Econometrics* 225(2):200–230 (2021); de Chaisemartin & D'Haultfœuille, *AER* 110(9):2964–2996 (2020); Sun & Abraham, *Journal of Econometrics* 225(2):175–199 (2021) — heterogeneity-robust staggered DiD. [CONFIRMED.]
+
+*Unverified: Baker, Callaway, Cunningham, Goodman-Bacon & Sant'Anna (2025, arXiv:2503.13323) — authors/topic plausible; arXiv ID to be confirmed at final-citation stage. The "fifteen years" subtitle anchor is author-acknowledged approximate. See factchecks/04-the-natural-experiment-in-training-rollouts.md.*
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Imbens & Angrist 1994 Econometrica
+- Lee et al. 2022 AER
+- Goodman-Bacon 2021 Journal of Econometrics
+- Callaway & Sant'Anna 2021 Journal of Econometrics
+-->

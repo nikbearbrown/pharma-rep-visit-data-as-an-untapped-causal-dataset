@@ -91,3 +91,14 @@ Everything above Evidence Level 3 — clean causal identification, deployed mode
 *Humanitarians AI · Bear Brown LLC*
 *bear@bearbrown.co · humanitarians.ai*
 ʕ •ﻌ•ʔ
+
+## References (fact-check pass)
+
+1. Dafny, L., Ody, C. & Schmitt, M., "When Discounts Raise Costs: The Effect of Copay Coupons on Generic Utilization," *American Economic Journal: Economic Policy* 9(2) (2017). [CONFIRMED — the named cross-state copay-coupon / generic-suppression design exists and is correctly attributed.]
+2. CMS Open Payments; Medicare Part D; ICER value reports — named public data sources are real and correctly identified.
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- CMS Open Payments overview
+- CMS Medicare Part D Prescribers
+- Add local citation for any 'worked run' benchmark results
+-->

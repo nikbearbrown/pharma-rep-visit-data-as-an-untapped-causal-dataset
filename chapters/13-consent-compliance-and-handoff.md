@@ -369,3 +369,26 @@ Mark each Pass / Fail / Cannot-determine.
 **AI Use Disclosure prompt:** *Write two sentences naming exactly what an AI tool did in your capstone work and the one judgment you supplied that it could not — for example, a route-to-counsel flag you raised that the model would have answered, a consent boundary you set on what the bot may capture, or the Risk-1 statement you insisted on keeping when the model tried to soften it.* (Mandatory.)
 
 **Series connection:** the failure mode is **consent/PII captured that must not be / a regulatory question adjudicated instead of routed to counsel**, with no ground truth to catch it because the opt-out population is suppressed. Tier **T7 (Wisdom)** for the consent, welfare, and regulatory value judgments, and Tier **T6 (Collective)** for the handoff — the brief is the artifact that carries accountability across the Fellow, counsel, and the partner, and a brief that hides its own gating risk is a sales pitch, not a handoff.
+
+---
+
+## References (fact-check pass)
+
+All regulatory, legal, and method citations were verified CONFIRMED against FDA, CMS, PhRMA, and court-record sources; every regulatory item is explicitly routed to counsel rather than adjudicated; no corrections required. See `factchecks/13-consent-compliance-and-handoff-assertions.md`.
+
+1. Zhang, Jiji. "On the Completeness of Orientation Rules for Causal Discovery in the Presence of Latent Confounders and Selection Bias." *Artificial Intelligence* 172, no. 16–17 (2008): 1873–1896. [CONFIRMED]
+2. Spirtes, Peter, Clark Glymour, and Richard Scheines. *Causation, Prediction, and Search.* 2nd ed. Cambridge, MA: MIT Press, 2000. [CONFIRMED — FCI provenance]
+3. PhRMA Code on Interactions with Health Care Professionals, revisions effective January 1, 2022. [CONFIRMED]
+4. HHS Office of Inspector General. Special Fraud Alert: Speaker Programs. November 2020. [CONFIRMED]
+5. FDA. "Communications From Firms to Health Care Providers Regarding Scientific Information on Unapproved Uses of Approved/Cleared Medical Products" (SIUU). Revised draft October 2023; final January 2025 (Fed. Reg. Jan. 7, 2025). [CONFIRMED]
+6. Physician Payments Sunshine Act, 42 U.S.C. §1320a-7h; 42 C.F.R. Part 403; ACA 2010 §6002. CY2025 de minimis $13.46 / aggregate $134.54. [CONFIRMED]
+7. *United States v. Caronia*, 703 F.3d 149 (2d Cir. 2012). [CONFIRMED]
+8. *Amarin Pharma, Inc. v. FDA*, 119 F. Supp. 3d 196 (S.D.N.Y. 2015). [CONFIRMED]
+
+<!-- FACTCHECK-SUGGESTED-REFERENCES
+- Veeva CRM/Vault Help for consent fields
+- FDA OPDP page
+- CMS Open Payments overview
+- PhRMA Code current version
+- FDA SIUU guidance current version
+-->
